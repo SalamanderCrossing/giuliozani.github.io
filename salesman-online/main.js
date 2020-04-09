@@ -1,6 +1,6 @@
-//import { solve } from "https://giuliozani.github.io/salesman-online/salesman-distance-matrix/salesman.js";
+import { solve } from "https://raw.githubusercontent.com/GiulioZani/salesman-dm/master/salesman.js";
 //import { getDistanceMatrix } from "./get_distance_matrix.js";
-//import { getDistanceMatrix } from "https://giuliozani.github.io/salesman-online/get_distance_matrix.js";
+import { getDistanceMatrix } from "https://giuliozani.github.io/salesman-online/get_distance_matrix.js";
 $(document).ready(() => {
   const app = new Vue({
     el: "#app",
