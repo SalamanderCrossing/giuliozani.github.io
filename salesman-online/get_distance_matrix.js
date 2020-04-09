@@ -34,7 +34,7 @@ const getDistance = (add1, add2) =>
         resolve(body.routes[0].distance);
         return true;
       },
-      "json"
+      "application/json"
     );
   });
 
