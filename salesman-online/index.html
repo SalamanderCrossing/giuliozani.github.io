@@ -30,6 +30,13 @@
       type="text/javascript"
       src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"
     ></script>
+    <script type="module" >
+        import { solve } from "https://giuliozani.github.io/salesman-online/salesman-distance-matrix/salesman.js";
+        //import { getDistanceMatrix } from "./get_distance_matrix.js";
+        import { getDistanceMatrix } from "https://giuliozani.github.io/salesman-online/get_distance_matrix.js";
+        window.solve = solve;
+        window.getDistanceMatrix = getDistanceMatrix;
+    </script>
     <script type="module" src="main.js"></script>
     <title>OpenStreetmap Salesman</title>
   </head>
