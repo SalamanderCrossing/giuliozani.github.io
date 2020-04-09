@@ -26,7 +26,7 @@ const getDistanceMatrix = (coordinates) =>
 const getDistance = (add1, add2) =>
   new Promise((resolve, reject) => {
     const url = `http://router.project-osrm.org/route/v1/driving/${add1[0]},${add1[1]};${add2[0]},${add2[1]}?overview=false`;
-    // const url = 'http://router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.397634,52.529407;13.428555,52.523219?overview=false'
+    // const url = 'router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.397634,52.529407;13.428555,52.523219?overview=false'
     $.get(url, (body, status) => {
       console.log(body);
       resolve(body.routes[0].distance);

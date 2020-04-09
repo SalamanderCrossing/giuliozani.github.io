@@ -1,4 +1,4 @@
-import { solve } from "./salesman.js";
+import { solve } from "https://giuliozani.github.io/salesman-online/salesman.js";
 //import { getDistanceMatrix } from "./get_distance_matrix.js";
 import { getDistanceMatrix } from "https://giuliozani.github.io/salesman-online/get_distance_matrix.js";
 $(document).ready(() => {
