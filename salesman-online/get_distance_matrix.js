@@ -31,7 +31,7 @@ const getDistance = (add1, add2) =>
       console.log(body);
       resolve(body.routes[0].distance);
       return true;
-    });
+    }, 'json');
   });
 
 export { getDistance, getDistanceMatrix };
