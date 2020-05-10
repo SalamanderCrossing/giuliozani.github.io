@@ -8,7 +8,7 @@ window.onload = function() {
           //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
         })
         .begin()
-        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
+       // .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
 
 
     //Set up the webgazer video feedback.
@@ -33,7 +33,7 @@ window.onload = function() {
 
 window.onbeforeunload = function() {
     //webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
-    window.localStorage.clear(); //Comment out if you want to save data across different sessions
+    //window.localStorage.clear(); //Comment out if you want to save data across different sessions
 }
 
 /**
