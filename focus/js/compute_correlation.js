@@ -4,7 +4,7 @@
  * @param {number[]} d2
  */
 
-export function corr(d1, d2) {
+const corr = (d1, d2) => {
   let { min, pow, sqrt } = Math;
   let add = (a, b) => a + b;
   let n = min(d1.length, d2.length);
@@ -20,4 +20,6 @@ export function corr(d1, d2) {
     return 0;
   }
   return (mulSum - (sum1 * sum2) / n) / dense;
-}
+};
+
+export default corr;

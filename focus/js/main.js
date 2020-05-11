@@ -1,4 +1,4 @@
-import { initWebgazer, webgazer } from "./init_webgazer.js";
+import initWebgazer from "./init_webgazer.js";
 import Walker from "./walker.js";
 import corr from "./compute_correlation.js";
 
@@ -36,14 +36,14 @@ $(document).ready(() => {
   canvas.style.position = "fixed";
 
   $(".Calibration").hide();
-  //initWebgazer();
+  initWebgazer();
 
   const walker = new Walker("plotting_canvas");
   walker.start();
 
   const minutes = 1.0;
 
-  setTimeOut(() => {
+  setTimeout(() => {
     walker.stop();
     webgazer.end();
     const rx = corr(data.walker.xs, data.eye.xs);
