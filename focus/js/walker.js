@@ -32,7 +32,7 @@ class Walker {
     }, 20);
   }
   stop() {
-    clearInterval(interval);
+    clearInterval(this.interval);
   }
 }
 export default Walker;
