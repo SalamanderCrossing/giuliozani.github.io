@@ -39,7 +39,7 @@ function helpModalShow() {
  * This function listens for button clicks on the html page
  * checks that all buttons have been clicked 5 times each, and then goes on to measuring the precision
  */
-const calibrate = () => {
+const calibrate = (res) => {
   ClearCanvas();
   helpModalShow();
   $(".Calibration").click(function () {
@@ -110,6 +110,7 @@ const calibrate = () => {
               if (isConfirm) {
                 //clear the calibration & hide the last middle button
                 ClearCanvas();
+                res();
               } else {
                 //use restart function to restart the calibration
                 ClearCalibration();
@@ -150,4 +151,8 @@ function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-export default calibrate;
+export {
+  calibrate,
+  ClearCalibration,
+  PopUpInstruction
+};

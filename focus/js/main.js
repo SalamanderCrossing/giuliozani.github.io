@@ -30,13 +30,14 @@ const data = {
 };
 
 $(document).ready(() => {
+  setTimeout(()=>{
   const canvas = document.getElementById("plotting_canvas");
-  canvas.width = window.innerWidth;
+    canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   canvas.style.position = "fixed";
 
   $(".Calibration").hide();
-  initWebgazer();
+  initWebgazer(()=>{
 
   const walker = new Walker("plotting_canvas");
   walker.start();
@@ -56,9 +57,14 @@ $(document).ready(() => {
   webgazer.setGazeListener((eyePosition, clock) => {
     //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
     //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
-    data.eye.xs.push(eyePosition.x);
-    data.eye.ys.push(eyePosition.y);
-    data.walker.xs.push(walker.x);
-    data.walker.ys.push(walker.y);
+    if (eyePosition){
+      data.eye.xs.push(eyePosition.x);
+      data.eye.ys.push(eyePosition.y);
+      data.walker.xs.push(walker.x);
+      data.walker.ys.push(walker.y);
+    }
   });
+  });
+
+  }, 1000)
 });

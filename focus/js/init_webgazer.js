@@ -1,16 +1,17 @@
-import calibrate from "./calibration.js";
+import {ClearCalibration, PopUpInstruction, calibrate} from "./calibration.js";
 
-const initWebgazer = () => {
+const initWebgazer = (res) => {
   $(".Calibration").show();
-
-  calibrate();
+  calibrate(res);
   //start the webgazer tracker
-  webgazer
-    .setRegression("ridge") /* currently must set regression and tracker */
-    .setTracker("clmtrackr")
-    .begin();
-  // .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
-
+  webgazer.setRegression('ridge') /* currently must set regression and tracker */
+        .setTracker('clmtrackr')
+        .setGazeListener(function(data, clock) {
+          //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
+          //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+        })
+        .begin()
+        .showPredictionPoints(true); /* shows a square every 100 milliseconds where current prediction is */
   //Set up the webgazer video feedback.
   var setup = function () {
     //Set up the main canvas. The main canvas is used to calibrate the webgazer.
