@@ -1,4 +1,4 @@
-import noise from "noise.js";
+import noise from "./noise.js";
 
 class Walker {
   constructor(canvasId) {
@@ -20,15 +20,16 @@ class Walker {
   }
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    drawBall();
-    this.x = noise.simplex2(0, time) * this.canvas.width;
-    this.y = noise.simplex2(1000, time) * this.canvas.height;
+    this.drawBall();
+    this.x = ((noise.simplex2(0, this.time) + 1) * this.canvas.width) / 2;
+    this.y = ((noise.simplex2(1000, this.time) + 1) * this.canvas.height) / 2;
+    // (noise.simplex2(1000, this.time)) * this.canvas.height;
   }
   start() {
     this.interval = setInterval(() => {
       this.draw();
-      this.time++;
-    });
+      this.time += 0.004;
+    }, 20);
   }
   stop() {
     clearInterval(interval);
