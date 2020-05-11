@@ -38,10 +38,10 @@ window.onbeforeunload = function () {
 /**
  * Restart the calibration process by clearing the local storage and reseting the calibration point
  */
-function Restart() {
+window.Restart = () => {
   document.getElementById("Accuracy").innerHTML = "<a>Not yet Calibrated</a>";
   ClearCalibration();
   PopUpInstruction();
-}
+};
 
 export default initWebgazer;
