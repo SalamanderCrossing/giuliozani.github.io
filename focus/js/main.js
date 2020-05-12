@@ -1,6 +1,6 @@
-import initWebgazer from './init_webgazer.js';
-import Walker from './walker.js';
-import corr from './compute_correlation.js';
+import initWebgazer from "./init_webgazer.js";
+import Walker from "./walker.js";
+import corr from "./compute_correlation.js";
 
 const openFullscreen = () => {
   const elem = document.body;
@@ -30,49 +30,90 @@ const data = {
 };
 const accuracies = [];
 const savePositions = () => {};
-
+const addAccuracy = () => {
+  const rx = corr(data.walker.xs, data.eye.xs);
+  const ry = corr(data.walker.ys, data.eye.ys);
+  const r = (rx + ry) / 2;
+  console.log(r);
+  accuracies.push(r);
+  data.walker.xs = [];
+  data.walker.ys = [];
+  data.eye.xs = [];
+  data.eye.ys = [];
+};
+const round = (num) => Math.round((num + Number.EPSILON) * 1000) / 1000;
+const toPerc = (num) => {
+  const rounded = String(round(num));
+  return `${rounded.slice(2, 4)}.${rounded[4] !== undefined ? rounded[4] : 0}%`;
+};
 $(document).ready(() => {
   setTimeout(() => {
-    const canvas = document.getElementById('plotting_canvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.position = 'fixed';
+    $(".calibration").hide();
+    Swal.fire(
+      "Allow fullscreen?",
+      "Fullscreen improves focus",
+      "question"
+    ).then(() => {
+      openFullscreen();
+      const canvas = document.getElementById("plotting_canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.position = "fixed";
+      const context = canvas.getContext("2d");
+      //context.fillStyle = "#000000";
+      //context.fillRect(0, 0, canvas.width, canvas.height);
 
-    $('.Calibration').hide();
-    initWebgazer(() => {
-      webgazer.showPredictionPoints(false);
-      const walker = new Walker('plotting_canvas');
-      walker.start();
+      initWebgazer((accuracy) => {
+        canvas.style.cursor = "none";
+        webgazer.showPredictionPoints(false);
+        Swal.fire({
+          title: "Ready?",
+          html:
+            "Check that your face position is all right and remember not to move it!",
+          confirmButtonText: "Go!",
+        }).then(() => {
+          const walker = new Walker("plotting_canvas");
+          walker.start();
 
-      const minutes = 1.0;
+          const seconds = 60;
 
-      setTimeout(() => {
-        walker.stop();
-        webgazer.end();
-        clearInterval(interval);
-        const r = accuracies.reduce((x, y) => x + y, 0) / accuracies.length;
-        console.log(r);
-        Swal.fire(`Accuracy=${r}`, 'good job', 'success');
-      }, minutes * 1000 * 60);
+          setTimeout(() => {
+            if (data.eye.length > 0) {
+              console.log("updating accuracy");
+              addAccuracy();
+            }
+            window.localStorage.clear();
+            walker.stop();
+            webgazer.end();
+            clearInterval(interval);
+            console.log(accuracies);
+            const r = accuracies.reduce((x, y) => x + y, 0) / accuracies.length;
+            const result = Math.min((100 * r) / accuracy, 1.0);
+            console.log(
+              `Accuracy:${accuracy}
+            Pearson's r:${r}
+            Result = min(r / Accuracy, 1.0) = ${result}
+            `
+            );
+            console.log(r);
+            Swal.fire(
+              `Focus: ${toPerc(result)}`,
+              "Congratulations!",
+              "success"
+            );
+          }, seconds * 1000);
 
-      webgazer.setGazeListener((eyePosition, clock) => {
-        if (eyePosition) {
-          data.eye.xs.push(eyePosition.x);
-          data.eye.ys.push(eyePosition.y);
-          data.walker.xs.push(walker.x);
-          data.walker.ys.push(walker.y);
-        }
+          webgazer.setGazeListener((eyePosition, clock) => {
+            if (eyePosition) {
+              data.eye.xs.push(eyePosition.x);
+              data.eye.ys.push(eyePosition.y);
+              data.walker.xs.push(walker.x);
+              data.walker.ys.push(walker.y);
+            }
+          });
+          const interval = setInterval(addAccuracy, 10 * 1000);
+        });
       });
-      const interval = setInterval(() => {
-        const rx = corr(data.walker.xs, data.eye.xs);
-        const ry = corr(data.walker.ys, data.eye.ys);
-        const r = (rx + ry) / 2;
-        accuracies.push(r);
-        data.walker.xs = [];
-        data.walker.ys = [];
-        data.eye.xs = [];
-        data.eye.ys = [];
-      }, 10 * 1000);
     });
   }, 1000);
 });
