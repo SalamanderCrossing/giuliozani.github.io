@@ -1,11 +1,11 @@
-import noise from "./noise.js";
+import noise from './noise.js';
 
 class Walker {
   constructor(canvasId) {
     noise.seed(Math.random());
     const canvas = document.getElementById(canvasId);
     this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     this.interval = null;
@@ -14,7 +14,7 @@ class Walker {
   drawBall() {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
-    this.ctx.fillStyle = "#0095DD";
+    this.ctx.fillStyle = '#0095DD';
     this.ctx.fill();
     this.ctx.closePath();
   }

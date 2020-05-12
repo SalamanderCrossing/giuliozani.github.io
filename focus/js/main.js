@@ -1,6 +1,6 @@
-import initWebgazer from "./init_webgazer.js";
-import Walker from "./walker.js";
-import corr from "./compute_correlation.js";
+import initWebgazer from './init_webgazer.js';
+import Walker from './walker.js';
+import corr from './compute_correlation.js';
 
 const openFullscreen = () => {
   const elem = document.body;
@@ -28,18 +28,20 @@ const data = {
     ys: [],
   },
 };
+const accuracies = [];
+const savePositions = () => {};
 
 $(document).ready(() => {
   setTimeout(() => {
-    const canvas = document.getElementById("plotting_canvas");
+    const canvas = document.getElementById('plotting_canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    canvas.style.position = "fixed";
+    canvas.style.position = 'fixed';
 
-    $(".Calibration").hide();
+    $('.Calibration').hide();
     initWebgazer(() => {
       webgazer.showPredictionPoints(false);
-      const walker = new Walker("plotting_canvas");
+      const walker = new Walker('plotting_canvas');
       walker.start();
 
       const minutes = 1.0;
@@ -47,16 +49,13 @@ $(document).ready(() => {
       setTimeout(() => {
         walker.stop();
         webgazer.end();
-        const rx = corr(data.walker.xs, data.eye.xs);
-        const ry = corr(data.walker.ys, data.eye.ys);
-        const r = (rx + ry) / 2;
-
-        Swal.fire(`Accuracy=${r}`, "good job", "success");
+        clearInterval(interval);
+        const r = accuracies.reduce((x, y) => x + y, 0) / accuracies.length;
+        console.log(r);
+        Swal.fire(`Accuracy=${r}`, 'good job', 'success');
       }, minutes * 1000 * 60);
 
       webgazer.setGazeListener((eyePosition, clock) => {
-        //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
-        //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
         if (eyePosition) {
           data.eye.xs.push(eyePosition.x);
           data.eye.ys.push(eyePosition.y);
@@ -64,6 +63,16 @@ $(document).ready(() => {
           data.walker.ys.push(walker.y);
         }
       });
+      const interval = setInterval(() => {
+        const rx = corr(data.walker.xs, data.eye.xs);
+        const ry = corr(data.walker.ys, data.eye.ys);
+        const r = (rx + ry) / 2;
+        accuracies.push(r);
+        data.walker.xs = [];
+        data.walker.ys = [];
+        data.eye.xs = [];
+        data.eye.ys = [];
+      }, 10 * 1000);
     });
   }, 1000);
 });
