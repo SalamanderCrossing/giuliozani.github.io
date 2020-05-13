@@ -57,6 +57,7 @@ window.onSelectChange = (element) => {
 };
 
 const play = () => {
+  window.localStorage.clear();
   data = {
     walker: {
       xs: [],
@@ -77,10 +78,13 @@ const play = () => {
           Check that your face position is all right and remember, don't move! 
           <br>
           The task now is to <strong>follow the red dot with your gaze</strong>.
+          <br>
+          <br>
           <table style="width:100%">
             <tr>
-              <th><input id='time_input' type='range' value='1' min='1' max='10' onchange='onSelectChange(this)'></th>
-              <th id='time'>1m</th>
+              <td>Time:</td>
+              <td id='time'>1m</td>
+              <td><input id='time_input' type='range' value='1' min='1' max='10' onchange='onSelectChange(this)'></td>
             </tr>
           </table>
           `,
@@ -94,9 +98,8 @@ const play = () => {
         console.log("updating accuracy");
         addAccuracy();
       }
-      window.localStorage.clear();
       walker.stop();
-      webgazer.end();
+      //webgazer.end();
       clearInterval(interval);
       console.log(accuracies);
       const r = accuracies.reduce((x, y) => x + y, 0) / accuracies.length;
@@ -110,7 +113,7 @@ const play = () => {
       );
       console.log(r);
       Swal.fire({
-        title: `Focus: ${toPerc(result)}`,
+        title: `Focus: ${result === 1 ? "100%" : toPerc(result)}`,
         icon: "success",
         showCancelButton: true,
         confirmButtonText: "again",
@@ -138,6 +141,7 @@ const play = () => {
 
 const calibrate = () => {
   //openFullscreen(canvas);
+  window.localStorage.clear();
   const context = canvas.getContext("2d");
   //context.fillStyle = "#000000";
   //context.fillRect(0, 0, canvas.width, canvas.height);
@@ -162,17 +166,22 @@ $(document).ready(() => {
 
   setTimeout(() => {
     $(".calibration").hide();
-    Swal.fire(
-      "Welcome to Focus",
-      `
+    Swal.fire({
+      title: "Welcome to Focus",
+      html: `
         Online smooth pursuit. 
+        <br>
+        <br>
         <div style='text-align:left'>
-          You'll see a video stream in the upper left corner, adjust your face position such that the green face contour fits it. When you've found the right position don't move!
-          <br>
-          Notice: you'll need to grant webcam acces to use Focus.
+         Make sure there's enough light around you.<br>
+          You'll see a video stream in the upper left corner, adjust your face position such that the green contour fits it.
+           When you've found the right position don't move!
         </div>
-      `
-    ).then(() => {
+      `,
+      footer: `
+      <a href="https://webgazer.cs.brown.edu/">Built using webgazer.</a>
+      `,
+    }).then(() => {
       /*
       
       */

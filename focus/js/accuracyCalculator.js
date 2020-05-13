@@ -27,6 +27,9 @@ function get_points() {
  * This function calculates a measurement for how precise
  * the eye tracker currently is which is displayed to the user
  */
+
+const mean = (xs) => xs.reduce((x, y) => x + y, 0) / xs.length;
+
 function calculatePrecision(past50Array) {
   var windowHeight = $(window).height();
   var windowWidth = $(window).width();
@@ -36,8 +39,8 @@ function calculatePrecision(past50Array) {
   var y50 = past50Array[1];
 
   // Calculate the position of the point the user is staring at
-  var staringPointX = windowWidth / 2;
-  var staringPointY = windowHeight / 2;
+  var staringPointX = mean(x50);
+  var staringPointY = mean(y50);
 
   var precisionPercentages = new Array(50);
   calculatePrecisionPercentages(
@@ -53,6 +56,19 @@ function calculatePrecision(past50Array) {
   // Return the precision measurement as a rounded percentage
   return Math.round(precision);
 }
+/*
+const variance = (xs, mean) =>
+  Math.sqrt(xs.reduce((acc, x) => acc + Math.pow(x - mean, 2), 0) / xs.length);
+const calculateprecison = (past50Array) => {
+  const xs = past50Array[0]
+  const ys = past50Array[1]
+  const meanX = mean(past50Array[0]);
+  const meanY = mean(past50Array[1]);
+  const varX = variance(xs, meanX);
+  const varY = varicane(ys, meanY);
+  return 
+};
+*/
 
 /*
  * Calculate percentage accuracy for each prediction based on distance of

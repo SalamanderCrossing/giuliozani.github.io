@@ -110,6 +110,7 @@ const calibrate = (res) => {
             document.getElementById("Accuracy").innerHTML = accuracyLabel; // Show the accuracy in the nav bar.
             swal({
               title: "Your accuracy measure is " + precision_measurement + "%",
+              html: `Should be ≥ 70%`,
               allowOutsideClick: false,
               buttons: {
                 cancel: "Recalibrate",
