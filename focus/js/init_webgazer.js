@@ -1,6 +1,23 @@
 import calibrate from "./calibration.js";
 
-const initWebgazer = (res) => {
+const openFullscreen = () => {
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) {
+    /* Firefox */
+    //elem.mozRequestFullScreen();
+    //document.documentElement.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+};
+
+const initWebgazer = (res, onWebgazerReady) => {
   //$(".calibration").show();
   //start the webgazer tracker
   webgazer
@@ -15,6 +32,7 @@ const initWebgazer = (res) => {
 
   function checkIfReady() {
     if (webgazer.isReady()) {
+      onWebgazerReady();
       calibrate(res);
     } else {
       setTimeout(checkIfReady, 100);
@@ -27,7 +45,5 @@ window.onbeforeunload = function () {
   webgazer.end(); //Uncomment if you want to save the data even if you reload the page.
   //window.localStorage.clear(); //Comment out if you want to save data across different sessions
 };
-
-
 
 export default initWebgazer;

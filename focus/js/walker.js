@@ -8,24 +8,27 @@ class Walker {
     this.ctx = canvas.getContext("2d");
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.stepSize = 10;
+    this.stepSize = 25;
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
-    this.interval = null;
+    this.interval = 20;
     this.time = 0;
     this.xSign = 1;
     this.ySign = 1;
     this.videoHeight = 240;
     this.videoWidth = 320;
+    this.stopped = false;
   }
   drawBall() {
+    this.ctx.save();
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
     this.ctx.fillStyle = "#990000";
     this.ctx.fill();
     this.ctx.closePath();
+    this.ctx.restore();
   }
-  draw() {
+  step() {
     const nextStepX = noise.simplex2(0, this.time) * this.xSign * this.stepSize;
     const nextStepY =
       noise.simplex2(1000, this.time) * this.ySign * this.stepSize;
@@ -52,20 +55,43 @@ class Walker {
     }
     this.x = nextX;
     this.y = nextY;
+    this.time += 0.01;
+  }
+  draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = "#000000";
+    //this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawBall();
+    if (!this.stopped) {
+      window.requestAnimationFrame(this.draw);
+    }
   }
   start() {
     this.canvas.style.curson = "none";
+    const draw = () => {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      //this.ctx.fillStyle = "#000000";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.step();
+      this.drawBall();
+      if (!this.stopped) {
+        console.log(this.interval);
+        setTimeout(() => {
+          window.requestAnimationFrame(draw);
+        }, this.interval);
+      }
+    };
+    window.requestAnimationFrame(draw);
+    /*
     this.interval = setInterval(() => {
       this.draw();
       this.time += 0.005;
     }, 10);
+    */
   }
   stop() {
-    clearInterval(this.interval);
+    this.stopped = true;
+    //clearInterval(this.interval);
   }
 }
 export default Walker;
