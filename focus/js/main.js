@@ -75,6 +75,8 @@ const play = () => {
     title: "Ready?",
     html: `
           Check that your face position is all right and remember, don't move! 
+          <br>
+          The task now is to <strong>follow the red dot with your gaze</strong>.
           <table style="width:100%">
             <tr>
               <th><input id='time_input' type='range' value='1' min='1' max='10' onchange='onSelectChange(this)'></th>
@@ -160,14 +162,24 @@ $(document).ready(() => {
 
   setTimeout(() => {
     $(".calibration").hide();
-    Swal.fire("Welcome to Focus", "Online smooth pursuit.").then(() => {
+    Swal.fire(
+      "Welcome to Focus",
+      `
+        Online smooth pursuit. 
+        <div style='text-align:left'>
+          You'll see a video stream in the upper left corner, adjust your face position such that the green face contour fits it. When you've found the right position don't move!
+          <br>
+          Notice: you'll need to grant webcam acces to use Focus.
+        </div>
+      `
+    ).then(() => {
       /*
       
       */
 
       calibrate();
     });
-  }, 2000);
+  }, 500);
   /*
   const canvas = document.getElementById("plotting_canvas");
   canvas.width = window.innerWidth;
