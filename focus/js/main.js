@@ -117,12 +117,12 @@ const play = () => {
         icon: "success",
         showCancelButton: true,
         confirmButtonText: "again",
-        cancelButtonText: "recalibrate",
+        cancelButtonText: "reload",
       }).then((result) => {
         if (result.value) {
           play();
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          calibrate();
+          window.location.reload(false);
         }
       });
     }, seconds * 1000);
