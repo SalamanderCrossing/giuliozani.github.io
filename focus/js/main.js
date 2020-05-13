@@ -171,7 +171,7 @@ $(document).ready(() => {
 
       calibrate();
     });
-  }, 1000);
+  }, 2000);
   /*
   const canvas = document.getElementById("plotting_canvas");
   canvas.width = window.innerWidth;
