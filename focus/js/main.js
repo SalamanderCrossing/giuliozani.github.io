@@ -160,11 +160,7 @@ $(document).ready(() => {
 
   setTimeout(() => {
     $(".calibration").hide();
-    Swal.fire(
-      "Allow fullscreen?",
-      "Fullscreen improves focus",
-      "question"
-    ).then(() => {
+    Swal.fire("Welcome to Focus", "Online smooth pursuit.").then(() => {
       /*
       
       */
