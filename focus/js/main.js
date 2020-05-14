@@ -32,6 +32,32 @@ let data = {
 let seconds = 60;
 let accuracies = [];
 let accuracy = 0;
+
+window.showPlot = () => {
+  window.document.getElementById("btn_show_plot").style.display = "none";
+  const ys = accuracies.map((acc) =>
+    Math.min(1.0, round((100 * acc) / accuracy))
+  );
+  const xs = accuracies.map((_, i) => i * 10 + 5);
+  const trace = {
+    x: xs,
+    y: ys,
+    mode: "lines+markers",
+    type: "scatter",
+  };
+  const layout = {
+    width: 600,
+    height: 400,
+    xaxis: {
+      title: "seconds",
+    },
+    yaxis: {
+      title: "focus",
+      range: [0, 1.0],
+    },
+  };
+  Plotly.newPlot("plot", [trace], layout);
+};
 const savePositions = () => {};
 const addAccuracy = () => {
   const rx = corr(data.walker.xs, data.eye.xs);
@@ -74,6 +100,7 @@ const play = () => {
   webgazer.showPredictionPoints(false);
   Swal.fire({
     title: "Ready?",
+    allowOutsideClick: false,
     html: `
           Check that your face position is all right and remember, don't move! 
           <br>
@@ -90,8 +117,18 @@ const play = () => {
           `,
     confirmButtonText: "Go!",
   }).then(() => {
+    document.getElementById("webgazerVideoFeed").style.display = "none";
     const walker = new Walker("plotting_canvas");
     walker.start();
+    webgazer.setGazeListener((eyePosition, clock) => {
+      if (eyePosition) {
+        data.eye.xs.push(eyePosition.x);
+        data.eye.ys.push(eyePosition.y);
+        data.walker.xs.push(walker.x);
+        data.walker.ys.push(walker.y);
+      }
+    });
+    const interval = setInterval(addAccuracy, 10 * 1000);
 
     setTimeout(() => {
       if (data.eye.length > 0) {
@@ -112,9 +149,16 @@ const play = () => {
             `
       );
       console.log(r);
+      document.getElementById("webgazerVideoFeed").style.display = "block";
       Swal.fire({
         title: `Focus: ${result === 1 ? "100%" : toPerc(result)}`,
+        html: `
+              <button id='btn_show_plot' onclick="showPlot()" type="button" class="btn btn-info">show plot</button>
+              <div id='plot'></div>
+        `,
         icon: "success",
+        customClass: "swal-wide",
+        allowOutsideClick: false,
         showCancelButton: true,
         confirmButtonText: "again",
         cancelButtonText: "reload",
@@ -125,17 +169,7 @@ const play = () => {
           window.location.reload(false);
         }
       });
-    }, seconds * 1000);
-
-    webgazer.setGazeListener((eyePosition, clock) => {
-      if (eyePosition) {
-        data.eye.xs.push(eyePosition.x);
-        data.eye.ys.push(eyePosition.y);
-        data.walker.xs.push(walker.x);
-        data.walker.ys.push(walker.y);
-      }
-    });
-    const interval = setInterval(addAccuracy, 10 * 1000);
+    }, seconds * 1000 + 1000);
   });
 };
 
@@ -168,6 +202,7 @@ $(document).ready(() => {
     $(".calibration").hide();
     Swal.fire({
       title: "Welcome to Focus",
+      allowOutsideClick: false,
       html: `
         Online smooth pursuit. 
         <br>

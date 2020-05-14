@@ -75,7 +75,6 @@ class Walker {
       this.step();
       this.drawBall();
       if (!this.stopped) {
-        console.log(this.interval);
         setTimeout(() => {
           window.requestAnimationFrame(draw);
         }, this.interval);
