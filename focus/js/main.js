@@ -62,6 +62,7 @@ window.showPlot = () => {
 };
 const savePositions = () => {};
 const addAccuracy = () => {
+  console.log(`Datapoints collected in 10s: ${data.walker.xs.length}`);
   const rx = corr(data.walker.xs, data.eye.xs);
   const ry = corr(data.walker.ys, data.eye.ys);
   const r = (rx + ry) / 2;
