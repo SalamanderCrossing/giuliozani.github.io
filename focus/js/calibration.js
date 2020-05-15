@@ -26,15 +26,18 @@ const popUpInstructions = () =>
   new Promise((res) => {
     ClearCalibration();
     ClearCanvas();
-    swal({
+    Swal.fire({
       title: "Calibration",
-      text:
-        "Please click on each of the 9 points on the screen. You must click on each point 5 times till it goes yellow. This will calibrate your eye movements.",
+      html: `You'll see a video stream in the upper left corner, adjust your face position such that the green contour fits it.
+       <br><br>
+        When you've found the right position don't move!
+        <br><br>
+        Please click on each of the 9 points on the screen. You must click on each point 5 times till it goes yellow. This will calibrate your eye movements.`,
       buttons: {
         cancel: false,
         confirm: true,
       },
-    }).then((isConfirm) => {
+    }).then(() => {
       showCalibrationPoint();
       res();
     });
@@ -88,6 +91,8 @@ const calibrate = (res) => {
         // clears the canvas
         var canvas = document.getElementById("plotting_canvas");
         canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+
+        window.webgazer.showPredictionPoints(false);
 
         // notification for the measurement process
         swal({

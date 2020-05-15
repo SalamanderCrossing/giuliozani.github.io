@@ -3,19 +3,23 @@ import Walker from "./walker.js";
 import corr from "./compute_correlation.js";
 
 const openFullscreen = () => {
-  const elem = document.documentElement;
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.mozRequestFullScreen) {
-    /* Firefox */
-    //elem.mozRequestFullScreen();
-    //document.documentElement.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) {
-    /* Chrome, Safari and Opera */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) {
-    /* IE/Edge */
-    elem.msRequestFullscreen();
+  try {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      /* Firefox */
+      //elem.mozRequestFullScreen();
+      //document.documentElement.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 let canvas = null;
@@ -35,9 +39,7 @@ let accuracy = 0;
 
 window.showPlot = () => {
   window.document.getElementById("btn_show_plot").style.display = "none";
-  const ys = accuracies.map((acc) =>
-    Math.min(1.0, round((100 * acc) / accuracy))
-  );
+  const ys = accuracies.map((acc) => Math.max(0, round(acc)));
   const xs = accuracies.map((_, i) => i * 10 + 5);
   const trace = {
     x: xs,
@@ -53,7 +55,7 @@ window.showPlot = () => {
     },
     yaxis: {
       title: "focus",
-      range: [0, 1.0],
+      range: [-0.05, 1.05],
     },
   };
   Plotly.newPlot("plot", [trace], layout);
@@ -64,16 +66,16 @@ const addAccuracy = () => {
   const ry = corr(data.walker.ys, data.eye.ys);
   const r = (rx + ry) / 2;
   console.log(r);
-  accuracies.push(r);
+  accuracies.push(r >= 0 ? r : 0);
   data.walker.xs = [];
   data.walker.ys = [];
   data.eye.xs = [];
   data.eye.ys = [];
 };
-const round = (num) => Math.round((num + Number.EPSILON) * 1000) / 1000;
+const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 const toPerc = (num) => {
   const rounded = String(round(Math.abs(num)));
-  return `${rounded.slice(2, 4)}.${rounded[4] !== undefined ? rounded[4] : 0}%`;
+  return `${rounded.slice(2, 4)}%`;
 };
 window.onSelectChange = (element) => {
   const num = Math.floor(Number(element.value));
@@ -102,22 +104,23 @@ const play = () => {
     title: "Ready?",
     allowOutsideClick: false,
     html: `
-          Check that your face position is all right and remember, don't move! 
+          Double check your face position is all right and remember, don't move! 
           <br>
           The task now is to <strong>follow the red dot with your gaze</strong>.
           <br>
           <br>
           <table style="width:100%">
             <tr>
-              <td>Time:</td>
-              <td id='time'>1m</td>
+              <td style='width:50px; margin-right:0!important; padding-right:0!important;'>Duration:</td>
+              <td style='margin-left:0!important; padding-left:0!important;' id='time'>1m</td>
               <td><input id='time_input' type='range' value='1' min='1' max='10' onchange='onSelectChange(this)'></td>
             </tr>
           </table>
           `,
     confirmButtonText: "Go!",
   }).then(() => {
-    document.getElementById("webgazerVideoFeed").style.display = "none";
+    //document.getElementById("webgazerVideoFeed").style.display = "none";
+    webgazer.onlyShowVideoIfEyesOut(true);
     const walker = new Walker("plotting_canvas");
     walker.start();
     webgazer.setGazeListener((eyePosition, clock) => {
@@ -140,20 +143,21 @@ const play = () => {
       clearInterval(interval);
       console.log(accuracies);
       const r = accuracies.reduce((x, y) => x + y, 0) / accuracies.length;
-      const result = Math.min((100 * r) / accuracy, 1.0);
+      //const result = Math.min((100 * r) / accuracy, 1.0);
       console.log(
         `
             Accuracy:${accuracy}
             Pearson's r:${r}
-            Result = min(r / Accuracy, 1.0) = ${result}
             `
       );
       console.log(r);
       document.getElementById("webgazerVideoFeed").style.display = "block";
       Swal.fire({
-        title: `Focus: ${result === 1 ? "100%" : toPerc(result)}`,
+        title: `Focus: ${r === 1 ? "100%" : toPerc(r)}`,
         html: `
-              <button id='btn_show_plot' onclick="showPlot()" type="button" class="btn btn-info">show plot</button>
+              ${r > 0.9 ? "Too easy? Try with longer duration." : ""}
+              <br>
+              <button id='btn_show_plot' style='margin-top:10px' onclick="showPlot()" type="button" class="btn btn-info">show plot</button>
               <div id='plot'></div>
         `,
         icon: "success",
@@ -207,14 +211,14 @@ $(document).ready(() => {
         Online smooth pursuit. 
         <br>
         <br>
-        <div style='text-align:left'>
-         Make sure there's enough light around you.<br>
-          You'll see a video stream in the upper left corner, adjust your face position such that the green contour fits it.
-           When you've found the right position don't move!
+        <div style='padding-left:20px; padding-right:20px;'>
+            Make sure there's enough light around you.<br><br>
+            This application needs webcam access.<br><br>
+            Focus doesn't save any of your data. It even works offline!
         </div>
       `,
       footer: `
-      <a href="https://webgazer.cs.brown.edu/">Built using webgazer.</a>
+      <a href="https://webgazer.cs.brown.edu/">Built using Webgazer</a>
       `,
     }).then(() => {
       /*

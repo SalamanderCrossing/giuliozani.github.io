@@ -191258,19 +191258,41 @@ function store_points(x, y, k) {
       // Paint the latest video frame into the canvas which will be analyzed by WebGazer
       // [20180729 JT] Why do we need to do this? clmTracker does this itself _already_, which is just duplicating the work.
       // Is it because other trackers need a canvas instead of an img/video element?
-      paintCurrentFrame(
-        videoElementCanvas,
-        videoElementCanvas.width,
-        videoElementCanvas.height
-      );
 
       // Get gaze prediction (ask clm to track; pass the data to the regressor; get back a prediction)
       latestGazeData = getPrediction();
       // Count time
       var elapsedTime = performance.now() - clockStart;
-      // [20180611 James Tompkin]: What does this line do?
-      callback(latestGazeData, elapsedTime);
 
+      // Feedback box
+      // Check that the eyes are inside of the validation box
+      if (webgazer.params.showFaceFeedbackBox) checkEyesInValidationBox();
+
+      const eyesInValidationBox =
+        faceFeedbackBox.style.border === "solid green" ||
+        faceFeedbackBox.style.border === "medium solid green";
+      callback(latestGazeData, elapsedTime, eyesInValidationBox);
+
+      if (webgazer.params.onlyShowVideoIfEyesOut && eyesInValidationBox) {
+        //videoElementCanvas.style.display = "none";
+        setTimeout(() => {
+          if (webgazer.params.onlyShowVideoIfEyesOut && eyesInValidationBox) {
+            faceOverlay.style.display = "none";
+            videoElement.style.display = "none";
+            faceFeedbackBox.style.display = "none";
+          }
+        }, 5000);
+      } else {
+        //videoElementCanvas.style.display = "block";
+        faceOverlay.style.display = "block";
+        faceFeedbackBox.style.display = "block";
+        videoElement.style.display = "block";
+      }
+      paintCurrentFrame(
+        videoElementCanvas,
+        videoElementCanvas.width,
+        videoElementCanvas.height
+      );
       // Draw face overlay
       if (webgazer.params.showFaceOverlay) {
         // Draw the face overlay
@@ -191282,11 +191304,6 @@ function store_points(x, y, k) {
           cl.draw(faceOverlay);
         }
       }
-
-      // Feedback box
-      // Check that the eyes are inside of the validation box
-      if (webgazer.params.showFaceFeedbackBox) checkEyesInValidationBox();
-
       if (latestGazeData) {
         smoothingVals.push(latestGazeData);
         var x = 0;
@@ -191299,7 +191316,7 @@ function store_points(x, y, k) {
         var pred = webgazer.util.bound({ x: x / len, y: y / len });
 
         if (store_points_var) {
-          drawCoordinates("blue", pred.x, pred.y); //draws the previous predictions
+          //drawCoordinates("blue", pred.x, pred.y); //draws the previous predictions
           //store the position of the past fifty occuring tracker preditions
           store_points(pred.x, pred.y, k);
           k++;
@@ -191739,6 +191756,10 @@ function store_points(x, y, k) {
     if (gazeDot) {
       gazeDot.style.display = val ? "block" : "none";
     }
+    return webgazer;
+  };
+  webgazer.onlyShowVideoIfEyesOut = (val) => {
+    webgazer.params.onlyShowVideoIfEyesOut = val;
     return webgazer;
   };
 

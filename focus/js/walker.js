@@ -1,5 +1,14 @@
 import noise from "./noise.js";
 
+const isSafari = () =>
+  /constructor/i.test(window.HTMLElement) ||
+  (function (p) {
+    return p.toString() === "[object SafariRemoteNotification]";
+  })(
+    !window["safari"] ||
+      (typeof safari !== "undefined" && safari.pushNotification)
+  );
+
 class Walker {
   constructor(canvasId) {
     noise.seed(Math.random());
@@ -8,7 +17,11 @@ class Walker {
     this.ctx = canvas.getContext("2d");
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.stepSize = 25;
+    const safari = isSafari();
+    if (safari) {
+      console.log("safari detected");
+    }
+    this.stepSize = 15;
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     this.interval = 20;

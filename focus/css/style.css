@@ -1,7 +1,14 @@
 body {
     min-width:600px!important;
 }
-
+li {
+  padding-left:0px!important;
+  margin-left:0px!important;
+}
+ul {
+  padding-left:20px!important;
+  margin-left:0px!important;
+}
 /* Video Feed Styling */
 #overlay {
     z-index: 1;
