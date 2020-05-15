@@ -75,8 +75,15 @@ const addAccuracy = () => {
 };
 const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 const toPerc = (num) => {
+  if (num === 1) {
+    return "100%";
+  }
+  if (num === 0) {
+    return "0%";
+  }
   const rounded = String(round(Math.abs(num)));
-  return `${rounded.slice(2, 4)}%`;
+  const proto = `${rounded.slice(2, 4)}%`;
+  return proto[0] === "0" ? proto.slice(1) : proto;
 };
 window.onSelectChange = (element) => {
   const num = Math.floor(Number(element.value));
@@ -121,6 +128,7 @@ const play = () => {
     confirmButtonText: "Go!",
   }).then(() => {
     //document.getElementById("webgazerVideoFeed").style.display = "none";
+    webgazer.showVideoFeedback(false);
     webgazer.onlyShowVideoIfEyesOut(true);
     const walker = new Walker("plotting_canvas");
     walker.start();

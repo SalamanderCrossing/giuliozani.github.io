@@ -191253,6 +191253,8 @@ function store_points(x, y, k) {
   var smoothingVals = new webgazer.util.DataWindow(4);
   var k = 0;
 
+  let correctPosition = 0;
+
   function loop() {
     if (!paused) {
       // Paint the latest video frame into the canvas which will be analyzed by WebGazer
@@ -191272,17 +191274,17 @@ function store_points(x, y, k) {
         faceFeedbackBox.style.border === "solid green" ||
         faceFeedbackBox.style.border === "medium solid green";
       callback(latestGazeData, elapsedTime, eyesInValidationBox);
-
       if (webgazer.params.onlyShowVideoIfEyesOut && eyesInValidationBox) {
         //videoElementCanvas.style.display = "none";
-        setTimeout(() => {
-          if (webgazer.params.onlyShowVideoIfEyesOut && eyesInValidationBox) {
-            faceOverlay.style.display = "none";
-            videoElement.style.display = "none";
-            faceFeedbackBox.style.display = "none";
-          }
-        }, 5000);
+        correctPosition++;
+        if (correctPosition >= 50) {
+          faceOverlay.style.display = "none";
+          videoElement.style.display = "none";
+          faceFeedbackBox.style.display = "none";
+          correctPosition = 0;
+        }
       } else {
+        correctPosition = 0;
         //videoElementCanvas.style.display = "block";
         faceOverlay.style.display = "block";
         faceFeedbackBox.style.display = "block";
@@ -191761,6 +191763,13 @@ function store_points(x, y, k) {
   webgazer.onlyShowVideoIfEyesOut = (val) => {
     webgazer.params.onlyShowVideoIfEyesOut = val;
     return webgazer;
+  };
+  webgazer.showVideoFeedback = (val) => {
+    const display = val ? "block" : "none";
+    //videoElementCanvas.style.display = "none";
+    faceOverlay.style.display = display;
+    videoElement.style.display = display;
+    faceFeedbackBox.style.display = display;
   };
 
   /**
