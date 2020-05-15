@@ -211,6 +211,7 @@ $(document).ready(() => {
         Online smooth pursuit. 
         <br>
         <br>
+        <br>
         <div style='padding-left:20px; padding-right:20px;'>
             Make sure there's enough light around you.<br><br>
             This application needs webcam access.<br><br>
