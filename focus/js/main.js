@@ -62,16 +62,20 @@ window.showPlot = () => {
 };
 const savePositions = () => {};
 const addAccuracy = () => {
-  console.log(`Datapoints collected in 10s: ${data.walker.xs.length}`);
-  const rx = corr(data.walker.xs, data.eye.xs);
-  const ry = corr(data.walker.ys, data.eye.ys);
+  const walkerXs = data.walker.xs;
+  const walkerYs = data.walker.ys;
+  const eyeXs = data.eye.xs;
+  const eyeYs = data.eye.ys;
+  data.walker.xs = [];
+  data.walker.ys = [];
+  data.eye.ys = [];
+  data.eye.xs = [];
+  console.log(`Datapoints collected in 10s: ${walkerXs.length}`);
+  const rx = corr(walkerXs, eyeXs);
+  const ry = corr(walkerYs, eyeYs);
   const r = (rx + ry) / 2;
   console.log(r);
   accuracies.push(r >= 0 ? r : 0);
-  data.walker.xs = [];
-  data.walker.ys = [];
-  data.eye.xs = [];
-  data.eye.ys = [];
 };
 const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 const toPerc = (num) => {
