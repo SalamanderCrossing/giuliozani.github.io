@@ -208,7 +208,7 @@ $(document).ready(() => {
       title: "Welcome to Focus",
       allowOutsideClick: false,
       html: `
-        <div style='font-size:0.8'>Online smooth pursuit.<div>
+        <div style='font-size:80%'>Online smooth pursuit.</div>
         <br>
         <br>
         <div style='padding-left:20px; padding-right:20px;'>
