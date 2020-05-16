@@ -1,0 +1,25 @@
+{
+  "name": "attention_test",
+  "version": "1.0.0",
+  "description": "a simple attention test based on eye tracking",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webGazer"
+  ],
+  "author": "Giulio Zani <giulio.zani@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^8.2.5",
+    "eslint": "^7.0.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "dependencies": {
+    "@sweetalert2/theme-dark": "^3.1.4",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "sweetalert2": "^9.10.13"
+  }
+}
