@@ -98,7 +98,7 @@ const addAccuracy = () => {
   */
 };
 const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
-const toPerc = (num) => Math.round(num * 100);
+const toPerc = (num) => `${Math.round(num * 100)}%`;
 window.onSelectChange = (element) => {
   const num = Math.floor(Number(element.value));
   seconds = 60 * num;
