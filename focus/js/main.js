@@ -248,9 +248,9 @@ $(document).ready(() => {
             Make sure there's enough light around you.<br><br>
             This application needs webcam access.<br><br>
             Focus doesn't save any of your data. It even works offline!
-            <div style="font-size:70%">
-            At the moment only Firefox and Chrome are supported. 
-            Focus needs a minimally powerfool computer to function smoothly.
+            <div style="font-size:70%; margin-top:10px;">
+            At the moment only Firefox and Chrome are supported. <br> 
+            Focus also needs a minimally powerfool computer to run smoothly.
             </div>
         </div>
       `,
