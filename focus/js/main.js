@@ -156,7 +156,7 @@ const play = () => {
         data.walker.ys.push(walker.y);
       }
     });
-    const interval = setInterval(addAccuracy, 20 * 1000);
+    const interval = setInterval(addAccuracy, 10 * 1000);
 
     setTimeout(() => {
       if (data.eye.length > 0) {
