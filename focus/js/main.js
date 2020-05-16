@@ -1,6 +1,15 @@
-import initWebgazer from "./init_webgazer.js";
-import Walker from "./walker.js";
-import corr from "./compute_correlation.js";
+import initWebgazer from './init_webgazer.js';
+import Walker from './walker.js';
+import corr from './compute_correlation.js';
+
+const resize = () => {
+  const canvas = document.getElementById('plotting_canvas');
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+};
+window.addEventListener('resize', resize, false);
 
 const openFullscreen = () => {
   try {
@@ -9,8 +18,8 @@ const openFullscreen = () => {
       elem.requestFullscreen();
     } else if (elem.mozRequestFullScreen) {
       /* Firefox */
-      //elem.mozRequestFullScreen();
-      //document.documentElement.requestFullscreen();
+      // elem.mozRequestFullScreen();
+      // document.documentElement.requestFullscreen();
     } else if (elem.webkitRequestFullscreen) {
       /* Chrome, Safari and Opera */
       elem.webkitRequestFullscreen();
@@ -38,29 +47,28 @@ let accuracies = [];
 let accuracy = 0;
 
 window.showPlot = () => {
-  window.document.getElementById("btn_show_plot").style.display = "none";
+  window.document.getElementById('btn_show_plot').style.display = 'none';
   const ys = accuracies.map((acc) => Math.max(0, round(acc)));
   const xs = accuracies.map((_, i) => i * 10 + 5);
   const trace = {
     x: xs,
     y: ys,
-    mode: "lines+markers",
-    type: "scatter",
+    mode: 'lines+markers',
+    type: 'scatter',
   };
   const layout = {
     width: 600,
     height: 400,
     xaxis: {
-      title: "seconds",
+      title: 'seconds',
     },
     yaxis: {
-      title: "focus",
+      title: 'focus',
       range: [-0.05, 1.05],
     },
   };
-  Plotly.newPlot("plot", [trace], layout);
+  Plotly.newPlot('plot', [trace], layout);
 };
-const savePositions = () => {};
 const addAccuracy = () => {
   const walkerXs = data.walker.xs;
   const walkerYs = data.walker.ys;
@@ -76,27 +84,31 @@ const addAccuracy = () => {
   const r = (rx + ry) / 2;
   console.log(r);
   accuracies.push(r >= 0 ? r : 0);
+  /*
+  $.post('http://127.0.0.1:3000', {
+    data: JSON.stringify({
+      walkerXs: walkerXs,
+      walkerYs: walkerYs,
+      eyeXs: eyeXs,
+      eyeYs: eyeYs,
+    }),
+  }).done((data) => {
+    console.log('sent');
+  });
+  */
 };
 const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
-const toPerc = (num) => {
-  if (num === 1) {
-    return "100%";
-  }
-  if (num === 0) {
-    return "0%";
-  }
-  const rounded = String(round(Math.abs(num)));
-  const proto = `${rounded.slice(2, 4)}%`;
-  return proto[0] === "0" ? proto.slice(1) : proto;
-};
+const toPerc = (num) => Math.round(num * 100);
 window.onSelectChange = (element) => {
   const num = Math.floor(Number(element.value));
   seconds = 60 * num;
-  document.getElementById("time").innerHTML = `${num}m`;
+  document.getElementById('time').innerHTML = `${num}m`;
   console.log(num);
 };
 
 const play = () => {
+  document.body.style.backgroundColor = 'black';
+  canvas.style.backgroundColor = 'black';
   window.localStorage.clear();
   data = {
     walker: {
@@ -110,10 +122,10 @@ const play = () => {
   };
   accuracies = [];
 
-  canvas.style.cursor = "none";
+  canvas.style.cursor = 'none';
   webgazer.showPredictionPoints(false);
   Swal.fire({
-    title: "Ready?",
+    title: 'Ready?',
     allowOutsideClick: false,
     html: `
           Double check your face position is all right and remember, don't move! 
@@ -129,12 +141,12 @@ const play = () => {
             </tr>
           </table>
           `,
-    confirmButtonText: "Go!",
+    confirmButtonText: 'Go!',
   }).then(() => {
-    //document.getElementById("webgazerVideoFeed").style.display = "none";
+    // document.getElementById("webgazerVideoFeed").style.display = "none";
     webgazer.showVideoFeedback(false);
     webgazer.onlyShowVideoIfEyesOut(true);
-    const walker = new Walker("plotting_canvas");
+    const walker = new Walker('plotting_canvas');
     walker.start();
     webgazer.setGazeListener((eyePosition, clock) => {
       if (eyePosition) {
@@ -144,41 +156,41 @@ const play = () => {
         data.walker.ys.push(walker.y);
       }
     });
-    const interval = setInterval(addAccuracy, 10 * 1000);
+    const interval = setInterval(addAccuracy, 20 * 1000);
 
     setTimeout(() => {
       if (data.eye.length > 0) {
-        console.log("updating accuracy");
+        console.log('updating accuracy');
         addAccuracy();
       }
       walker.stop();
-      //webgazer.end();
+      // webgazer.end();
       clearInterval(interval);
       console.log(accuracies);
       const r = accuracies.reduce((x, y) => x + y, 0) / accuracies.length;
-      //const result = Math.min((100 * r) / accuracy, 1.0);
+      // const result = Math.min((100 * r) / accuracy, 1.0);
       console.log(
-        `
+          `
             Accuracy:${accuracy}
             Pearson's r:${r}
-            `
+            `,
       );
       console.log(r);
-      document.getElementById("webgazerVideoFeed").style.display = "block";
+      document.getElementById('webgazerVideoFeed').style.display = 'block';
       Swal.fire({
-        title: `Focus: ${r === 1 ? "100%" : toPerc(r)}`,
+        title: `Focus: ${toPerc(r)}`,
         html: `
-              ${r > 0.9 ? "Too easy? Try with longer duration." : ""}
+              ${r > 0.9 ? 'Too easy? Try with longer duration.' : ''}
               <br>
               <button id='btn_show_plot' style='margin-top:10px' onclick="showPlot()" type="button" class="btn btn-info">show plot</button>
               <div id='plot'></div>
         `,
-        icon: "success",
-        customClass: "swal-wide",
+        icon: 'success',
+        customClass: 'swal-wide',
         allowOutsideClick: false,
         showCancelButton: true,
-        confirmButtonText: "again",
-        cancelButtonText: "reload",
+        confirmButtonText: 'again',
+        cancelButtonText: 'reload',
       }).then((result) => {
         if (result.value) {
           play();
@@ -191,34 +203,42 @@ const play = () => {
 };
 
 const calibrate = () => {
-  //openFullscreen(canvas);
+  // openFullscreen(canvas);
   window.localStorage.clear();
-  const context = canvas.getContext("2d");
-  //context.fillStyle = "#000000";
-  //context.fillRect(0, 0, canvas.width, canvas.height);
+  const context = canvas.getContext('2d');
+  // context.fillStyle = "#000000";
+  // context.fillRect(0, 0, canvas.width, canvas.height);
   initWebgazer(
-    (newAccuracy) => {
-      accuracy = newAccuracy;
-      play();
-    },
-    () => {
-      setTimeout(() => {
-        openFullscreen();
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        canvas.style.position = "fixed";
-      }, 1000);
-    }
+      (newAccuracy) => {
+        accuracy = newAccuracy;
+        play();
+      },
+      () => {
+        setTimeout(() => {
+          openFullscreen();
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          canvas.style.position = 'fixed';
+        }, 1000);
+      },
   );
 };
 
 $(document).ready(() => {
-  canvas = document.getElementById("plotting_canvas");
+  canvas = document.getElementById('plotting_canvas');
+  // canvas.style.backgroundColor = "rgb(53,53,55)";
+  // document.body.style.backgroundColor = "rgb(53,53,55)";
+  // const xhr = new XMLHttpRequest();
+  // xhr.open('POST', '/', true);
+  // xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+  // send the collected data as JSON
+  // xhr.send(JSON.stringify({fukkkk: 0}));
 
   setTimeout(() => {
-    $(".calibration").hide();
+    $('.calibration').hide();
     Swal.fire({
-      title: "Welcome to Focus",
+      title: 'Welcome to Focus',
       allowOutsideClick: false,
       html: `
         <div style='font-size:80%'>Online smooth pursuit.</div>
@@ -235,7 +255,7 @@ $(document).ready(() => {
       `,
     }).then(() => {
       /*
-      
+
       */
 
       calibrate();

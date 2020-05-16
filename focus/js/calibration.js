@@ -3,20 +3,20 @@ import {
   stop_storing_points_variable,
   calculatePrecision,
   get_points,
-} from "./accuracyCalculator.js";
+} from './accuracyCalculator.js';
 
-var PointCalibrate = 0;
-var CalibrationPoints = {};
+let PointCalibrate = 0;
+let CalibrationPoints = {};
 
 /**
  * Clear the canvas and the calibration button.
  */
 function ClearCanvas() {
-  $(".calibration").hide();
-  var canvas = document.getElementById("plotting_canvas");
-  //const fillColor = canvas.getContext("2d").fillColor();
-  canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-  //canvas.getContext("2d").fillRect(0, 0, canvas.width, canvas.height);
+  $('.calibration').hide();
+  const canvas = document.getElementById('plotting_canvas');
+  // const fillColor = canvas.getContext("2d").fillColor();
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  // canvas.getContext("2d").fillRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -27,7 +27,7 @@ const popUpInstructions = () =>
     ClearCalibration();
     ClearCanvas();
     Swal.fire({
-      title: "Calibration",
+      title: 'Calibration',
       html: `You'll see a video stream in the upper left corner, adjust your face position such that the green contour fits it.
        <br><br>
         When you've found the right position don't move!
@@ -46,7 +46,7 @@ const popUpInstructions = () =>
  * Show the help instructions right at the start.
  */
 function helpModalShow() {
-  $("#helpModal").modal("show");
+  $('#helpModal').modal('show');
 }
 
 /**
@@ -57,8 +57,8 @@ function helpModalShow() {
 const calibrate = (res) => {
   // click event on the calibration buttons
   popUpInstructions().then(() => {
-    $(".calibration").click(function () {
-      var id = $(this).attr("id");
+    $('.calibration').click(function() {
+      const id = $(this).attr('id');
 
       if (!CalibrationPoints[id]) {
         // initialises if not done
@@ -67,38 +67,38 @@ const calibrate = (res) => {
       CalibrationPoints[id]++; // increments values
 
       if (CalibrationPoints[id] == 5) {
-        //only turn to yellow after 5 clicks
-        $(this).css("background-color", "yellow");
-        $(this).prop("disabled", true); //disables the button
+        // only turn to yellow after 5 clicks
+        $(this).css('background-color', 'yellow');
+        $(this).prop('disabled', true); // disables the button
         PointCalibrate++;
       } else if (CalibrationPoints[id] < 5) {
-        //Gradually increase the opacity of calibration points when click to give some indication to user.
-        var opacity = 0.2 * CalibrationPoints[id] + 0.2;
-        $(this).css("opacity", opacity);
+        // Gradually increase the opacity of calibration points when click to give some indication to user.
+        const opacity = 0.2 * CalibrationPoints[id] + 0.2;
+        $(this).css('background-color', `rgb(255,0,0,${opacity})`);
       }
 
-      //Show the middle calibration point after all other points have been clicked.
+      // Show the middle calibration point after all other points have been clicked.
       if (PointCalibrate == 8) {
-        $("#Pt5").show();
+        $('#Pt5').show();
       }
 
       if (PointCalibrate >= 9) {
         // last point is calibrated
-        //using jquery to grab every element in Calibration class and hide them except the middle point.
-        $(".calibration").hide();
-        $("#Pt5").show();
+        // using jquery to grab every element in Calibration class and hide them except the middle point.
+        $('.calibration').hide();
+        $('#Pt5').show();
 
         // clears the canvas
-        var canvas = document.getElementById("plotting_canvas");
-        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+        const canvas = document.getElementById('plotting_canvas');
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
         window.webgazer.showPredictionPoints(false);
 
         // notification for the measurement process
-        swal({
-          title: "Calculating measurement",
+        Swal.fire({
+          title: 'Calculating measurement',
           text:
-            "Please don't move your mouse & stare at the middle dot for the next 5 seconds. This will allow us to calculate the accuracy of our predictions.",
+            'Please don\'t move your mouse & stare at the middle dot for the next 5 seconds. This will allow us to calculate the accuracy of our predictions.',
           closeOnEsc: false,
           allowOutsideClick: false,
           closeModal: true,
@@ -108,26 +108,21 @@ const calibrate = (res) => {
 
           sleep(5000).then(() => {
             stop_storing_points_variable(); // stop storing the prediction points
-            var past50 = get_points(); // retrieve the stored points
-            var precision_measurement = calculatePrecision(past50);
-            var accuracyLabel =
-              "<a>Accuracy | " + precision_measurement + "%</a>";
-            document.getElementById("Accuracy").innerHTML = accuracyLabel; // Show the accuracy in the nav bar.
-            swal({
-              title: "Your accuracy measure is " + precision_measurement + "%",
+            const past50 = get_points(); // retrieve the stored points
+            const precision_measurement = calculatePrecision(past50);
+            Swal.fire({
+              title: 'Your accuracy measure is ' + precision_measurement + '%',
               text: `Should be ≥ 70%`,
               allowOutsideClick: false,
-              buttons: {
-                cancel: "Recalibrate",
-                confirm: true,
-              },
-            }).then((isConfirm) => {
-              if (isConfirm) {
-                //clear the calibration & hide the last middle button
+              cancelButtonText: 'recalibrate',
+              showCancelButton: true,
+            }).then((result) => {
+              if (result.value) {
+                // clear the calibration & hide the last middle button
                 ClearCanvas();
                 res(precision_measurement);
               } else {
-                //use restart function to restart the calibration
+                // use restart function to restart the calibration
                 ClearCalibration();
                 ClearCanvas();
                 showCalibrationPoint();
@@ -144,8 +139,8 @@ const calibrate = (res) => {
  * Show the Calibration Points
  */
 function showCalibrationPoint() {
-  $(".calibration").show();
-  $("#Pt5").hide(); // initially hides the middle button
+  $('.calibration').show();
+  $('#Pt5').hide(); // initially hides the middle button
 }
 
 /**
@@ -153,9 +148,9 @@ function showCalibrationPoint() {
  */
 function ClearCalibration() {
   window.localStorage.clear();
-  $(".calibration").css("background-color", "red");
-  $(".calibration").css("opacity", 0.2);
-  $(".calibration").prop("disabled", false);
+  // $('.calibration').css('background-color', 'red');
+  $('.calibration').css('background-color', 'rgb(255,0,0,0.2)');
+  $('.calibration').prop('disabled', false);
 
   CalibrationPoints = {};
   PointCalibrate = 0;

@@ -15,8 +15,8 @@ class Walker {
     const canvas = document.getElementById(canvasId);
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    this.ctx.fillStyle = "#000000";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    //this.ctx.fillStyle = "#000000";
+    //this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     const safari = isSafari();
     if (safari) {
       console.log("safari detected");
@@ -55,6 +55,7 @@ class Walker {
       nextY = this.y - nextStepY;
       this.ySign = -this.ySign;
     }
+    /*
     if (nextX < this.videoWidth && nextY < this.videoHeight) {
       if (this.x >= this.videoWidth) {
         nextX = this.x - nextStepX;
@@ -66,25 +67,18 @@ class Walker {
       //this.x += 2 * (videoHeight - this.x);
       //this.y += 2 * (videoWidth - this.y);
     }
+    */
     this.x = nextX;
     this.y = nextY;
     this.time += 0.01;
   }
-  draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //this.ctx.fillStyle = "#000000";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.drawBall();
-    if (!this.stopped) {
-      window.requestAnimationFrame(this.draw);
-    }
-  }
   start() {
     this.canvas.style.curson = "none";
+
     const draw = () => {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       //this.ctx.fillStyle = "#000000";
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      //this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.step();
       this.drawBall();
       if (!this.stopped) {

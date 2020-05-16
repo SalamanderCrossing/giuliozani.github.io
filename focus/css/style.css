@@ -1,5 +1,16 @@
+html{
+  background-color:rgb(53,53,55)!important;
+}
+
+.swal2-container.swal2-backdrop-show {
+    background: rgba(25, 25, 26, 0.0);
+}
 body {
     min-width:600px!important;
+    background-color:rgb(53,53,55)!important;
+}
+#plotting_canvas{
+  background-color:rgb(53,53,55);
 }
 li {
   padding-left:0px!important;
@@ -62,16 +73,17 @@ li {
 
 /* Calibration button styling */
 .calibration{
+  display:none;
     width: 20px;
     height: 20px;
     -webkit-border-radius: 25px;
     -moz-border-radius: 25px;
     border-radius: 25px;
     background-color: red;
-    opacity: 0.2;
-    border-color: black;
+    border-color: white;
     border-style: solid;
     position:fixed;
+    border-width:2px;
 }
 
 /* Calibration point position */
