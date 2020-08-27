@@ -14,12 +14,12 @@ class HopfieldNetwork{
         const newWeights = getWeightsMatrix(pattern)
         this.weights = addMatrices(this.weights, newWeights)
     }
-    recall(cue, simulatedAnnealing){
+    recall(cue, temperatureRange){
         if (!this.memorized){
             throw 'nothing memorized!'
         }
-        return simulatedAnnealing ?
-            recallWithSimulatedAnnealing(this.weights, cue, 5, 0.01) :
+        return temperatureRange ?
+            recallWithSimulatedAnnealing(this.weights, cue, temperatureRange) :
             recall(this.weights, cue, temperature)
     }
     reset(){

@@ -22,9 +22,9 @@ const recall = _.tco((self, weights, x, temperature=0.01) => {
 	const [recalled, changed] = updateValues(weights, x, indexes)
 	return changed ? self(weights, recalled, temperature) : recalled
 })
-const recallWithSimulatedAnnealing = _.tco((self, weights, x, startTemperature, endTemperature) => {
-    const memory = recall(weights, x, startTemperature);
-    return Math.abs(startTemperature - endTemperature) < 0.1 ? memory : self(weights, memory, startTemperature - 0.01, endTemperature)
+const recallWithSimulatedAnnealing = _.tco((self, weights, x, tMax, tMin, tStep) => {
+    const memory = recall(weights, x, tMax);
+    return Math.abs(startTemperature - endTemperature) < 0.1 ? memory : self(weights, memory, tMax - tStep, tMin, tStep)
 })
 const test = () => {
     const pattern1 = [-1, -1, -1, 1, 1, 1, 1]

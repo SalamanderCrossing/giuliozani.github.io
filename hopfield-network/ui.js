@@ -38,7 +38,8 @@ const clear = function() {
 }
 const recall = function(){
     const input = nodes.map(n => n.val)
-    const memory = hopfieldNetwork.recall(input, data.simulatedAnnealing)
+    const range = data.simulatedAnnealing ? [data.tMax, data.tMin, data.tStep] : null
+    const memory = hopfieldNetwork.recall(input, range)
     for (let i of _.range(memory.length)){
         nodes[i].val = memory[i]
     }
