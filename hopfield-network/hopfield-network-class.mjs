@@ -20,7 +20,7 @@ class HopfieldNetwork{
         }
         return temperatureRange ?
             recallWithSimulatedAnnealing(this.weights, cue, temperatureRange) :
-            recall(this.weights, cue, temperature)
+            recall(this.weights, cue)
     }
     reset(){
         this.weights = _.zeros(this.nodeCount, this.nodeCount)
