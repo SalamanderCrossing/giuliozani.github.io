@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+            <style>
+            .black{
+                background-color:black;
+            }
+            .white{
+                background-color:white;
+            }
+            .center{
+                display: flex;
+                justify-content: center;
+
+            }
+            td{
+                height: 23px;
+                width: 20px;
+            }
+            table{
+                margin-top:10px;
+                margin-bottom:10px;
+                display: block;
+                  margin-left: auto;
+              margin-right: auto;
+
+            }
+        </style>
+	</head>
+	<body style='height: 100vh; width:100vw;'>
+		<div id='app' style='height: 100vh; width:100vw;'>
+            <div class='center' style='width:100vw;'>
+                <table>
+                    <tr v-for='i in edge'>
+                        <td v-for='j in edge' style='border:solid 1px' v-on:click='indexes[i][j].val=-indexes[i][j].val' v-bind:class="[indexes[i][j].val == -1 ? 'white' : 'black']">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <div class='center' style='width:100vw'>
+                <div class="btn-group" role="group" style='height:50px'>
+                    <button v-on:click='memorize' type='button' class='btn btn-dark'>memorize</button>
+                    <button v-on:click='clear' type='button' class='btn btn-dark'>clear</button>
+                    <button v-on:click='recall' type='button' class='btn btn-dark'>recall</button>
+                    <button v-on:click='reset' type='button' class='btn btn-dark'>reset</button>
+                </div>
+                
+            </div>
+
+            <div class='center' style='width:100vw'>
+                    <div style='margin-top:10px' class="custom-control custom-checkbox">
+                      <input v-model='simulatedAnnealing' type="checkbox" class="custom-control-input" id="customCheck1">
+                      <label class="custom-control-label" for="customCheck1">Simulated Annealing</label>
+                    </div>
+                    
+            </div>
+        </div>
+        <script type='module' src='ui.js'></script>
+<!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+	</body>
+</html>
