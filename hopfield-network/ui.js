@@ -9,7 +9,10 @@ const indexes = []
 const data = {
       edge: _.range(size),
       indexes: indexes,
-      simulatedAnnealing:false
+      simulatedAnnealing:false,
+      tMax: 5,
+      tMin:0.01,
+      tStep:0.01
     };
 let k = 0;
 for (let i of _.range(size)){
