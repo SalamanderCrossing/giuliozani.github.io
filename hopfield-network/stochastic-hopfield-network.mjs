@@ -24,7 +24,7 @@ const recall = _.tco((self, weights, x, temperature=0.01) => {
 })
 const recallWithSimulatedAnnealing = _.tco((self, weights, x, tMax, tMin, tStep) => {
     const memory = recall(weights, x, tMax);
-    return Math.abs(startTemperature - endTemperature) < 0.1 ? memory : self(weights, memory, tMax - tStep, tMin, tStep)
+    return Math.abs(tMax - tMin) <= 0.02 ? memory : self(weights, memory, tMax - tStep, tMin, tStep)
 })
 const test = () => {
     const pattern1 = [-1, -1, -1, 1, 1, 1, 1]
