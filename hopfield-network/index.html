@@ -49,32 +49,43 @@
                 </div>
                 
             </div>
-            <div class='center' style='width:100vw'>
+            <div class='center' style='width:100vw; margin-bottom:10px'>
                     <div style='margin-top:10px' class="custom-control custom-checkbox">
                       <input v-model='simulatedAnnealing' type="checkbox" class="custom-control-input" id="customCheck1">
                       <label class="custom-control-label" for="customCheck1">Simulated Annealing</label>
                     </div>
-            </div>
-            <div v-show='simulatedAnnealing'  style='max-width:170px; text-align:center;'>
-                <div class="input-group input-group-sm mb-3" style='float:center'>
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Initial T:</span>
-                  </div>
-                  <input type="number" v-model=tMax class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+             </div>
+             <div v-show='simulatedAnnealing'>
+            <div class='center' style='width:100vw'>
+                <div  class='center' style='max-width:170px; text-align:center;'>
+                    <div class="input-group input-group-sm mb-3 center" style='float:center'>
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Initial T:</span>
+                      </div>
+                      <input type="number" v-model=tMax class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
+            </div>
+            <div class='center' style='width:100vw'>
+                <div style='max-width:170px; text-align:center;'>
+                <div class="input-group input-group-sm mb-3 ">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Final T:</span>
                   </div>
                   <input type="number" v-model=tMin class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
-            <div class="input-group input-group-sm mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Cooling Step</span>
-                  </div>
-                  <input type="number" v-model=tMin class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
-
+            </div>
+            <div class='center' style='width:100vw'>
+                <div style='max-width:170px; text-align:center;'>
+                <div class="input-group input-group-sm mb-3 center">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Cooling Step</span>
+                      </div>
+                      <input type="number" v-model=tMin class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
         <script type='module' src='ui.js'></script>
