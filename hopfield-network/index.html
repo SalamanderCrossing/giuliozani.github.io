@@ -55,19 +55,21 @@
                       <label class="custom-control-label" for="customCheck1">Simulated Annealing</label>
                     </div>
             </div>
-            <div v-show='simulatedAnnealing' class='center' style='width:100vw'>
+            <div v-show='simulatedAnnealing'  style='width:100vw'>
                 <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Initial T:</span>
                   </div>
                   <input type="number" v-model=tMax class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
+                <br>
                 <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Final T:</span>
                   </div>
                   <input type="number" v-model=tMin class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
+                <br>
             <div class="input-group input-group-sm mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Cooling Step</span>
