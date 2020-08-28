@@ -5,7 +5,7 @@ const getWeightsMatrix = (input) => input.map((x, i)=>input.map((y,j)=>i === j ?
 const addMatrices = (m1, m2) => m1.map((row, i) => row.map((val, j) => m1[i][j] + m2[i][j]))
 const matrixByVector = (m, x) => m.map(row => sign(row.reduce((acc, val, i) => acc + val*x[i],0)))
 const fire = (x, temperature) => {
-	const t = 0.1
+    console.log(temperature)
 	const p = _.sigmoid(1/temperature*x)
 	return Math.random() < p ? 1 : -1
 }
@@ -15,11 +15,11 @@ const updateValues = _.tco((self, weights, x, indexes, temperature, changed = fa
 	const nextChanged = changed || nextValue !== x[i];
 	const nextX = _.set(x, i, nextValue)
 	const nextIndexes = indexes.slice(1) 
-        return nextIndexes.length === 0 ? [nextX, nextChanged] : self(weights, nextX, nextIndexes, nextChanged)
+        return nextIndexes.length === 0 ? [nextX, nextChanged] : self(weights, nextX, nextIndexes, temperature, nextChanged)
 })
 const recall = _.tco((self, weights, x, temperature=0.01) => {
 	const indexes = _.shuffle(_.range(x.length))
-	const [recalled, changed] = updateValues(weights, x, indexes)
+	const [recalled, changed] = updateValues(weights, x, indexes, temperature)
 	return changed ? self(weights, recalled, temperature) : recalled
 })
 const recallWithSimulatedAnnealing = _.tco((self, weights, x, tMax, tMin, tStep) => {

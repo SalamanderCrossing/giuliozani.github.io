@@ -10,7 +10,7 @@ const data = {
       edge: _.range(size),
       indexes: indexes,
       simulatedAnnealing:false,
-      tMax: 5,
+      tMax: 5.00,
       tMin:0.01,
       tStep:0.01
     };
@@ -28,8 +28,13 @@ for (let i of _.range(size)){
     }
 }
 const memorize = function() {
-    const input = nodes.map(n => n.val)
-    hopfieldNetwork.memorize(input)
+    if (nodes.filter(n => n.val !== -1).length === 0){
+        alert('Nothing to memorize!')
+    }
+    else{
+        const input = nodes.map(n => n.val)
+        hopfieldNetwork.memorize(input)
+    }
 }
 const clear = function() {
     for (let node of nodes){
