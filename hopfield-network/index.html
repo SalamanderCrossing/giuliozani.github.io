@@ -3,6 +3,11 @@
         <title>
             Stochastic Hopfield Network
         </title>
+        <script
+			  src="https://code.jquery.com/jquery-3.5.1.min.js"
+			  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+			  crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -18,22 +23,28 @@
                 justify-content: center;
 
             }
+            #parameters{
+                z-index:20000
+            }
             td{
                 height: 13px;
                 width: 10px;
             }
             table{
                 margin-top:10px;
-                margin-bottom:10px;
+                margin-bottom:2px;
                 display: block;
                   margin-left: auto;
               margin-right: auto;
 
             }
+            #plot{
+                max-height:40vh;
+            }
         </style>
 	</head>
 	<body style='height: 100vh; width:100vw;'>
-		<div id='app' style='height: 50vh; width:100vw;'>
+		<div id='app' style='height: 60vh; width:100vw;'>
             <div class='center' style='width:100vw;'>
                 <table>
                     <tr v-for='i in edge'>
@@ -42,31 +53,31 @@
                     </tr>
                 </table>
             </div>
-            <br>
             <div class='center' style='width:100vw'>
                 <div class="btn-group" role="group" style='height:50px'>
-                    <button v-on:click='memorize' type='button' class='btn btn-dark'>memorize</button>
-                    <button v-on:click='clear' type='button' class='btn btn-dark'>clear</button>
-                    <button v-on:click='recall' type='button' class='btn btn-dark'>recall</button>
-                    <button v-on:click='reset' type='button' class='btn btn-dark'>reset</button>
+                    <button v-on:click='memorize' type='button' class='btn-sm btn-dark'>memorize</button>
+                    <button v-on:click='clear' type='button' class='btn-sm btn-dark'>clear</button>
+                    <button v-on:click='recall' type='button' class='btn-sm btn-dark'>recall</button>
+                    <button v-on:click='reset' type='button' class='btn-sm btn-dark'>reset</button>
                 </div>
             </div>
             <div class='center' style='width:100vw'>
                 <div class="btn-group" role="group" style='height:50px'>
-                    <button v-on:click='clearHalf' type='button' class='btn btn-dark'>clear half</button>
-                    <button v-on:click='drawSmile' type='button' class='btn btn-dark'> &#128578; </button>
-                    <button v-on:click='drawSad' type='button' class='btn btn-dark'> &#128577; </button>
-                    <button v-on:click='drawSurprise' type='button' class='btn btn-dark'> &#128558; </button>
-                    <button v-on:click='print' type='button' class='btn btn-dark'>print</button>
+                    <button v-on:click='clearHalf' type='button' class='btn-sm btn-dark'>clear half</button>
+                    <button v-on:click='drawSmile' type='button' class='btn-sm btn-dark'> &#128578; </button>
+                    <button v-on:click='drawSad' type='button' class='btn-sm btn-dark'> &#128577; </button>
+                    <button v-on:click='drawAngry' type='button' class='btn-sm btn-dark'> &#128544; </button>
+                    <button v-on:click='drawWinking' type='button' class='btn-sm btn-dark'>&#128521; </button>
                 </div>
             </div>
             <div class='center' style='width:100vw; margin-bottom:10px'>
                     <div style='margin-top:10px' class="custom-control custom-checkbox">
-                      <input v-model='simulatedAnnealing' type="checkbox" class="custom-control-input" id="customCheck1">
-                      <label class="custom-control-label" for="customCheck1">Simulated Annealing</label>
+                      <input v-on:click='toggleSimulatedAnnealing' type="checkbox" class="custom-control-input hide-on-plotting" id="customCheck1">
+                      <label class="custom-control-label hide-on-plotting" for="customCheck1">Simulated Annealing (slow)</label>
+                      <label id='progress' class="custom-control-label show-on-plotting" for="customCheck1"></label>
                     </div>
              </div>
-             <div v-show='simulatedAnnealing'>
+             <div id='parameters' v-show='showParameters'>
             <div class='center' style='width:100vw'>
                 <div  class='center' style='max-width:170px; text-align:center;'>
                     <div class="input-group input-group-sm mb-3 center" style='float:center'>
@@ -87,22 +98,15 @@
                 </div>
                 </div>
             </div>
-            <div class='center' style='width:100vw'>
-                <div style='max-width:170px; text-align:center;'>
-                <div class="input-group input-group-sm mb-3 center">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Cooling Step</span>
-                      </div>
-                      <input type="number" v-model=tStep class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                    </div>
-                </div>
-            </div>
-            </div>
+
         </div>
-        <div id='plot'></div>
+
+
+        </div>
+
+        <div v-show='showPlot' id='plot'></div>
         <script type='module' src='ui.js'></script>
 <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 

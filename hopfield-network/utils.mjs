@@ -5,6 +5,23 @@ const append = (array, element) => {
     nextArray.push(element);
     return nextArray;
 };
+const roundTo = (n, digits) => {
+    var negative = false;
+    if (digits === undefined) {
+        digits = 0;
+    }
+    if (n < 0) {
+        negative = true;
+        n = n * -1;
+    }
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    n = (Math.round(n) / multiplicator).toFixed(digits);
+    if (negative) {
+        n = (n * -1).toFixed(digits);
+    }
+    return n;
+};
 const shuffle = (x) => {
     const array = x.slice();
     for (let i = array.length - 1; i > 0; i--) {
@@ -46,6 +63,10 @@ const zeros = (a, b = 0) => {
     }
 };
 
+const firstIndex = tco((self, array, val, i = 0) =>
+    i === array.length ? -1 : array[i] === val ? i : self(array, val, i + 1)
+);
+
 export default {
     range,
     shuffle,
@@ -57,4 +78,6 @@ export default {
     zeros,
     fif,
     append,
+    firstIndex,
+    roundTo
 };
