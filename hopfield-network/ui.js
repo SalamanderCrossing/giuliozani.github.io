@@ -99,7 +99,7 @@ const recall = function () {
         const energies = steps.map((s) => s.energy);
         const min = Math.min(...energies);
         const index = _.firstIndex(energies, min);
-        return steps.slice(0, Math.min(steps.length - 1, index + 30));
+        return steps.slice(0, Math.min(steps.length - 1, index + 60));
     };
     const steps = cutSteps(hopfieldNetwork.recall(input, range));
     //draw(memory);
