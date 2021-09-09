@@ -10,9 +10,16 @@
     <style>
       body {
         text-align: center;
+        position: relative;
       }
       #cannon {
+        margin:0;
         text-align: center;
+        height:100vh;
+        width: 100vw;
+        position: absolute;
+        top: 50%;
+        padding: 0 0;
       }
       table {
         text-align: center;
@@ -24,15 +31,38 @@
         border: 1px solid black;
       }
       td{
-        height:min(10vw, 50px);
-        width:min(10vw, 50px);
+        height:min(8.5vh, 10vw);
+        width:min(8.5vh, 10vw);
         text-align: center;
+      }
+      .rotate {
+
+        transform: rotate(-180deg);
+
+
+        /* Legacy vendor prefixes that you probably don't need... */
+
+        /* Safari */
+        -webkit-transform: rotate(-180deg);
+
+        /* Firefox */
+        -moz-transform: rotate(-180deg);
+
+        /* IE */
+        -ms-transform: rotate(-180deg);
+
+        /* Opera */
+        -o-transform: rotate(-180deg);
+
+        /* Internet Explorer */
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
       }
     </style>
   </head>
   <body>
-    <h1>Cannon</h1>
     <div id="cannon">
+      <h3 class="rotate" style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
       <table>
         <tr v-for="(row, i) in grid">
           <td v-for="(col, j)  in row" v-on:click="selected(i, j)">{{col}}</td>
