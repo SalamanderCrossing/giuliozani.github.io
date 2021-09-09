@@ -23,9 +23,9 @@
         text-align: center;
         border: 1px solid black;
       }
-      table-cell {
-        height:1000px;
-        width: 1000px;
+      td{
+        height:min(10vw, 50px);
+        width:min(10vw, 50px);
         text-align: center;
       }
     </style>
@@ -35,7 +35,7 @@
     <div id="cannon">
       <table>
         <tr v-for="(row, i) in grid">
-          <td class="table-cell" v-for="(col, j)  in row" v-on:click="selected(i, j)">{{col}}</td>
+          <td v-for="(col, j)  in row" v-on:click="selected(i, j)">{{col}}</td>
         </tr>
       </table>
       <h3 style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
