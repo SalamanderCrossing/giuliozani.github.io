@@ -72,7 +72,7 @@
       <h3 class="rotate" style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
       <table>
         <tr v-for="(row, i) in grid">
-          <td v-for="(col, j)  in row" v-on:click="selected(i, j)">{{col}}</td>
+          <td v-for="(col, j)  in row" v-on:click="selected(i, j)" v-bind:class="{rotate:(i < 5)}">{{col}}</td>
         </tr>
       </table>
       <h3 style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
