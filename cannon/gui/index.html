@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <head>
+    <title>Cannon</title>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+      body {
+        text-align: center;
+      }
+      #cannon {
+        text-align: center;
+      }
+      table {
+        text-align: center;
+        margin: 0px auto;
+      }
+      tr,
+      td {
+        text-align: center;
+        border: 1px solid black;
+      }
+      td {
+        width: 5vh;
+        height: 5vh;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cannon</h1>
+    <div id="cannon">
+      <table>
+        <tr v-for="(row, i) in grid">
+          <td v-for="(col, j)  in row" v-on:click="selected(i, j)">{{col}}</td>
+        </tr>
+      </table>
+      <h3 style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
+    </div>
+    <script type="module">
+      import { Cannon } from "./main.js";
+      const update = () => {
+        app.grid = app.grid.slice();
+        app.player = cannon.currentPlayer;
+        app.round = cannon.round;
+      };
+      const cannon = new Cannon();
+      const app = new Vue({
+        el: "#cannon",
+        data: {
+          grid: cannon.grid,
+          player: cannon.currentPlayer,
+          round: cannon.round,
+        },
+        methods: {
+          selected: function (i, j) {
+            const [moves, gameOver] = cannon.select(i, j);
+            if (gameOver) {
+              Swal.fire(`Player ${cannon.currentPlayer} wins!!`);
+            }
+            update();
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
