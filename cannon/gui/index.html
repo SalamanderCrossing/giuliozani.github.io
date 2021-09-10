@@ -37,7 +37,7 @@
         text-align: center;
         border: 1px solid black;
       }
-      td{
+      td, img{
         height:min(8.5vh, 10vw);
         width:min(8.5vh, 10vw);
         text-align: center;
@@ -73,7 +73,7 @@
       <h3 class="rotate" style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
       <table>
         <tr v-for="(row, i) in grid">
-          <td v-for="(col, j)  in row" v-on:click="selected(i, j)" v-bind:class="{rotate:(i < 5)}">{{col}}</td>
+          <td v-for="(col, j)  in row" v-on:click="selected(i, j)" v-bind:class="{rotate:(i < 5)}"><img v-bind:src="getSrc(i, j)" /></td>
         </tr>
       </table>
       <h3 style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
@@ -95,6 +95,21 @@
           round: cannon.round,
         },
         methods: {
+          getSrc:function(i, j){
+            const gridVal = this.grid[i][j];
+            if (gridVal=== "X"){
+              return "./white_pawn.png"
+            }
+            else if (gridVal === "O"){
+              return "./black_pawn.png"
+            }
+            else if (gridVal === "M"){
+              return "./green_dot.png"
+            }
+            else if (gridVal.includes("T")){
+              return "./town.png"
+            }
+          },
           selected: function (i, j) {
             const [moves, gameOver] = cannon.select(i, j);
             if (gameOver) {
