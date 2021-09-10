@@ -199,17 +199,17 @@ class Cannon {
   }
   _unselect() {
     if (this.selectedI !== -1 && this.selectedJ !== -1) {
-      this.grid[this.selectedI][this.selectedJ] = this.currentPlayer;
+      this.grid[this.selectedI][this.selectedJ] = this.grid[this.selectedI][
+        this.selectedJ
+      ].replace("S", "");
     }
     for (const m of this.availableMoves) {
       const gridVal = this.grid[m[0]][m[1]];
-      if (gridVal === "M") {
-        this.grid[m[0]][m[1]] = "";
-      } else if (gridVal[0] === "*" || gridVal[0] === ">") {
-        this.grid[m[0]][m[1]] = gridVal[1];
-      } else if (gridVal == "@") {
-        this.grid[m[0]][m[1]] = "";
-      }
+      this.grid[m[0]][m[1]] = gridVal
+        .replace("@", "")
+        .replace("M", "")
+        .replace("<", "")
+        .replace(">", "");
     }
     this.selectedI = -1;
     this.selectedJ = -1;

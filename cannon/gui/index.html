@@ -16,8 +16,8 @@
       }
       .center{
         position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+        top: 50%;
+        transform: translateY(-50%);
       }
       #cannon {
         margin:0;
@@ -30,40 +30,36 @@
       table {
         text-align: center;
         margin: 0px auto;
+        border-collapse: collapse;
       }
       tr,
       td {
         font-size:min(3vw, 3vh);
         text-align: center;
-        border: 1px solid black;
       }
-      td, img{
+      img, td{
         height:min(8.5vh, 10vw);
         width:min(8.5vh, 10vw);
         text-align: center;
       }
+      img[src=""] { display: none; }
+      td{
+        border-radius:50%;
+      }
       .rotate {
-
         transform: rotate(-180deg);
-
-
-        /* Legacy vendor prefixes that you probably don't need... */
-
-        /* Safari */
         -webkit-transform: rotate(-180deg);
-
-        /* Firefox */
         -moz-transform: rotate(-180deg);
-
-        /* IE */
         -ms-transform: rotate(-180deg);
-
-        /* Opera */
         -o-transform: rotate(-180deg);
-
-        /* Internet Explorer */
         filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-
+      }
+      .selected{
+        box-sizing:border-box;
+        border-style:dashed;
+        border-color:black;
+        border-width:3px;
+        border-radius:50%;
       }
     </style>
   </head>
@@ -73,7 +69,9 @@
       <h3 class="rotate" style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
       <table>
         <tr v-for="(row, i) in grid">
-          <td v-for="(col, j)  in row" v-on:click="selected(i, j)" v-bind:class="{rotate:(i < 5)}"><img v-bind:src="getSrc(i, j)" /></td>
+          <td v-for="(col, j)  in row" v-on:click="selected(i, j)" v-bind:class="{rotate:(grid[i][j].includes('X')), selected:(grid[i][j].includes('S'))}">
+            <img border="0" v-bind:src="getSrc(i, j)" />
+          </td>
         </tr>
       </table>
       <h3 style="text-align: center">Player: {{player}}, Round: {{round}}</h3>
@@ -83,6 +81,7 @@
       import { Cannon } from "./cannon.js";
       const update = () => {
         app.grid = app.grid.slice();
+        console.table(app.grid);
         app.player = cannon.currentPlayer;
         app.round = cannon.round;
       };
@@ -97,18 +96,23 @@
         methods: {
           getSrc:function(i, j){
             const gridVal = this.grid[i][j];
-            if (gridVal=== "X"){
-              return "./white_pawn.png"
+            let src = ''
+            if (gridVal.includes("X")){
+              src = "./white_pawn.png"
             }
-            else if (gridVal === "O"){
-              return "./black_pawn.png"
+            else if (gridVal.includes("O")){
+              src =  "./black_pawn.png"
             }
             else if (gridVal === "M"){
-              return "./green_dot.png"
+              src = "./dotted_circle.png"
             }
-            else if (gridVal.includes("T")){
-              return "./town.png"
+            if (gridVal.includes("T")){
+              src = "./town.png"
             }
+            else if (gridVal === "@"){
+              src = "./dashed_circle.png"
+            }
+            return src
           },
           selected: function (i, j) {
             const [moves, gameOver] = cannon.select(i, j);
