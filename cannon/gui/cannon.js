@@ -315,6 +315,8 @@ class Cannon {
     this.availableMoves = moves;
     return moves;
   }
+  getAllMoves(){
+  }
 }
 
 export { Cannon };
