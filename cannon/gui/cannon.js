@@ -60,8 +60,8 @@ class Cannon {
     let moves = [];
     const opponent = this._getOpponent();
     const center = cannon.slice(0, 2);
-    let pH = [center[0] + 2 * cannon[2], center[1] + 2 * cannon[3]];
-    let pL = [center[0] - 2 * cannon[2], center[1] - 2 * cannon[3]];
+    let pH = [center[0] + 3 * cannon[2], center[1] + 3 * cannon[3]];
+    let pL = [center[0] - 3 * cannon[2], center[1] - 3 * cannon[3]];
     let done = false;
     let hCollidedBorder = false;
     let lCollidedBorder = false;
