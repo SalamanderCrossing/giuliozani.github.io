@@ -16,7 +16,7 @@
     ></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <link href="./cannon.png" type="image/x-icon" rel="icon" />
+    <link href="./imgs/cannon.png" type="image/x-icon" rel="icon" />
     <style>
       body {
         text-align: center;
@@ -40,6 +40,7 @@
         text-align: center;
         margin: 0px auto;
         border-collapse: collapse;
+        border: solid 1px;
       }
       tr,
       td {
@@ -52,7 +53,7 @@
         width: min(8.5vh, 10vw);
         text-align: center;
       }
-      img[src=""] {
+      img[src="./imgs/"] {
         display: none;
       }
       td {
@@ -67,11 +68,13 @@
         filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
       }
       .selected {
-        box-sizing: border-box;
-        border-style: dashed;
-        border-color: black;
-        border-width: 3px;
-        border-radius: 50%;
+        background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='100' ry='100' stroke='black' stroke-width='11' stroke-dasharray='13%2c 18%2c 18' stroke-dashoffset='0' stroke-linecap='butt'/%3e%3c/svg%3e");
+      }
+      .can_be_shot {
+        background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='100' ry='100' stroke='%23EC3463' stroke-width='8' stroke-dasharray='50%25%2c 13%25' stroke-dashoffset='86' stroke-linecap='butt'/%3e%3c/svg%3e");
+      }
+      .can_be_eaten {
+        background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='100' ry='100' stroke='%23EC3463' stroke-width='25' stroke-dasharray='6%2c 9' stroke-dashoffset='93' stroke-linecap='butt'/%3e%3c/svg%3e");
       }
     </style>
   </head>
@@ -86,7 +89,7 @@
             <td
               v-for="(col, j)  in row"
               v-on:click="selected(i, j)"
-              v-bind:class="{rotate:(grid[i][j].includes('X')), selected:(grid[i][j].includes('S'))}"
+              v-bind:class="{rotate:(grid[i][j].includes('X')), selected:(grid[i][j].includes('S')), can_be_shot:(grid[i][j].includes('>')), can_be_eaten:(grid[i][j].includes('*'))}"
             >
               <img border="0" v-bind:src="getSrc(i, j)" />
             </td>
@@ -127,7 +130,7 @@
             } else if (gridVal === "@") {
               src = "dashed_circle.png";
             }
-            return src;
+            return `./imgs/${src}`;
           },
           selected: function (i, j) {
             const [moves, gameOver] = cannon.select(i, j);

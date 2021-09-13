@@ -205,11 +205,7 @@ class Cannon {
     }
     for (const m of this.availableMoves) {
       const gridVal = this.grid[m[0]][m[1]];
-      this.grid[m[0]][m[1]] = gridVal
-        .replace("@", "")
-        .replace("M", "")
-        .replace("<", "")
-        .replace(">", "");
+      this.grid[m[0]][m[1]] = gridVal.replace(/[@M<>*]/g, "")
     }
     this.selectedI = -1;
     this.selectedJ = -1;
@@ -315,8 +311,7 @@ class Cannon {
     this.availableMoves = moves;
     return moves;
   }
-  getAllMoves(){
-  }
+  getAllMoves() {}
 }
 
 export { Cannon };
