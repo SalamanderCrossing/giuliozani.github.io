@@ -54,14 +54,14 @@ const getCannonShiftsMoves = (grid, cannon) => {
     return moves;
 };
 const getCannonShootingMoves = (grid, currentPlayer, cannon) => {
-    let moves = [];
+    const moves = [];
     const opponent = -1 * currentPlayer;
     const center = cannon.slice(0, 2);
-    let pH = [
+    const pH = [
         center[0] + 3 * cannon[2],
         center[1] + 3 * cannon[3],
     ];
-    let pL = [
+    const pL = [
         center[0] - 3 * cannon[2],
         center[1] - 3 * cannon[3],
     ];
@@ -161,33 +161,35 @@ const getMoves = (grid, currentPlayer, selectedI, selectedJ, isFirstRound) => {
     const moves = [];
     //const cannonShiftsMap: Cannon[][] = [];
     if (isFirstRound) {
-        const resultI = Number(currentPlayer === -1) * 9;
+        const townI = Number(currentPlayer === -1) * 9;
         moves.push(...utils
             .range(1, 9)
-            .map((resultJ) => [-1, -1, resultI, resultJ, 5 /* PositionTown */, 0, 0]));
+            .map((resultJ) => [-1, -1, townI, resultJ, 5 /* PositionTown */, 0, 0]));
     }
     else if (grid[selectedI][selectedJ] === currentPlayer) {
-        const soldierMoves = getSoldierMoves(grid, currentPlayer, selectedI, selectedJ);
-        const cannons = getCannonsWithSoldier(grid, currentPlayer, selectedI, selectedJ);
-        const cannonShootingMoves = cannons.flatMap((c) => getCannonShootingMoves(grid, currentPlayer, c));
-        const cannonShiftMoves = [];
-        for (const cannon of cannons) {
-            const cannonShifts = getCannonShiftsMoves(grid, cannon);
-            cannonShiftMoves.push(...cannonShifts);
-            /*
-            for (const cannonShift of cannonShifts) {
-              if (!cannonShiftsMap[cannonShift[0]]) {
-                cannonShiftsMap[cannonShift[0]] = [];
-              }
-              cannonShiftsMap[cannonShift[0]][cannonShift[1]] = cannon;
+        if (hasTown(grid, currentPlayer)) {
+            const soldierMoves = getSoldierMoves(grid, currentPlayer, selectedI, selectedJ);
+            const cannons = getCannonsWithSoldier(grid, currentPlayer, selectedI, selectedJ);
+            const cannonShootingMoves = cannons.flatMap((c) => getCannonShootingMoves(grid, currentPlayer, c));
+            const cannonShiftMoves = [];
+            for (const cannon of cannons) {
+                const cannonShifts = getCannonShiftsMoves(grid, cannon);
+                cannonShiftMoves.push(...cannonShifts);
+                /*
+                for (const cannonShift of cannonShifts) {
+                    if (!cannonShiftsMap[cannonShift[0]]) {
+                        cannonShiftsMap[cannonShift[0]] = [];
+                    }
+                    cannonShiftsMap[cannonShift[0]][cannonShift[1]] = cannon;
+                }
+                */
             }
-            */
+            moves.push(...soldierMoves.concat(cannonShootingMoves).concat(cannonShiftMoves));
         }
-        moves.push(...soldierMoves.concat(cannonShootingMoves).concat(cannonShiftMoves));
     }
     return moves;
 };
-const makeMove = (grid, currentPlayer, move) => {
+const makeMove = (grid, currentPlayer, move, cache = null) => {
     const newGrid = grid.map((r) => r.slice());
     const [sourceI, sourceJ, destI, destJ, moveType, cannonDirectionI, cannonDirectionJ,] = move;
     switch (moveType) {
@@ -214,6 +216,25 @@ const makeMove = (grid, currentPlayer, move) => {
     }
     return newGrid;
 };
+const hasTown = (grid, player) => {
+    const townI = Number(player === -1) * 9;
+    return (utils
+        .range(1, 9)
+        .filter((resultJ) => grid[townI][resultJ] === 2 * player)
+        .length === 1);
+};
+const getSoldierCount = (grid, currentPlayer) => grid
+    .flatMap((row) => row.filter((el) => el === currentPlayer))
+    .map((x) => {
+    const abs = Math.abs(x);
+    return abs === 1 ? abs : 100;
+})
+    .reduce((x, y) => x + y, 0);
+const relativeSoldiersCount = (grid, currentPlayer) => {
+    const valPro = getSoldierCount(grid, currentPlayer);
+    const valAgainst = getSoldierCount(grid, -currentPlayer);
+    return valPro / valAgainst;
+};
 const expandStates = (grid, currentPlayer, isFirstRound) => {
     const states = [];
     if (!isFirstRound) {
@@ -230,4 +251,4 @@ const expandStates = (grid, currentPlayer, isFirstRound) => {
     }
     return states;
 };
-export { getMoves, expandStates, makeMove, initGrid, };
+export { getMoves, expandStates, makeMove, initGrid, relativeSoldiersCount as soldierCount, };

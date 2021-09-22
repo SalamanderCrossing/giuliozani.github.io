@@ -1,17 +1,20 @@
-import { expandStates } from "./cannon_engine.js";
-const evaluateMoves = (moves) => {
-    return tf.randomUniform([moves.length]);
-};
+import { expandStates, soldierCount } from "./cannon_engine.js";
+const argMax = (array) => [].map
+    .call(array, (x, i) => [x, i])
+    .reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+const argsort = (arr1, arr2) => arr1
+    .map((item, index) => [arr2[index], item]) // add the args to sort by
+    .sort(([arg1], [arg2]) => arg2 - arg1) // sort by the args
+    .map(([, item]) => item); // extract the sorted items
 const negaMax = (grid, depth, alpha = -Infinity, beta = Infinity, currentPlayer = 1) => {
-    const childGrids = expandStates(grid, currentPlayer, false); //FIXME
-    const values = evaluateMoves(childGrids);
-    const indices = tf.topk(values, values.size, true).indices;
-    const orderedChildGrids = childGrids.gather(indices);
+    const childGrids = expandStates(grid, currentPlayer, false);
+    const values = childGrids.map((g) => soldierCount(g, currentPlayer));
+    const orderedChildGrids = argsort(childGrids, values);
     if (depth === 0 || childGrids.length === 0) {
-        return currentPlayer;
+        return currentPlayer * soldierCount(grid, currentPlayer);
     }
     let value = -Infinity;
-    for (const child of childGrids) {
+    for (const child of orderedChildGrids) {
         value = Math.max(value, -negaMax(child, depth - 1, -beta, -alpha, -currentPlayer));
         alpha = Math.max(alpha, value);
         if (alpha >= beta) {
@@ -21,6 +24,8 @@ const negaMax = (grid, depth, alpha = -Infinity, beta = Infinity, currentPlayer 
     return value;
 };
 const chooseMove = (states) => {
-    return Math.round(Math.random() * (states.length - 1));
+    const values = states.map((s) => negaMax(s, 3));
+    const best = argMax(values);
+    return best;
 };
 export { chooseMove };
