@@ -437,8 +437,9 @@ const test = () => {
 		[-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
 		[0, 0, 0, 0, 0, -2, 0, 0, 0, 0],
 	];
-	console.table(getCache(grid))
 	console.table(grid);
+	console.log("Cache:")
+	console.log(getCache(grid))
 	const moves = getMoves(grid, -1, 7, 6, false);
 	console.log("Moves:");
 	console.table(moves);
