@@ -260,7 +260,27 @@ const expandStates = (grid, currentPlayer, isFirstRound) => {
     }
     return states;
 };
-const getCache = (grid) => { };
+const getCache = (grid) => {
+    const cache = [
+        [[], [], [-1, -1]],
+        [[], [], [-1, -1]],
+    ];
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            const gridVal = grid[i][j];
+            const position = Math.max(Math.sign(gridVal), 0);
+            if (Math.abs(gridVal) === 1) {
+                const cannons = getCannonsWithSoldier(grid, gridVal, i, j);
+                cache[position][0].push([i, j]);
+                cache[position][1].push(...cannons);
+            }
+            else if (Math.abs(gridVal) === 2) {
+                cache[position][2] = [i, j];
+            }
+        }
+    }
+    return cache;
+};
 export { getMoves, expandStates, makeMove, initGrid, evalBoard as relativeSoldiersCount, };
 const test = () => {
     const grid = [
@@ -275,6 +295,7 @@ const test = () => {
         [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
         [0, 0, 0, 0, 0, -2, 0, 0, 0, 0],
     ];
+    console.table(getCache(grid));
     console.table(grid);
     const moves = getMoves(grid, -1, 7, 6, false);
     console.log("Moves:");
