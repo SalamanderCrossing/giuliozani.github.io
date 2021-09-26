@@ -12,6 +12,14 @@ import {chooseMove} from "./ai_player.js"
 
 import utils from "./utils.js";
 
+const shuffleArray = (array:Array<any>) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
 class CannonBoard {
   _grid: Grid;
   _currentPlayer: Player;
@@ -23,7 +31,7 @@ class CannonBoard {
   _selected: boolean;
   constructor() {
     this._grid = initGrid();
-    this._currentPlayer = -1;
+    this._currentPlayer = -1 as Player;
     this.round = 0;
     this.keysMap = new Map(
       Object.entries({
@@ -48,12 +56,14 @@ class CannonBoard {
     );
     this._lastMoves = [];
     this._selected = false;
+		this._selectedI = -1 
+		this._selectedJ = -1
   }
   get grid(): string[][] {
     return this._grid.map((x) => x.map((y) => this.keysMap.get(y)));
   }
   get currentPlayer(): string {
-    return this.keysMap.get(this._currentPlayer);
+    return this.keysMap.get(this._currentPlayer) as string;
   }
   _unselect() {
     for (const i of utils.range(this._grid.length)) {
@@ -69,6 +79,7 @@ class CannonBoard {
     this.round += Number(this._currentPlayer === 1);
     this._currentPlayer *= -1;
     const states = expandStates(this._grid, this._currentPlayer as Player, this.round === 0)
+		shuffleArray(states)
     console.log(`Number of future states: ${states.length}`)
     if (this._currentPlayer === 1){
       const moveIndex = chooseMove(states)

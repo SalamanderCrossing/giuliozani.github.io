@@ -16,7 +16,7 @@ const enum GridValues {
 	Town1 = 2,
 	Town2 = -2,
 }
-type Move = [
+export type Move = [
 	sourceI: number,
 	sourceJ: number,
 	destI: number,
@@ -25,14 +25,14 @@ type Move = [
 	optionalCannonDirectionI: number,
 	optionalCannonDirectionJ: number
 ];
-type Grid = number[][];
-type Cannon = [
+export type Grid = number[][];
+export type Cannon = [
 	centerI: number,
 	centerJ: number,
 	directionI: number,
 	directionJ: number
 ];
-type Player = -1 | 1;
+export type Player = -1 | 1;
 type Cache = [
 	[[number, number][], Cannon[], [number, number]],
 	[[number, number][], Cannon[], [number, number]]
@@ -270,6 +270,8 @@ const getMoves = (
 				selectedI,
 				selectedJ
 			);
+			console.log("Cannons");
+			console.table(cannons);
 			const cannonShootingMoves = cannons.flatMap((c) =>
 				getCannonShootingMoves(grid, currentPlayer, c)
 			);
@@ -286,6 +288,8 @@ const getMoves = (
 				}
 				*/
 			}
+			console.log("Shooting moves");
+			console.table(cannonShootingMoves);
 			moves.push(
 				...soldierMoves.concat(cannonShootingMoves).concat(cannonShiftMoves)
 			);
@@ -322,7 +326,7 @@ const makeMove = (
 		case Moves.Shoot:
 			newGrid[move[2]][move[3]] = GridValues.Empty;
 			break;
-		case Moves.CannonShift:
+		case Moves.CannonShift: {
 			const directionI = Math.pow(
 				-1,
 				Number(sourceI + 2 * cannonDirectionI === destI)
@@ -336,30 +340,34 @@ const makeMove = (
 			newGrid[destI][destJ] = grid[shiftSourceI][shiftSourceJ];
 			newGrid[shiftSourceI][shiftSourceJ] = GridValues.Empty;
 			break;
+		}
 	}
 	return newGrid;
 };
 const hasTown = (grid: Grid, player: Player): boolean => {
 	const townI = Number(player === -1) * 9;
-	return (
-		utils
-			.range(1, 9)
-			.filter((resultJ: number) => grid[townI][resultJ] === 2 * player)
-			.length === 1
-	);
+	for (let j = 1; j < 10; j++) {
+		if (grid[townI][j] === 2 * player) {
+			return true;
+		}
+	}
+	return false;
 };
 const getSoldierCount = (grid: Grid, currentPlayer: Player): number =>
 	grid
-		.flatMap((row) => row.filter((el) => el === currentPlayer))
-		.map((x) => {
-			const abs = Math.abs(x);
-			return abs === 1 ? abs : 100;
-		})
-		.reduce((x, y) => x + y, 0);
-const relativeSoldiersCount = (grid: Grid, currentPlayer: Player): number => {
+		.flatMap((row) => row.filter((el) => Math.sign(el) === currentPlayer))
+		.reduce((x, y) => x + Math.abs(y), 0);
+
+const evalBoard = (grid: Grid, currentPlayer: Player): number => {
 	const valPro = getSoldierCount(grid, currentPlayer);
 	const valAgainst = getSoldierCount(grid, -currentPlayer as Player);
-	return valPro / valAgainst;
+	return !hasTown(grid, currentPlayer)
+		? -Infinity
+		: !hasTown(grid, -currentPlayer as Player)
+		? Infinity
+		: valAgainst === 0
+		? Infinity
+		: valPro / valAgainst;
 };
 const expandStates = (
 	grid: Grid,
@@ -388,16 +396,39 @@ const expandStates = (
 	}
 	return states;
 };
-
+const getCache = (grid:Grid):Cache => {}
 export {
-	Player,
 	Moves,
-	Grid,
-	Move,
-	Cannon,
 	getMoves,
 	expandStates,
 	makeMove,
 	initGrid,
-	relativeSoldiersCount as soldierCount,
+	evalBoard as relativeSoldiersCount,
 };
+const test = () => {
+	const grid = [
+		[0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
+		[0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+		[0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+		[0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
+		[-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
+		[-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
+		[0, 0, 0, 0, 0, -2, 0, 0, 0, 0],
+	];
+	console.table(grid);
+	const moves = getMoves(grid, -1, 7, 6, false);
+	console.log("Moves:");
+	console.table(moves);
+	const nextState = makeMove(grid, -1, moves[2]);
+	console.table(nextState);
+	const value = evalBoard(nextState, -1);
+	const antiValue = evalBoard(nextState, 1);
+	console.log(value);
+	console.log(antiValue);
+	// const nextStates = moves.map(
+};
+
+test();

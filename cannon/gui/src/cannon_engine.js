@@ -170,6 +170,8 @@ const getMoves = (grid, currentPlayer, selectedI, selectedJ, isFirstRound) => {
         if (hasTown(grid, currentPlayer)) {
             const soldierMoves = getSoldierMoves(grid, currentPlayer, selectedI, selectedJ);
             const cannons = getCannonsWithSoldier(grid, currentPlayer, selectedI, selectedJ);
+            console.log("Cannons");
+            console.table(cannons);
             const cannonShootingMoves = cannons.flatMap((c) => getCannonShootingMoves(grid, currentPlayer, c));
             const cannonShiftMoves = [];
             for (const cannon of cannons) {
@@ -184,6 +186,8 @@ const getMoves = (grid, currentPlayer, selectedI, selectedJ, isFirstRound) => {
                 }
                 */
             }
+            console.log("Shooting moves");
+            console.table(cannonShootingMoves);
             moves.push(...soldierMoves.concat(cannonShootingMoves).concat(cannonShiftMoves));
         }
     }
@@ -205,7 +209,7 @@ const makeMove = (grid, currentPlayer, move, cache = null) => {
         case 3 /* Shoot */:
             newGrid[move[2]][move[3]] = 0 /* Empty */;
             break;
-        case 4 /* CannonShift */:
+        case 4 /* CannonShift */: {
             const directionI = Math.pow(-1, Number(sourceI + 2 * cannonDirectionI === destI));
             const directionJ = Math.pow(-1, Number(sourceJ + 2 * cannonDirectionJ === destJ));
             const shiftSourceI = move[0] + directionI * move[5];
@@ -213,27 +217,32 @@ const makeMove = (grid, currentPlayer, move, cache = null) => {
             newGrid[destI][destJ] = grid[shiftSourceI][shiftSourceJ];
             newGrid[shiftSourceI][shiftSourceJ] = 0 /* Empty */;
             break;
+        }
     }
     return newGrid;
 };
 const hasTown = (grid, player) => {
     const townI = Number(player === -1) * 9;
-    return (utils
-        .range(1, 9)
-        .filter((resultJ) => grid[townI][resultJ] === 2 * player)
-        .length === 1);
+    for (let j = 1; j < 10; j++) {
+        if (grid[townI][j] === 2 * player) {
+            return true;
+        }
+    }
+    return false;
 };
 const getSoldierCount = (grid, currentPlayer) => grid
-    .flatMap((row) => row.filter((el) => el === currentPlayer))
-    .map((x) => {
-    const abs = Math.abs(x);
-    return abs === 1 ? abs : 100;
-})
-    .reduce((x, y) => x + y, 0);
-const relativeSoldiersCount = (grid, currentPlayer) => {
+    .flatMap((row) => row.filter((el) => Math.sign(el) === currentPlayer))
+    .reduce((x, y) => x + Math.abs(y), 0);
+const evalBoard = (grid, currentPlayer) => {
     const valPro = getSoldierCount(grid, currentPlayer);
     const valAgainst = getSoldierCount(grid, -currentPlayer);
-    return valPro / valAgainst;
+    return !hasTown(grid, currentPlayer)
+        ? -Infinity
+        : !hasTown(grid, -currentPlayer)
+            ? Infinity
+            : valAgainst === 0
+                ? Infinity
+                : valPro / valAgainst;
 };
 const expandStates = (grid, currentPlayer, isFirstRound) => {
     const states = [];
@@ -251,4 +260,31 @@ const expandStates = (grid, currentPlayer, isFirstRound) => {
     }
     return states;
 };
-export { getMoves, expandStates, makeMove, initGrid, relativeSoldiersCount as soldierCount, };
+const getCache = (grid) => { };
+export { getMoves, expandStates, makeMove, initGrid, evalBoard as relativeSoldiersCount, };
+const test = () => {
+    const grid = [
+        [0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
+        [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
+        [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0],
+        [0, 0, 0, 0, 0, -2, 0, 0, 0, 0],
+    ];
+    console.table(grid);
+    const moves = getMoves(grid, -1, 7, 6, false);
+    console.log("Moves:");
+    console.table(moves);
+    const nextState = makeMove(grid, -1, moves[2]);
+    console.table(nextState);
+    const value = evalBoard(nextState, -1);
+    const antiValue = evalBoard(nextState, 1);
+    console.log(value);
+    console.log(antiValue);
+    // const nextStates = moves.map(
+};
+test();

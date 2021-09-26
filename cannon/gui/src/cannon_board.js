@@ -1,6 +1,14 @@
 import { getMoves, expandStates, makeMove, initGrid, } from "./cannon_engine.js";
 import { chooseMove } from "./ai_player.js";
 import utils from "./utils.js";
+const shuffleArray = (array) => {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+};
 class CannonBoard {
     constructor() {
         this._grid = initGrid();
@@ -27,6 +35,8 @@ class CannonBoard {
         }).map((x) => [x[1], x[0]]));
         this._lastMoves = [];
         this._selected = false;
+        this._selectedI = -1;
+        this._selectedJ = -1;
     }
     get grid() {
         return this._grid.map((x) => x.map((y) => this.keysMap.get(y)));
@@ -48,6 +58,7 @@ class CannonBoard {
         this.round += Number(this._currentPlayer === 1);
         this._currentPlayer *= -1;
         const states = expandStates(this._grid, this._currentPlayer, this.round === 0);
+        shuffleArray(states);
         console.log(`Number of future states: ${states.length}`);
         if (this._currentPlayer === 1) {
             const moveIndex = chooseMove(states);

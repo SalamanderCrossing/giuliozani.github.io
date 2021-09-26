@@ -1,4 +1,9 @@
-import { Grid, expandStates, Player, soldierCount } from "./cannon_engine.js";
+import {
+	Grid,
+	expandStates,
+	Player,
+	relativeSoldiersCount,
+} from "./cannon_engine.js";
 
 const argMax = (array: number[]): number =>
 	[].map
@@ -14,21 +19,23 @@ const argsort = (arr1: Array<any>, arr2: Array<any>) =>
 const negaMax = (
 	grid: Grid,
 	depth: number,
+	currentPlayer: Player = 1,
 	alpha = -Infinity,
-	beta = Infinity,
-	currentPlayer: Player = 1
+	beta = Infinity
 ): number => {
-	const childGrids = expandStates(grid, currentPlayer, false);
-	const values = childGrids.map((g) => soldierCount(g, currentPlayer));
-	const orderedChildGrids = argsort(childGrids, values);
+	const childGrids = expandStates(grid, currentPlayer as Player, false);
+	// const values = childGrids.map((g) => soldierCount(g, currentPlayer));
+
+	const orderedChildGrids = childGrids; //argsort(childGrids, values);
 	if (depth === 0 || childGrids.length === 0) {
-		return currentPlayer * soldierCount(grid, currentPlayer);
+		return relativeSoldiersCount(grid, currentPlayer as Player);
 	}
 	let value = -Infinity;
 	for (const child of orderedChildGrids) {
+		console.table(child);
 		value = Math.max(
 			value,
-			-negaMax(child, depth - 1, -beta, -alpha, -currentPlayer as Player)
+			-negaMax(child, depth - 1, -currentPlayer as Player, -beta, -alpha)
 		);
 		alpha = Math.max(alpha, value);
 		if (alpha >= beta) {
@@ -38,7 +45,7 @@ const negaMax = (
 	return value;
 };
 const chooseMove = (states: Grid[]): number => {
-	const values = states.map((s) => negaMax(s, 3));
+	const values = states.map((s) => -negaMax(s, 3, -1));
 	const best = argMax(values);
 	return best;
 };
