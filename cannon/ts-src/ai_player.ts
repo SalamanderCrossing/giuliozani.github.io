@@ -1,14 +1,9 @@
-import {
-	Grid,
-	expandStates,
-	Player,
-	relativeSoldiersCount,
-} from "./cannon_engine.js";
+import { evalBoard, Player, Grid, expandStates } from "./cannon_engine.js";
 
 const argMax = (array: number[]): number =>
-	[].map
-		.call(array, (x, i) => [x, i])
-		.reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+	array
+		.map((x, i) => [x, i])
+		.reduce((r: number[], a: number[]) => (a[0] > r[0] ? a : r))[1];
 
 const argsort = (arr1: Array<any>, arr2: Array<any>) =>
 	arr1
@@ -28,7 +23,7 @@ const negaMax = (
 
 	const orderedChildGrids = childGrids; //argsort(childGrids, values);
 	if (depth === 0 || childGrids.length === 0) {
-		return relativeSoldiersCount(grid, currentPlayer as Player);
+		return evalBoard(grid, currentPlayer as Player);
 	}
 	let value = -Infinity;
 	for (const child of orderedChildGrids) {
@@ -50,4 +45,7 @@ const chooseMove = (states: Grid[]): number => {
 	return best;
 };
 
-export { chooseMove };
+addEventListener("message", (event: Record<string, Grid[]>) => {
+	console.log()
+	postMessage(chooseMove(event["data"]));
+});

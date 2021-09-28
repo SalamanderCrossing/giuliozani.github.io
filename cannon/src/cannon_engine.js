@@ -170,8 +170,8 @@ const getMoves = (grid, currentPlayer, selectedI, selectedJ, isFirstRound) => {
         if (hasTown(grid, currentPlayer)) {
             const soldierMoves = getSoldierMoves(grid, currentPlayer, selectedI, selectedJ);
             const cannons = getCannonsWithSoldier(grid, currentPlayer, selectedI, selectedJ);
-            console.log("Cannons");
-            console.table(cannons);
+            //console.log("Cannons");
+            //console.table(cannons);
             const cannonShootingMoves = cannons.flatMap((c) => getCannonShootingMoves(grid, currentPlayer, c));
             const cannonShiftMoves = [];
             for (const cannon of cannons) {
@@ -186,8 +186,8 @@ const getMoves = (grid, currentPlayer, selectedI, selectedJ, isFirstRound) => {
                 }
                 */
             }
-            console.log("Shooting moves");
-            console.table(cannonShootingMoves);
+            //console.log("Shooting moves");
+            //console.table(cannonShootingMoves);
             moves.push(...soldierMoves.concat(cannonShootingMoves).concat(cannonShiftMoves));
         }
     }
@@ -281,7 +281,6 @@ const getCache = (grid) => {
     }
     return cache;
 };
-export { getMoves, expandStates, makeMove, initGrid, evalBoard as relativeSoldiersCount, };
 const test = () => {
     const grid = [
         [0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
@@ -309,4 +308,4 @@ const test = () => {
     console.log(antiValue);
     // const nextStates = moves.map(
 };
-test();
+export { getMoves, expandStates, makeMove, initGrid, evalBoard, };

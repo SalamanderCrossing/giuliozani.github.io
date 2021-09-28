@@ -1,6 +1,15 @@
 import utils from "./utils.js";
 //TODO:memorize soldier and cannon positions
 //TODO:make negamax player with ab pruning
+/*
+const range = (a: number, max = -Infinity): number[] => {
+	if (max == -Infinity) {
+		max = a;
+		a = 0;
+	}
+	return Array.from({ length: max - a }, (_, i) => a + i);
+};
+*/
 const enum Moves {
 	Step,
 	Retreat,
@@ -39,7 +48,7 @@ type Cache = [
 ];
 const areValid = (i: number, j: number): boolean =>
 	i >= 0 && i < 10 && j >= 0 && j < 10;
-const initGrid = () =>
+const initGrid = (): Grid =>
 	[...Array(10).keys()].map((_, i) =>
 		[...Array(10).keys()].map((_, j) =>
 			j % 2 !== 0 && i > 0 && i < 4 ? 1 : j % 2 === 0 && i < 9 && i > 5 ? -1 : 0
@@ -270,8 +279,8 @@ const getMoves = (
 				selectedI,
 				selectedJ
 			);
-			console.log("Cannons");
-			console.table(cannons);
+			//console.log("Cannons");
+			//console.table(cannons);
 			const cannonShootingMoves = cannons.flatMap((c) =>
 				getCannonShootingMoves(grid, currentPlayer, c)
 			);
@@ -288,8 +297,8 @@ const getMoves = (
 				}
 				*/
 			}
-			console.log("Shooting moves");
-			console.table(cannonShootingMoves);
+			//console.log("Shooting moves");
+			//console.table(cannonShootingMoves);
 			moves.push(
 				...soldierMoves.concat(cannonShootingMoves).concat(cannonShiftMoves)
 			);
@@ -408,21 +417,13 @@ const getCache = (grid: Grid): Cache => {
 			if (Math.abs(gridVal) === 1) {
 				const cannons = getCannonsWithSoldier(grid, gridVal as Player, i, j);
 				cache[position][0].push([i, j]);
-				cache[position][1].push(...cannons)
+				cache[position][1].push(...cannons);
 			} else if (Math.abs(gridVal) === 2) {
 				cache[position][2] = [i, j];
 			}
 		}
 	}
-	return cache
-};
-export {
-	Moves,
-	getMoves,
-	expandStates,
-	makeMove,
-	initGrid,
-	evalBoard as relativeSoldiersCount,
+	return cache;
 };
 const test = () => {
 	const grid = [
@@ -438,8 +439,8 @@ const test = () => {
 		[0, 0, 0, 0, 0, -2, 0, 0, 0, 0],
 	];
 	console.table(grid);
-	console.log("Cache:")
-	console.log(getCache(grid))
+	console.log("Cache:");
+	console.log(getCache(grid));
 	const moves = getMoves(grid, -1, 7, 6, false);
 	console.log("Moves:");
 	console.table(moves);
@@ -451,5 +452,11 @@ const test = () => {
 	console.log(antiValue);
 	// const nextStates = moves.map(
 };
-
-test();
+export {
+	Moves,
+	getMoves,
+	expandStates,
+	makeMove,
+	initGrid,
+	evalBoard,
+};
