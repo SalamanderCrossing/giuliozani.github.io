@@ -38,6 +38,9 @@ class CannonBoard {
         this._selectedI = -1;
         this._selectedJ = -1;
         this._isComputing = false;
+        this._ai = new Worker("./src/ai_player.js", { type: "module" });
+        this._ai.onmessageerror = console.log;
+        this._ai.onerror = console.log;
     }
     get grid() {
         return this._grid.map((x) => x.map((y) => this.keysMap.get(y)));
@@ -59,16 +62,12 @@ class CannonBoard {
         this.round += Number(this._currentPlayer === 1);
         this._currentPlayer *= -1;
         const states = expandStates(this._grid, this._currentPlayer, this.round === 0);
-        shuffleArray(states);
+        //shuffleArray(states);
         console.log(`Number of future states: ${states.length}`);
         if (this._currentPlayer === 1) {
-            const ai = new Worker("./src/ai_player.js", { type: "module" });
-            ai.postMessage(states);
-            ai.onmessageerror = console.log;
-            ai.onerror = console.log;
+            this._ai.postMessage([this.round, this._grid]);
             this._isComputing = true;
-            ai.onmessage = (e) => {
-                console.log(e.data);
+            this._ai.onmessage = (e) => {
                 const moveIndex = e.data;
                 this._grid = states[moveIndex];
                 this._switchPlayer();
@@ -84,8 +83,6 @@ class CannonBoard {
         this._selectedJ = this.round === 0 ? -1 : j;
         this._selected = true;
         this._lastMoves = getMoves(this._grid, this._currentPlayer, this._selectedI, this._selectedJ, this.round === 0);
-        console.log("Moves: ");
-        console.table(this._lastMoves);
         if (this._lastMoves.length > 0 && this._lastMoves[0][0] !== -1) {
             this._grid[this._lastMoves[0][0]][this._lastMoves[0][1]] *= 1.3;
         }
@@ -109,19 +106,19 @@ class CannonBoard {
                     break;
             }
         }
-        console.table(this._grid);
+        // console.table(this._grid);
     }
     select(i, j) {
         let gameOver = false;
         if (!this._isComputing) {
-            console.log(`Selecting ${JSON.stringify({ i, j })}`);
+            //console.log(`Selecting ${JSON.stringify({ i, j })}`);
             if (this._selected) {
                 const selectedMoves = this._lastMoves.filter((x) => x[2] === i && x[3] === j);
                 if (selectedMoves.length > 0) {
                     const selectedMove = selectedMoves[0];
                     this._grid = makeMove(this._grid, this._currentPlayer, selectedMove);
                     this._unselect();
-                    console.table(this._grid);
+                    //console.table(this._grid);
                     gameOver = this._switchPlayer();
                 }
                 else {
