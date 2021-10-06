@@ -1,16 +1,24 @@
-import { evalBoard, Player, Grid, expandStates } from "./cannon_engine.js";
+import {
+	evalBoard,
+	Player,
+	Grid,
+	Move,
+	expandStates,
+	makeMove,
+	getAllMoves,
+} from "./cannon_engine.js";
 
 const argMax = (array: number[]): number =>
 	array
 		.map((x, i) => [x, i])
 		.reduce((r: number[], a: number[]) => (a[0] > r[0] ? a : r))[1];
 
-const argsort = (arr1: Array<any>, arr2: Array<any>) =>
+const argSort = (arr1: Array<any>, arr2: Array<any>, reverse = false) =>
 	arr1
 		.map((item, index) => [arr2[index], item]) // add the args to sort by
-		.sort(([arg1], [arg2]) => arg2 - arg1) // sort by the args
+		.sort(([arg1], [arg2]) => (reverse ? arg1 - arg2 : arg2 - arg1)) // sort by the args
 		.map(([, item]) => item); // extract the sorted items
-
+/*
 const negaMax = (
 	grid: Grid,
 	depth: number,
@@ -20,14 +28,13 @@ const negaMax = (
 ): number => {
 	const childGrids = expandStates(grid, currentPlayer as Player, false);
 	// const values = childGrids.map((g) => soldierCount(g, currentPlayer));
-
-	const orderedChildGrids = childGrids; //argsort(childGrids, values);
+	const values = childGrids.map((g: Grid) => currentPlayer * evalBoard(g));
+	const orderedChildGrids = argsort(childGrids, values);
 	if (depth === 0 || childGrids.length === 0) {
-		return evalBoard(grid, currentPlayer as Player);
+		return currentPlayer * evalBoard(grid);
 	}
 	let value = -Infinity;
 	for (const child of orderedChildGrids) {
-		console.table(child);
 		value = Math.max(
 			value,
 			-negaMax(child, depth - 1, -currentPlayer as Player, -beta, -alpha)
@@ -39,13 +46,68 @@ const negaMax = (
 	}
 	return value;
 };
+*/
+const argNegaMax = (
+	grid: Grid,
+	depth: number,
+	isFirstRound: boolean,
+	currentPlayer: Player = 1,
+	alpha = -Infinity,
+	beta = Infinity
+): [number, number] => {
+	const childNodes = getAllMoves(grid, currentPlayer as Player, isFirstRound);
+	//const childNodes = expandStates(grid, currentPlayer, isFirstRound);
+	//const values = childGrids.map((g) => soldierCount(g, currentPlayer));
+	//const values = childNodes.map((g: Move) =>
+	//	currentPlayer*evalBoard(makeMove(grid, currentPlayer, g))
+	//);
+	//const orderedChildGrids = argSort(childNodes, values, true);
+	const orderedChildGrids = childNodes
+	if (depth === 0 || childNodes.length === 0) {
+		return [0, currentPlayer * evalBoard(grid)];
+	}
+	let value = -Infinity;
+	let valueI = -1;
+	for (let i = 0; i < orderedChildGrids.length; i++) {
+		const child = makeMove(grid, currentPlayer, orderedChildGrids[i]);
+		//const child = orderedChildGrids[i]
+		const protoValue = -argNegaMax(
+			child,
+			depth - 1,
+			false,
+			-currentPlayer as Player,
+			-beta,
+			-alpha
+		)[1];
+		if (protoValue > value) {
+			value = protoValue;
+			valueI = i;
+		}
+		alpha = Math.max(alpha, value);
+		if (alpha >= beta) {
+			break;
+		}
+	}
+	return [valueI, value];
+};
+const chooseMove = (state: Grid, isFirstRound: boolean): number => {
+	const t0 = performance.now();
+	const result = argNegaMax(state, 5, isFirstRound)[0];
+	const t1 = performance.now();
+	console.log(`Took ${(t1 - t0) / 1000}`);
+	return result;
+};
+/*
 const chooseMove = (states: Grid[]): number => {
-	const values = states.map((s) => -negaMax(s, 3, -1));
+	const values = states.map((s) => -negaMax(s, 5, -1));
 	const best = argMax(values);
 	return best;
 };
-
-addEventListener("message", (event: Record<string, Grid[]>) => {
-	console.log()
-	postMessage(chooseMove(event["data"]));
+*/
+addEventListener("message", (event) => {
+	const parsedEvent = (event as unknown as Record<string, [number, Grid]>)[
+		"data"
+	];
+	postMessage(chooseMove(parsedEvent[1], parsedEvent[0] === 0));
 });
+export { chooseMove };
