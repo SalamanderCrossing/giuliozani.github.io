@@ -18,35 +18,7 @@ const argSort = (arr1: Array<any>, arr2: Array<any>, reverse = false) =>
 		.map((item, index) => [arr2[index], item]) // add the args to sort by
 		.sort(([arg1], [arg2]) => (reverse ? arg1 - arg2 : arg2 - arg1)) // sort by the args
 		.map(([, item]) => item); // extract the sorted items
-/*
-const negaMax = (
-	grid: Grid,
-	depth: number,
-	currentPlayer: Player = 1,
-	alpha = -Infinity,
-	beta = Infinity
-): number => {
-	const childGrids = expandStates(grid, currentPlayer as Player, false);
-	// const values = childGrids.map((g) => soldierCount(g, currentPlayer));
-	const values = childGrids.map((g: Grid) => currentPlayer * evalBoard(g));
-	const orderedChildGrids = argsort(childGrids, values);
-	if (depth === 0 || childGrids.length === 0) {
-		return currentPlayer * evalBoard(grid);
-	}
-	let value = -Infinity;
-	for (const child of orderedChildGrids) {
-		value = Math.max(
-			value,
-			-negaMax(child, depth - 1, -currentPlayer as Player, -beta, -alpha)
-		);
-		alpha = Math.max(alpha, value);
-		if (alpha >= beta) {
-			break;
-		}
-	}
-	return value;
-};
-*/
+
 const argNegaMax = (
 	grid: Grid,
 	depth: number,
@@ -108,6 +80,13 @@ addEventListener("message", (event) => {
 	const parsedEvent = (event as unknown as Record<string, [number, Grid]>)[
 		"data"
 	];
-	postMessage(chooseMove(parsedEvent[1], parsedEvent[0] === 0));
+	const parsedGrid = parsedEvent[1]
+	//const parsedGrid = new Int8Array(100)
+	//for (let i = 0; i < 10; i++) {
+	//	for (let j = 0; j < 10; j++) {
+	//		parsedGrid[i * 10 + j] = protoGrid[i][j];
+	//	}
+	//}
+	postMessage(chooseMove(parsedGrid, parsedEvent[0] === 0));
 });
 export { chooseMove };

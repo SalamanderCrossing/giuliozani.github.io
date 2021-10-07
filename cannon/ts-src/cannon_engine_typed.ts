@@ -1,15 +1,6 @@
 import utils from "./utils.js";
 //TODO:memorize soldier and cannon positions
 //TODO:make negamax player with ab pruning
-/*
-const range = (a: number, max = -Infinity): number[] => {
-	if (max == -Infinity) {
-		max = a;
-		a = 0;
-	}
-	return Array.from({ length: max - a }, (_, i) => a + i);
-};
-*/
 const enum Moves {
 	Step,
 	Retreat,
@@ -34,7 +25,7 @@ export type Move = [
 	optionalCannonDirectionI: number,
 	optionalCannonDirectionJ: number
 ];
-export type Grid = number[][];
+export type Grid = Int8Array;
 export type Cannon = [
 	centerI: number,
 	centerJ: number,
@@ -48,12 +39,20 @@ type Cache = [
 ];
 const areValid = (i: number, j: number): boolean =>
 	i >= 0 && i < 10 && j >= 0 && j < 10;
-const initGrid = (): Grid =>
-	[...Array(10).keys()].map((_, i) =>
+const initGrid = (): Grid => {
+	const result = new Int8Array(100);
+	const arr = [...Array(10).keys()].map((_, i) =>
 		[...Array(10).keys()].map((_, j) =>
 			j % 2 !== 0 && i > 0 && i < 4 ? 1 : j % 2 === 0 && i < 9 && i > 5 ? -1 : 0
 		)
 	);
+	for (let i = 0; i < 10; i++) {
+		for (let j = 0; j < 10; j++) {
+			result[i * 10 + j] = arr[i][j];
+		}
+	}
+	return result;
+};
 
 const isCannon = (
 	grid: Grid,
@@ -68,9 +67,9 @@ const isCannon = (
 	areValid(i1, j1) &&
 	areValid(i2, j2) &&
 	areValid(i3, j3) &&
-	grid[i1][j1] === currentPlayer &&
-	grid[i2][j2] === currentPlayer &&
-	grid[i3][j3] === currentPlayer;
+	grid[10 * i1 + j1] === currentPlayer &&
+	grid[10 * i2 + j2] === currentPlayer &&
+	grid[10 * i3 + j3] === currentPlayer;
 
 const getCannonsWithSoldier = (
 	grid: Grid,
@@ -99,7 +98,7 @@ const getCannonShiftsMoves = (grid: Grid, cannon: Cannon): Move[] => {
 	const moves: Move[] = [];
 	const forwardI = cannon[0] + 2 * cannon[2];
 	const forwardJ = cannon[1] + 2 * cannon[3];
-	if (areValid(forwardI, forwardJ) && grid[forwardI][forwardJ] === 0) {
+	if (areValid(forwardI, forwardJ) && grid[10 * forwardI + forwardJ] === 0) {
 		moves.push([
 			cannon[0],
 			cannon[1],
@@ -112,7 +111,10 @@ const getCannonShiftsMoves = (grid: Grid, cannon: Cannon): Move[] => {
 	}
 	const backwardI = cannon[0] - 2 * cannon[2];
 	const backwardJ = cannon[1] - 2 * cannon[3];
-	if (areValid(backwardI, backwardJ) && grid[backwardI][backwardJ] === 0) {
+	if (
+		areValid(backwardI, backwardJ) &&
+		grid[10 * backwardI + backwardJ] === 0
+	) {
 		moves.push([
 			cannon[0],
 			cannon[1],
@@ -148,13 +150,13 @@ const getCannonShootingMoves = (
 	let i = 0;
 	while (!done) {
 		hCollidedBorder = !areValid(pH0, pH1);
-		hCollidedObject = hCollidedBorder ? false : grid[pH0][pH1] !== 0;
+		hCollidedObject = hCollidedBorder ? false : grid[10 * pH0 + pH1] !== 0;
 		if (!(hCollidedObject || hCollidedBorder)) {
 			pH0 += cannon2;
 			pH1 += cannon3;
 		}
 		lCollidedBorder = !areValid(pL0, pL1);
-		lCollidedObject = lCollidedBorder ? false : grid[pL0][pL1] !== 0;
+		lCollidedObject = lCollidedBorder ? false : grid[10 * pL0 + pL1] !== 0;
 		if (!(lCollidedObject || lCollidedBorder)) {
 			pL0 -= cannon2;
 			pL1 -= cannon3;
@@ -165,7 +167,7 @@ const getCannonShootingMoves = (
 				(lCollidedObject || lCollidedBorder)) ||
 			i === 2;
 	}
-	if (lCollidedObject && Math.sign(grid[pL0][pL1]) === opponent) {
+	if (lCollidedObject && Math.sign(grid[10 * pL0 + pL1]) === opponent) {
 		moves.push([
 			center0,
 			center1,
@@ -176,7 +178,7 @@ const getCannonShootingMoves = (
 			cannon3,
 		] as Move);
 	}
-	if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent) {
+	if (hCollidedObject && Math.sign(grid[10 * pH0 + pH1]) === opponent) {
 		moves.push([
 			center0,
 			center1,
@@ -196,35 +198,24 @@ const hasAdjacentSoldier = (
 	i: number,
 	j: number
 ) => {
-	const opponent = -currentPlayer;
-	const i0 = i - 1;
-	const j0 = j - 1;
-	const i1 = i - 1;
-	const j1 = j;
-	const i2 = i - 1;
-	const j2 = j + 1;
-	const i3 = i;
-	const j3 = j - 1;
-	const i4 = i;
-	const j4 = j + 1;
-	const i5 = i + 1;
-	const j5 = j - 1;
-	const i6 = i + 1;
-	const j6 = j;
-	const i7 = i + 1;
-	const j7 = j + 1;
-	return (
-		(areValid(i0, j0) && grid[i0][j0] === opponent) ||
-		(areValid(i1, j1) && grid[i1][j1] === opponent) ||
-		(areValid(i2, j2) && grid[i2][j2] === opponent) ||
-		(areValid(i3, j3) && grid[i3][j3] === opponent) ||
-		(areValid(i4, j4) && grid[i4][j4] === opponent) ||
-		(areValid(i5, j5) && grid[i5][j5] === opponent) ||
-		(areValid(i6, j6) && grid[i6][j6] === opponent) ||
-		(areValid(i7, j7) && grid[i7][j7] === opponent)
-	);
+	const opponent = -1 * currentPlayer;
+	const adjacentPositions: [number, number][] = [
+		[i - 1, j - 1],
+		[i - 1, j],
+		[i - 1, j + 1],
+		[i, j - 1],
+		[i, j + 1],
+		[i + 1, j - 1],
+		[i + 1, j],
+		[i + 1, j + 1],
+	];
+	for (const p of adjacentPositions) {
+		if (areValid(p[0], p[1]) && grid[10 * p[0] + p[1]] === opponent) {
+			return true;
+		}
+	}
+	return false;
 };
-
 const getSoldierMoves = (
 	grid: Grid,
 	currentPlayer: Player,
@@ -232,9 +223,9 @@ const getSoldierMoves = (
 	j: number
 ): Move[] => {
 	const opponent = -1 * currentPlayer;
-	const direction = currentPlayer;
+	const direction = Math.pow(-1, Number(currentPlayer < 0));
 	const adjacentSodier = hasAdjacentSoldier(grid, currentPlayer, i, j);
-	const moves = [
+	const soldierMoves = [
 		[i, j, i + direction, j - 1, Moves.Step, 0, 0],
 		[i, j, i + direction, j, Moves.Step, 0, 0],
 		[i, j, i + direction, j + 1, Moves.Step, 0, 0],
@@ -246,25 +237,19 @@ const getSoldierMoves = (
 		[i, j, i + direction, j - 1, Moves.Capture, 0, 0],
 		[i, j, i + direction, j, Moves.Capture, 0, 0],
 		[i, j, i + direction, j + 1, Moves.Capture, 0, 0],
-	] as Move[];
-	const soldierMoves = [];
-	for (const m of moves) {
-		const m0 = m[0];
-		const m1 = m[1];
-		const m2 = m[2];
-		const m3 = m[3];
-		const m4 = m[4];
-		if (
-			(m4 === Moves.Step && grid[m2][m3] === GridValues.Empty) ||
-			(m4 === Moves.Retreat &&
-				adjacentSodier &&
-				grid[m2][m3] === GridValues.Empty &&
-				grid[(m0 + m2) / 2][(m1 + m3) / 2] === GridValues.Empty) ||
-			(m4 === Moves.Capture && Math.sign(grid[m2][m3]) === opponent)
-		) {
-			soldierMoves.push(m);
-		}
-	}
+	].filter((p) => {
+		return (
+			areValid(p[2], p[3]) &&
+			((p[4] === Moves.Step && grid[10 * p[2] + p[3]] === GridValues.Empty) ||
+				(p[4] === Moves.Retreat &&
+					adjacentSodier &&
+					grid[10 * p[2] + p[3]] === GridValues.Empty &&
+					grid[(10 * (p[0] + p[2])) / 2 + (p[1] + p[3]) / 2] ===
+						GridValues.Empty) ||
+				(p[4] === Moves.Capture &&
+					Math.sign(grid[10 * p[2] + p[3]]) === opponent))
+		);
+	}) as Move[];
 	return soldierMoves;
 };
 const getMoves = (
@@ -275,6 +260,7 @@ const getMoves = (
 	isFirstRound: boolean
 ): Move[] => {
 	const moves: Move[] = [];
+	//const cannonShiftsMap: Cannon[][] = [];
 	if (isFirstRound) {
 		const townI = Number(currentPlayer === -1) * 9;
 		moves.push(
@@ -290,7 +276,7 @@ const getMoves = (
 		townPosition(grid, -currentPlayer as Player)[0] === -1
 	) {
 		return moves;
-	} else if (grid[selectedI][selectedJ] === currentPlayer) {
+	} else if (grid[10 * selectedI + selectedJ] === currentPlayer) {
 		if (townPosition(grid, currentPlayer)) {
 			const soldierMoves = getSoldierMoves(
 				grid,
@@ -304,8 +290,6 @@ const getMoves = (
 				selectedI,
 				selectedJ
 			);
-			//console.log("Cannons");
-			//console.table(cannons);
 			const cannonShootingMoves = cannons.flatMap((c) =>
 				getCannonShootingMoves(grid, currentPlayer, c)
 			);
@@ -330,7 +314,7 @@ const getMoves = (
 	return moves;
 };
 const makeMove = (grid: Grid, currentPlayer: Player, move: Move): Grid => {
-	const newGrid = grid.map((r) => r.slice());
+	const newGrid = new Int8Array(grid);
 	const [
 		sourceI,
 		sourceJ,
@@ -344,14 +328,14 @@ const makeMove = (grid: Grid, currentPlayer: Player, move: Move): Grid => {
 		case Moves.Capture:
 		case Moves.Retreat:
 		case Moves.Step:
-			newGrid[destI][destJ] = newGrid[sourceI][sourceJ];
-			newGrid[sourceI][sourceJ] = GridValues.Empty;
+			newGrid[10 * destI + destJ] = newGrid[10 * sourceI + sourceJ];
+			newGrid[10 * sourceI + sourceJ] = GridValues.Empty;
 			break;
 		case Moves.PositionTown:
-			newGrid[destI][destJ] = 2 * currentPlayer;
+			newGrid[10 * destI + destJ] = 2 * currentPlayer;
 			break;
 		case Moves.Shoot:
-			newGrid[move[2]][move[3]] = GridValues.Empty;
+			newGrid[10 * move[2] + move[3]] = GridValues.Empty;
 			break;
 		case Moves.CannonShift: {
 			const directionI = Math.pow(
@@ -364,8 +348,8 @@ const makeMove = (grid: Grid, currentPlayer: Player, move: Move): Grid => {
 			);
 			const shiftSourceI = move[0] + directionI * move[5];
 			const shiftSourceJ = move[1] + directionJ * move[6];
-			newGrid[destI][destJ] = grid[shiftSourceI][shiftSourceJ];
-			newGrid[shiftSourceI][shiftSourceJ] = GridValues.Empty;
+			newGrid[10 * destI + destJ] = grid[10 * shiftSourceI + shiftSourceJ];
+			newGrid[10 * shiftSourceI + shiftSourceJ] = GridValues.Empty;
 			break;
 		}
 	}
@@ -374,7 +358,7 @@ const makeMove = (grid: Grid, currentPlayer: Player, move: Move): Grid => {
 const townPosition = (grid: Grid, player: Player): [number, number] => {
 	const townI = Number(player === -1) * 9;
 	for (let j = 1; j < 10; j++) {
-		if (grid[townI][j] === 2 * player) {
+		if (grid[10 * townI + j] === 2 * player) {
 			return [townI, j];
 		}
 	}
@@ -384,8 +368,7 @@ const getSoldierCount = (grid: Grid, currentPlayer: Player): number => {
 	let count = 0;
 	for (let i = 0; i < 10; i++) {
 		for (let j = 0; j < 10; j++) {
-			const a = grid[i];
-			const el = a[j];
+			const el = grid[10 * i + j];
 			if (Math.sign(el) === currentPlayer) {
 				count += Math.abs(el);
 			}
@@ -408,7 +391,7 @@ const evalBoard = (grid: Grid, soldierValue = 10, cannonValue = 30): number => {
 	let sum = 0;
 	for (let i = 0; i < 10; i++) {
 		for (let j = 0; j < 10; j++) {
-			const gridVal = grid[i][j];
+			const gridVal = grid[10 * i + j];
 			if (Math.abs(gridVal) === 1) {
 				const cannonCount = getCannonsWithSoldier(
 					grid,
@@ -452,7 +435,7 @@ const expandStates = (
 	if (!isFirstRound) {
 		for (let i = 0; i < grid.length; i++) {
 			for (let j = 0; j < grid.length; j++) {
-				if (grid[i][j] === currentPlayer) {
+				if (grid[10 * i + j] === currentPlayer) {
 					for (const m of getMoves(grid, currentPlayer, i, j, false)) {
 						states.push(makeMove(grid, currentPlayer, m));
 					}
@@ -475,7 +458,7 @@ const getCache = (grid: Grid): Cache => {
 	];
 	for (let i = 0; i < 10; i++) {
 		for (let j = 0; j < 10; j++) {
-			const gridVal = grid[i][j];
+			const gridVal = grid[10 * i + j];
 			const position = Math.max(Math.sign(gridVal), 0);
 			if (Math.abs(gridVal) === 1) {
 				const cannons = getCannonsWithSoldier(grid, gridVal as Player, i, j);
@@ -499,7 +482,7 @@ const getAllMoves = (
 		const moves: Move[] = [];
 		for (let i = 0; i < grid.length; i++) {
 			for (let j = 0; j < grid.length; j++) {
-				if (grid[i][j] === currentPlayer) {
+				if (grid[10 * i + j] === currentPlayer) {
 					for (const m of getMoves(grid, currentPlayer, i, j, false)) {
 						moves.push(m);
 					}
@@ -510,6 +493,7 @@ const getAllMoves = (
 	}
 };
 const test = () => {
+	/*
 	const grid = [
 		[0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
 		[0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
@@ -535,6 +519,7 @@ const test = () => {
 	//console.log(value);
 	//console.log(antiValue);
 	// const nextStates = moves.map(
+	*/
 };
 export {
 	Moves,
