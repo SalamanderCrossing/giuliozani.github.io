@@ -1,3 +1,7 @@
+/*
+import { chooseMove } from "./ai_player.js";
+import { expandStates } from "./cannon_engine.js";
+
 const test = () => {
     const grid = [
         [0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
@@ -25,7 +29,7 @@ const test = () => {
     const bestMove = chooseMove(grid);
     const t1 = performance.now();
     console.log(`Best move: ${bestMove}, exec time: ${(t1 - t0) / 1000}`);
-    */
 };
 test();
-export {};
+
+    */
