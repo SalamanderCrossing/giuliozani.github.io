@@ -93,7 +93,7 @@ class CannonBoard {
 		//shuffleArray(states);
 		console.log(`Number of future states: ${states.length}`);
 		if (this._currentPlayer === 1) {
-			this._ai.postMessage([this.round, this._grid]);
+			this._ai.postMessage(["chooseMove", [this.round, this._grid]]);
 			this._isComputing = true;
 			this._ai.onmessage = (e) => {
 				const moveIndex = e.data;

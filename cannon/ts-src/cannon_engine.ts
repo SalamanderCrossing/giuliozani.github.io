@@ -231,39 +231,82 @@ const getSoldierMoves = (
 	i: number,
 	j: number
 ): Move[] => {
-	const opponent = -1 * currentPlayer;
+	const opponent = -currentPlayer;
 	const direction = currentPlayer;
 	const adjacentSodier = hasAdjacentSoldier(grid, currentPlayer, i, j);
-	const moves = [
-		[i, j, i + direction, j - 1, Moves.Step, 0, 0],
-		[i, j, i + direction, j, Moves.Step, 0, 0],
-		[i, j, i + direction, j + 1, Moves.Step, 0, 0],
-		[i, j, i - 2 * direction, j - 2, Moves.Retreat, 0, 0],
-		[i, j, i - 2 * direction, j, Moves.Retreat, 0, 0],
-		[i, j, i - 2 * direction, j + 2, Moves.Retreat, 0, 0],
-		[i, j, i, j - 1, Moves.Capture, 0, 0],
-		[i, j, i, j + 1, Moves.Capture, 0, 0],
-		[i, j, i + direction, j - 1, Moves.Capture, 0, 0],
-		[i, j, i + direction, j, Moves.Capture, 0, 0],
-		[i, j, i + direction, j + 1, Moves.Capture, 0, 0],
-	] as Move[];
-	const soldierMoves = [];
-	for (const m of moves) {
-		const m0 = m[0];
-		const m1 = m[1];
-		const m2 = m[2];
-		const m3 = m[3];
-		const m4 = m[4];
-		if (
-			(m4 === Moves.Step && grid[m2][m3] === GridValues.Empty) ||
-			(m4 === Moves.Retreat &&
-				adjacentSodier &&
-				grid[m2][m3] === GridValues.Empty &&
-				grid[(m0 + m2) / 2][(m1 + m3) / 2] === GridValues.Empty) ||
-			(m4 === Moves.Capture && Math.sign(grid[m2][m3]) === opponent)
-		) {
-			soldierMoves.push(m);
-		}
+	const soldierMoves: Move[] = [];
+	const step0i = i + direction;
+	const step0j = j - 1;
+	const step1i = i + direction;
+	const step1j = j;
+	const step2i = i + direction;
+	const step2j = j + 1;
+	if (grid[step0i][step0j] === GridValues.Empty) {
+		soldierMoves.push([i, j, step0i, step0j, Moves.Step, 0, 0]);
+	}
+	if (grid[step1i][step1j] === GridValues.Empty) {
+		soldierMoves.push([i, j, step1i, step1j, Moves.Step, 0, 0]);
+	}
+	if (grid[step2i][step2j] === GridValues.Empty) {
+		soldierMoves.push([i, j, step2i, step2j, Moves.Step, 0, 0]);
+	}
+	const retreat0i = i - 2 * direction;
+	const retreat0j = j - 2;
+	const retreat1i = i - 2 * direction;
+	const retreat1j = j;
+	const retreat2i = i - 2 * direction;
+	const retreat2j = j + 2;
+	if (areValid(retreat0i, retreat0j) && grid[retreat0i] === undefined){
+		debugger
+	}
+	if (
+		adjacentSodier &&
+		areValid(retreat0i, retreat0j) &&
+		grid[retreat0i][retreat0j] === GridValues.Empty &&
+		grid[(i + retreat0i) / 2][(j + retreat0j) / 2] === GridValues.Empty
+	) {
+		soldierMoves.push([i, j, retreat0i, retreat0j, Moves.Retreat, 0, 0]);
+	}
+	if (
+		adjacentSodier &&
+		areValid(retreat1i, retreat1j) &&
+		grid[retreat1i][retreat1j] === GridValues.Empty &&
+		grid[(i + retreat1i) / 2][(j + retreat1j) / 2] === GridValues.Empty
+	) {
+		soldierMoves.push([i, j, retreat1i, retreat1j, Moves.Retreat, 0, 0]);
+	}
+	if (
+		adjacentSodier &&
+		areValid(retreat2i, retreat2j) &&
+		grid[retreat2i][retreat2j] === GridValues.Empty &&
+		grid[(i + retreat2i) / 2][(j + retreat2j) / 2] === GridValues.Empty
+	) {
+		soldierMoves.push([i, j, retreat2i, retreat2j, Moves.Retreat, 0, 0]);
+	}
+	const capture0i = i;
+	const capture0j = j - 1;
+	const capture1i = i;
+	const capture1j = j + 1;
+	const capture2i = i + direction;
+	const capture2j = j - 1;
+	const capture3i = i + direction;
+	const capture3j = j;
+	const capture4i = i + direction;
+	const capture4j = j + 1;
+	if (Math.sign(grid[capture0i][capture0j]) === opponent) {
+		soldierMoves.push([i, j, capture0i, capture0j, Moves.Capture, 0, 0]);
+	}
+	if (Math.sign(grid[capture1i][capture1j]) === opponent) {
+		soldierMoves.push([i, j, capture1i, capture1j, Moves.Capture, 0, 0]);
+	}
+	if (Math.sign(grid[capture2i][capture2j]) === opponent) {
+		soldierMoves.push([i, j, capture2i, capture2j, Moves.Capture, 0, 0]);
+	}
+	if (Math.sign(grid[capture3i][capture3j]) === opponent) {
+		soldierMoves.push([i, j, capture3i, capture3j, Moves.Capture, 0, 0]);
+	}
+	if (Math.sign(grid[capture4i][capture4j]) === opponent) {
+		soldierMoves.push([i, j, capture4i, capture4j, Moves.Capture, 0, 0]);
 	}
 	return soldierMoves;
 };
@@ -394,7 +437,7 @@ const getSoldierCount = (grid: Grid, currentPlayer: Player): number => {
 	return count;
 };
 const getDistance = (i1: number, j1: number, i2: number, j2: number): number =>
-	Math.abs(i1 - i2) + Math.abs(j1 - j2);
+	Math.pow(i1 - i2, 2) + Math.pow(j1 - j2, 4);
 
 const evalBoard = (grid: Grid, soldierValue = 10, cannonValue = 30): number => {
 	const townPosition1 = townPosition(grid, 1);
