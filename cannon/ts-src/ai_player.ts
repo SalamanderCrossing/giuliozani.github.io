@@ -190,7 +190,7 @@ addEventListener("message", (event) => {
 	if (parsedEvent[0] === "chooseMove") {
 		if (parArgNegaMax === null) {
 			console.log('creting everything anew')
-			parArgNegaMax = new ParArgNegaMax(12);
+			parArgNegaMax = new ParArgNegaMax(4);
 		}
 		const [round, grid] = parsedEvent[1] as [number, Grid];
 		parArgNegaMax.argNegaMax(grid, round === 0);
