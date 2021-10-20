@@ -1,4 +1,4 @@
-import { getMoves, expandStates, makeMove, initGrid, } from "./cannon_engine.js";
+import { getMoves, getAllMoves, makeMove, initGrid, } from "./cannon_engine.js";
 import utils from "./utils.js";
 const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -38,7 +38,7 @@ class CannonBoard {
         this._selectedI = -1;
         this._selectedJ = -1;
         this._isComputing = false;
-        this._ai = new Worker("./src/ai_player.js", { type: "module" });
+        this._ai = new Worker("./src/ai_player/parallel_nega_max.js", { type: "module" });
         this._ai.onmessageerror = console.log;
         this._ai.onerror = console.log;
     }
@@ -61,7 +61,7 @@ class CannonBoard {
     _switchPlayer() {
         this.round += Number(this._currentPlayer === 1);
         this._currentPlayer *= -1;
-        const states = expandStates(this._grid, this._currentPlayer, this.round === 0);
+        const states = getAllMoves(this._grid, this._currentPlayer, this.round === 0);
         //shuffleArray(states);
         console.log(`Number of future states: ${states.length}`);
         if (this._currentPlayer === 1) {
@@ -69,7 +69,7 @@ class CannonBoard {
             this._isComputing = true;
             this._ai.onmessage = (e) => {
                 const moveIndex = e.data;
-                this._grid = states[moveIndex];
+                this._grid = makeMove(this._grid, states[moveIndex]);
                 this._switchPlayer();
                 this._isComputing = false;
                 this.update();
@@ -116,7 +116,7 @@ class CannonBoard {
                 const selectedMoves = this._lastMoves.filter((x) => x[2] === i && x[3] === j);
                 if (selectedMoves.length > 0) {
                     const selectedMove = selectedMoves[0];
-                    this._grid = makeMove(this._grid, this._currentPlayer, selectedMove);
+                    this._grid = makeMove(this._grid, selectedMove);
                     this._unselect();
                     //console.table(this._grid);
                     gameOver = this._switchPlayer();

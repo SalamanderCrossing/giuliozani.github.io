@@ -7,6 +7,7 @@ import {
 	getAllMoves,
 } from "./cannon_engine.js";
 
+type NegaMaxResult = [moveIndex: number, value: number, alpha: number, beta: number]
 const argMax = (array: number[]): number =>
 	array
 		.map((x, i) => [x, i])
@@ -26,7 +27,7 @@ const argNegaMax = (
 	alpha = -Infinity,
 	beta = Infinity,
 	maybeChildNodes: Move[] | null = null
-): [number, number] => {
+): NegaMaxResult => {
 	const childNodes =
 		maybeChildNodes === null
 			? getAllMoves(grid, currentPlayer as Player, isFirstRound)
@@ -39,12 +40,12 @@ const argNegaMax = (
 	//const orderedChildGrids = argSort(childNodes, values, true);
 	const orderedChildNodes = childNodes;
 	if (depth === 0 || childNodes.length === 0) {
-		return [0, currentPlayer * evalBoard(grid)];
+		return [0, currentPlayer * evalBoard(grid), alpha, beta];
 	}
 	let value = -Infinity;
-	let valueI = -1;
+	let valueI = 0;
 	for (let i = 0; i < orderedChildNodes.length; i++) {
-		const child = makeMove(grid, currentPlayer, orderedChildNodes[i]);
+		const child = makeMove(grid, orderedChildNodes[i]);
 		//const child = orderedChildGrids[i]
 		const protoValue = -argNegaMax(
 			child,
@@ -63,22 +64,22 @@ const argNegaMax = (
 			break;
 		}
 	}
-	return [valueI, value];
+	return [valueI, value, alpha, beta];
 };
 
 const getChunks = <T>(a: Array<T>, nSplits: number): Array<Array<T>> => {
 	const result = new Array<Array<T>>();
 	let current = new Array<T>();
+	result.push(current)
 	const size = Math.floor(a.length / nSplits);
-	result.push(current);
 	for (let i = 0; i < a.length; i++) {
 		current.push(a[i]);
-		if (current.length === size) {
-			current = [];
+		if (current.length === size && result.length < nSplits) {
+			current = new Array<T>();
 			result.push(current);
 		}
 	}
-	return result.filter((x) => x.length > 0);
+	return result
 };
 
 class ParArgNegaMax {
@@ -88,36 +89,35 @@ class ParArgNegaMax {
 		for (let i = 0; i < threads; i++) {
 			const worker = new Worker("./ai_player.js", { type: "module" });
 			this._workers.push(worker);
-			worker.onerror = (e)=>{
+			worker.onerror = (e) => {
 				debugger;
 			};
 			worker.onmessageerror = console.log;
-			worker.onmessage = (e)=>console.log(e.data);
-			worker.postMessage(["created"]);
 		}
 	}
 	argNegaMax(grid: Grid, isFirstRound: boolean) {
 		const t0 = performance.now();
-		const childNodes = getAllMoves(grid, -1 as Player, isFirstRound);
+		const childNodes = getAllMoves(grid, 1 as Player, isFirstRound);
+		console.log(`Number of future states according to me ${childNodes.length}`)
 		const threads = Math.min(this._workers.length, childNodes.length);
-		console.log(`Total umber of threads ${this._workers.length}, using ${threads}`)
+		console.log(
+			`Total umber of threads ${this._workers.length}, using ${threads}`
+		);
 		const chunks = getChunks(childNodes, threads);
-		const results = [];
+		// const chunks = [childNodes];
+		const results = new Array<NegaMaxResult>()
 		let completed = 0;
-		let i = 0;
-		for (let i = 0; i < threads; i++) {
+		for (let i = 0; i < chunks.length; i++) {
 			const worker = this._workers[i];
 			worker.onmessage = (e) => {
 				console.log(`Thread ${i} has finished!`);
-				const [relativeIndex, val] = e.data as unknown as [number, number];
-				const moveIndex = relativeIndex + i;
-				results[i] = [moveIndex, val];
+				// const [relativeIndex, val, alpha, beta] = e.data as unknown as [number, number, number, number];
+				const threadResult = e.data as unknown as NegaMaxResult
+				threadResult[0] += i * chunks[0].length;
+				results[i] = threadResult
 				completed += 1;
-				if (completed === threads) {
-					const result = results.reduce(
-						(acc, r) => (acc[1] < r[1] ? acc : r),
-						[0, Infinity]
-					);
+				if (completed === chunks.length) {
+					const result = results.reduce((acc, r) => (r[1] > acc[1] ? r : acc));
 					//console.log(`Last thread finished, result:${result}`);
 					postMessage(result[0]);
 					const t1 = performance.now();
@@ -127,8 +127,9 @@ class ParArgNegaMax {
 			if (chunks[i] === undefined) {
 				debugger;
 			}
-			worker.postMessage(["argNegaMax", [grid, chunks[i]]]);
-			i += 1;
+			console.log(`Starting thread ${i}`);
+			const chunk = chunks[i];
+			worker.postMessage(["argNegaMax", [grid, chunk, -Infinity, Infinity]]);
 		}
 		return [0, 0];
 	}
@@ -189,21 +190,20 @@ addEventListener("message", (event) => {
 	let parArgNegaMax: ParArgNegaMax | null = null;
 	if (parsedEvent[0] === "chooseMove") {
 		if (parArgNegaMax === null) {
-			console.log('creting everything anew')
-			parArgNegaMax = new ParArgNegaMax(4);
+			console.log("creting everything anew");
+			parArgNegaMax = new ParArgNegaMax(10);
 		}
 		const [round, grid] = parsedEvent[1] as [number, Grid];
 		parArgNegaMax.argNegaMax(grid, round === 0);
 	} else if (parsedEvent[0] === "argNegaMax") {
-		const [grid, moves] = parsedEvent[1] as [Grid, Move[]];
+		const [grid, moves, alpha, beta] = parsedEvent[1] as [Grid, Move[], number, number];
+		const depth = 5
 		if (moves === undefined) {
 			debugger;
 		}
-		console.log(`Started thread with ${moves.length} moves`);
-		const result = argNegaMax(grid, 4, false, -1, -Infinity, Infinity, moves);
+		console.log(`Started thread with ${moves.length} moves and depth ${depth}`);
+		const result = argNegaMax(grid, depth, false, 1, alpha, beta, moves);
 		postMessage(result);
-	} else if (parsedEvent[0] === "created") {
-		postMessage("hello!");
 	}
 });
 export { argNegaMax };
