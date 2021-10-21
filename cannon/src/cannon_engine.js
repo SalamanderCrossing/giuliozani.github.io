@@ -33,7 +33,7 @@ const getCannonShiftsMoves = (grid, cannon) => {
             cannon[1],
             forwardI,
             forwardJ,
-            4 /* CannonShift */,
+            2 /* CannonShift */,
             cannon[2],
             cannon[3],
         ]);
@@ -46,7 +46,7 @@ const getCannonShiftsMoves = (grid, cannon) => {
             cannon[1],
             backwardI,
             backwardJ,
-            4 /* CannonShift */,
+            2 /* CannonShift */,
             cannon[2],
             cannon[3],
         ]);
@@ -95,7 +95,7 @@ const getCannonShootingMoves = (grid, currentPlayer, cannon) => {
             center1,
             pL0,
             pL1,
-            3 /* Shoot */,
+            0 /* Shoot */,
             cannon2,
             cannon3,
         ]);
@@ -106,7 +106,7 @@ const getCannonShootingMoves = (grid, currentPlayer, cannon) => {
             center1,
             pH0,
             pH1,
-            3 /* Shoot */,
+            0 /* Shoot */,
             cannon2,
             cannon3,
         ]);
@@ -152,13 +152,13 @@ const getSoldierMoves = (grid, currentPlayer, i, j) => {
     const step2i = i + direction;
     const step2j = j + 1;
     if (areValid(step0i, step0j) && grid[step0i][step0j] === 0 /* Empty */) {
-        soldierMoves.push([i, j, step0i, step0j, 0 /* Step */, 0, 0]);
+        soldierMoves.push([i, j, step0i, step0j, 4 /* Step */, 0, 0]);
     }
     if (areValid(step1i, step1j) && grid[step1i][step1j] === 0 /* Empty */) {
-        soldierMoves.push([i, j, step1i, step1j, 0 /* Step */, 0, 0]);
+        soldierMoves.push([i, j, step1i, step1j, 4 /* Step */, 0, 0]);
     }
     if (areValid(step2i, step2j) && grid[step2i][step2j] === 0 /* Empty */) {
-        soldierMoves.push([i, j, step2i, step2j, 0 /* Step */, 0, 0]);
+        soldierMoves.push([i, j, step2i, step2j, 4 /* Step */, 0, 0]);
     }
     const retreat0i = i - 2 * direction;
     const retreat0j = j - 2;
@@ -173,19 +173,19 @@ const getSoldierMoves = (grid, currentPlayer, i, j) => {
         areValid(retreat0i, retreat0j) &&
         grid[retreat0i][retreat0j] === 0 /* Empty */ &&
         grid[(i + retreat0i) / 2][(j + retreat0j) / 2] === 0 /* Empty */) {
-        soldierMoves.push([i, j, retreat0i, retreat0j, 1 /* Retreat */, 0, 0]);
+        soldierMoves.push([i, j, retreat0i, retreat0j, 3 /* Retreat */, 0, 0]);
     }
     if (adjacentSodier &&
         areValid(retreat1i, retreat1j) &&
         grid[retreat1i][retreat1j] === 0 /* Empty */ &&
         grid[(i + retreat1i) / 2][(j + retreat1j) / 2] === 0 /* Empty */) {
-        soldierMoves.push([i, j, retreat1i, retreat1j, 1 /* Retreat */, 0, 0]);
+        soldierMoves.push([i, j, retreat1i, retreat1j, 3 /* Retreat */, 0, 0]);
     }
     if (adjacentSodier &&
         areValid(retreat2i, retreat2j) &&
         grid[retreat2i][retreat2j] === 0 /* Empty */ &&
         grid[(i + retreat2i) / 2][(j + retreat2j) / 2] === 0 /* Empty */) {
-        soldierMoves.push([i, j, retreat2i, retreat2j, 1 /* Retreat */, 0, 0]);
+        soldierMoves.push([i, j, retreat2i, retreat2j, 3 /* Retreat */, 0, 0]);
     }
     const capture0i = i;
     const capture0j = j - 1;
@@ -199,23 +199,23 @@ const getSoldierMoves = (grid, currentPlayer, i, j) => {
     const capture4j = j + 1;
     if (areValid(capture0i, capture0j) &&
         Math.sign(grid[capture0i][capture0j]) === opponent) {
-        soldierMoves.push([i, j, capture0i, capture0j, 2 /* Capture */, 0, 0]);
+        soldierMoves.push([i, j, capture0i, capture0j, 1 /* Capture */, 0, 0]);
     }
     if (areValid(capture1i, capture1j) &&
         Math.sign(grid[capture1i][capture1j]) === opponent) {
-        soldierMoves.push([i, j, capture1i, capture1j, 2 /* Capture */, 0, 0]);
+        soldierMoves.push([i, j, capture1i, capture1j, 1 /* Capture */, 0, 0]);
     }
     if (areValid(capture2i, capture2j) &&
         Math.sign(grid[capture2i][capture2j]) === opponent) {
-        soldierMoves.push([i, j, capture2i, capture2j, 2 /* Capture */, 0, 0]);
+        soldierMoves.push([i, j, capture2i, capture2j, 1 /* Capture */, 0, 0]);
     }
     if (areValid(capture3i, capture3j) &&
         Math.sign(grid[capture3i][capture3j]) === opponent) {
-        soldierMoves.push([i, j, capture3i, capture3j, 2 /* Capture */, 0, 0]);
+        soldierMoves.push([i, j, capture3i, capture3j, 1 /* Capture */, 0, 0]);
     }
     if (areValid(capture4i, capture4j) &&
         Math.sign(grid[capture4i][capture4j]) === opponent) {
-        soldierMoves.push([i, j, capture4i, capture4j, 2 /* Capture */, 0, 0]);
+        soldierMoves.push([i, j, capture4i, capture4j, 1 /* Capture */, 0, 0]);
     }
     return soldierMoves;
 };
@@ -260,6 +260,9 @@ const getMoves = (grid, currentPlayer, selectedI, selectedJ, isFirstRound) => {
     return moves;
 };
 const makeMove = (grid, move) => {
+    if (grid.map === undefined) {
+        debugger;
+    }
     const newGrid = grid.map((r) => r.slice());
     const [sourceI, sourceJ, destI, destJ, moveType, cannonDirectionI, cannonDirectionJ,] = move;
     const currentPlayer = moveType === 5 /* PositionTown */
@@ -268,19 +271,19 @@ const makeMove = (grid, move) => {
             : -1
         : Math.sign(grid[sourceI][sourceJ]);
     switch (moveType) {
-        case 2 /* Capture */:
-        case 1 /* Retreat */:
-        case 0 /* Step */:
+        case 1 /* Capture */:
+        case 3 /* Retreat */:
+        case 4 /* Step */:
             newGrid[destI][destJ] = newGrid[sourceI][sourceJ];
             newGrid[sourceI][sourceJ] = 0 /* Empty */;
             break;
         case 5 /* PositionTown */:
             newGrid[destI][destJ] = 2 * currentPlayer;
             break;
-        case 3 /* Shoot */:
+        case 0 /* Shoot */:
             newGrid[move[2]][move[3]] = 0 /* Empty */;
             break;
-        case 4 /* CannonShift */: {
+        case 2 /* CannonShift */: {
             const directionI = Math.pow(-1, Number(sourceI + 2 * cannonDirectionI === destI));
             const directionJ = Math.pow(-1, Number(sourceJ + 2 * cannonDirectionJ === destJ));
             const shiftSourceI = move[0] + directionI * move[5];
@@ -328,16 +331,24 @@ const getSoldierCount = (grid, currentPlayer) => {
     return count;
 };
 const getDistance = (i1, j1, i2, j2) => Math.pow(i1 - i2, 2) + Math.pow(j1 - j2, 4);
-const evalBoard = (grid, soldierValue = 10, cannonValue = 15) => {
+//ideas:
+//least distance from dude to town
+//least distance from cannon to town
+//town value
+//pawn value
+//cannon value
+const evalBoard = (grid, soldierValue = 10, cannonValue = 2, victoryValue = 200, leastDistanceValue = 0) => {
     const townPositions = getTownPositions(grid);
     const townPosition1 = townPositions[0];
     const townPosition2 = townPositions[1];
     if (townPosition1[0] === -1) {
-        return -Infinity;
+        return -victoryValue;
     }
     if (townPosition2[0] === -1) {
-        return Infinity;
+        return victoryValue;
     }
+    let leastDistance1 = 200;
+    let leastDistance2 = 200;
     let sum = 0;
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
@@ -345,21 +356,27 @@ const evalBoard = (grid, soldierValue = 10, cannonValue = 15) => {
             if (Math.abs(gridVal) === 1) {
                 const cannonCount = getCannonsWithSoldier(grid, gridVal, i, j).length;
                 if (gridVal === 1) {
-                    const distance = getDistance(i, j, townPosition2[0], townPosition2[1]);
+                    const distance = getDistance(i, j, townPosition1[0], townPosition1[1]);
+                    if (distance < leastDistance1) {
+                        leastDistance1 = distance;
+                    }
                     sum +=
                         /*(1 / Math.pow(distance, 1 / 5)) * */
-                        (soldierValue + cannonValue * cannonCount);
+                        soldierValue + cannonValue * cannonCount;
                 }
                 else {
-                    const distance = getDistance(i, j, townPosition1[0], townPosition1[1]);
+                    const distance = getDistance(i, j, townPosition2[0], townPosition2[1]);
+                    if (distance < leastDistance2) {
+                        leastDistance2 = distance;
+                    }
                     sum +=
                         /*(1 / Math.pow(distance, 1 / 5)) * */
-                        (-soldierValue - cannonValue * cannonCount);
+                        -soldierValue - cannonValue * cannonCount;
                 }
             }
         }
     }
-    return sum;
+    return sum + leastDistanceValue * (-leastDistance1 + leastDistance2);
 };
 const expandStates = (grid, currentPlayer, isFirstRound) => {
     const states = [];
@@ -400,5 +417,4 @@ const getAllMoves = (grid, currentPlayer, isFirstRound) => {
         return moves;
     }
 };
-const test = () => { };
-export { getMoves, getAllMoves, expandStates, makeMove, initGrid, evalBoard, };
+export { getMoves, getAllMoves, expandStates, makeMove, initGrid, evalBoard, getTownPositions, };

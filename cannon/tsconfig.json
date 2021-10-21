@@ -3,6 +3,8 @@
 		"module":"es2020",
 		"target":"es2020",
 		"outDir":"src",
-		"rootDir":"ts-src"
+		"rootDir":"ts-src",
+		"alwaysStrict":true,
+		"strict":true
 	}
 }

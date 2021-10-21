@@ -38,7 +38,9 @@ class CannonBoard {
         this._selectedI = -1;
         this._selectedJ = -1;
         this._isComputing = false;
-        this._ai = new Worker("./src/ai_player/parallel_nega_max.js", { type: "module" });
+        this._ai = new Worker("./src/ai_player/parallel_nega_max.js", {
+            type: "module",
+        });
         this._ai.onmessageerror = console.log;
         this._ai.onerror = console.log;
     }
@@ -61,21 +63,22 @@ class CannonBoard {
     _switchPlayer() {
         this.round += Number(this._currentPlayer === 1);
         this._currentPlayer *= -1;
-        const states = getAllMoves(this._grid, this._currentPlayer, this.round === 0);
+        const moves = getAllMoves(this._grid, this._currentPlayer, this.round === 0);
         //shuffleArray(states);
-        console.log(`Number of future states: ${states.length}`);
+        console.log(`Number of future states: ${moves.length}`);
         if (this._currentPlayer === 1) {
-            this._ai.postMessage(["chooseMove", [this.round, this._grid]]);
+            this._ai.postMessage([this.round, this._grid]);
             this._isComputing = true;
             this._ai.onmessage = (e) => {
-                const moveIndex = e.data;
-                this._grid = makeMove(this._grid, states[moveIndex]);
+                const move = e.data;
+                console.assert(moves.filter((m) => m.filter((v, i) => v !== move[i]).length === 0).length === 1, "Move doesn't exist");
+                this._grid = makeMove(this._grid, move);
                 this._switchPlayer();
                 this._isComputing = false;
                 this.update();
             };
         }
-        return states.length === 0;
+        return moves.length === 0;
     }
     _generateMoves(i, j) {
         this._unselect();
@@ -88,20 +91,20 @@ class CannonBoard {
         }
         for (const [_sourceI, _sourceJ, destI, destJ, moveType, _cannonDirectionI, _cannonDirectionJ,] of this._lastMoves) {
             switch (moveType) {
-                case 0 /* Step */:
-                case 1 /* Retreat */:
+                case 4 /* Step */:
+                case 3 /* Retreat */:
                     this._grid[destI][destJ] = 0.1;
                     break;
                 case 5 /* PositionTown */:
                     this._grid[destI][destJ] = 0.1;
                     break;
-                case 3 /* Shoot */:
+                case 0 /* Shoot */:
                     this._grid[destI][destJ] *= 1.1;
                     break;
-                case 2 /* Capture */:
+                case 1 /* Capture */:
                     this._grid[destI][destJ] *= 1.2;
                     break;
-                case 4 /* CannonShift */:
+                case 2 /* CannonShift */:
                     this._grid[destI][destJ] = 0.2;
                     break;
             }

@@ -62,12 +62,14 @@ class CannonBoard {
 		this._selectedI = -1;
 		this._selectedJ = -1;
 		this._isComputing = false;
-		this._ai = new Worker("./src/ai_player/parallel_nega_max.js", { type: "module" });
+		this._ai = new Worker("./src/ai_player/parallel_nega_max.js", {
+			type: "module",
+		});
 		this._ai.onmessageerror = console.log;
 		this._ai.onerror = console.log;
 	}
 	get grid(): string[][] {
-		return this._grid.map((x: number[]) => x.map((y) => this.keysMap.get(y)));
+		return this._grid.map((x: number[]) => x.map((y) => this.keysMap.get(y)!));
 	}
 	get currentPlayer(): string {
 		return this.keysMap.get(this._currentPlayer) as string;
@@ -85,21 +87,32 @@ class CannonBoard {
 	_switchPlayer(): boolean {
 		this.round += Number(this._currentPlayer === 1);
 		this._currentPlayer *= -1;
-		const states = getAllMoves(this._grid, this._currentPlayer as Player, this.round === 0)
+		const moves = getAllMoves(
+			this._grid,
+			this._currentPlayer as Player,
+			this.round === 0
+		);
 		//shuffleArray(states);
-		console.log(`Number of future states: ${states.length}`);
+		console.log(`Number of future states: ${moves.length}`);
 		if (this._currentPlayer === 1) {
-			this._ai.postMessage(["chooseMove", [this.round, this._grid]]);
+			this._ai.postMessage([this.round, this._grid]);
 			this._isComputing = true;
 			this._ai.onmessage = (e) => {
-				const moveIndex = e.data;
-				this._grid = makeMove(this._grid, states[moveIndex]);
+				const move = e.data;
+				console.assert(
+					moves.filter(
+						(m: Move) =>
+							m.filter((v: number, i: number) => v !== move[i]).length === 0
+					).length === 1,
+					"Move doesn't exist"
+				);
+				this._grid = makeMove(this._grid, move);
 				this._switchPlayer();
 				this._isComputing = false;
 				this.update();
 			};
 		}
-		return states.length === 0;
+		return moves.length === 0;
 	}
 	_generateMoves(i: number, j: number) {
 		this._unselect();

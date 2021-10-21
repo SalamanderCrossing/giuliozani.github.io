@@ -1,5 +1,5 @@
 import utils from "./utils.js";
-//TODO: fix cannon shooting shoots also through stuff
+//
 /*
 const range = (a: number, max = -Infinity): number[] => {
 	if (max == -Infinity) {
@@ -10,11 +10,11 @@ const range = (a: number, max = -Infinity): number[] => {
 };
 */
 const enum Moves {
-	Step,
-	Retreat,
+	Shoot = 0,
 	Capture,
-	Shoot,
 	CannonShift,
+	Retreat,
+	Step,
 	PositionTown,
 }
 const enum GridValues {
@@ -386,6 +386,9 @@ const getMoves = (
 	return moves;
 };
 const makeMove = (grid: Grid, move: Move): Grid => {
+	if (grid.map === undefined) {
+		debugger;
+	}
 	const newGrid = grid.map((r) => r.slice());
 	const [
 		sourceI,
@@ -471,16 +474,30 @@ const getSoldierCount = (grid: Grid, currentPlayer: Player): number => {
 const getDistance = (i1: number, j1: number, i2: number, j2: number): number =>
 	Math.pow(i1 - i2, 2) + Math.pow(j1 - j2, 4);
 
-const evalBoard = (grid: Grid, soldierValue = 10, cannonValue = 15): number => {
+//ideas:
+//least distance from dude to town
+//least distance from cannon to town
+//town value
+//pawn value
+//cannon value
+const evalBoard = (
+	grid: Grid,
+	soldierValue = 10,
+	cannonValue = 2,
+	victoryValue = 200,
+	leastDistanceValue = 0
+): number => {
 	const townPositions = getTownPositions(grid);
 	const townPosition1 = townPositions[0];
 	const townPosition2 = townPositions[1];
 	if (townPosition1[0] === -1) {
-		return -Infinity;
+		return -victoryValue;
 	}
 	if (townPosition2[0] === -1) {
-		return Infinity;
+		return victoryValue;
 	}
+	let leastDistance1 = 200;
+	let leastDistance2 = 200;
 	let sum = 0;
 	for (let i = 0; i < 10; i++) {
 		for (let j = 0; j < 10; j++) {
@@ -496,27 +513,33 @@ const evalBoard = (grid: Grid, soldierValue = 10, cannonValue = 15): number => {
 					const distance = getDistance(
 						i,
 						j,
-						townPosition2[0],
-						townPosition2[1]
+						townPosition1[0],
+						townPosition1[1]
 					);
+					if (distance < leastDistance1) {
+						leastDistance1 = distance;
+					}
 					sum +=
 						/*(1 / Math.pow(distance, 1 / 5)) * */
-						(soldierValue + cannonValue * cannonCount);
+						soldierValue + cannonValue * cannonCount;
 				} else {
 					const distance = getDistance(
 						i,
 						j,
-						townPosition1[0],
-						townPosition1[1]
+						townPosition2[0],
+						townPosition2[1]
 					);
+					if (distance < leastDistance2) {
+						leastDistance2 = distance;
+					}
 					sum +=
 						/*(1 / Math.pow(distance, 1 / 5)) * */
-						(-soldierValue - cannonValue * cannonCount);
+						-soldierValue - cannonValue * cannonCount;
 				}
 			}
 		}
 	}
-	return sum;
+	return sum + leastDistanceValue * (-leastDistance1 + leastDistance2);
 };
 const expandStates = (
 	grid: Grid,
@@ -565,7 +588,6 @@ const getAllMoves = (
 		return moves;
 	}
 };
-const test = () => {};
 export {
 	Moves,
 	getMoves,
@@ -574,4 +596,5 @@ export {
 	makeMove,
 	initGrid,
 	evalBoard,
+	getTownPositions,
 };

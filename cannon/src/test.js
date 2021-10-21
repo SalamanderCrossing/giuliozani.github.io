@@ -1,3 +1,4 @@
+"use strict";
 /*
 import { chooseMove } from "./ai_player.js";
 import { expandStates } from "./cannon_engine.js";
