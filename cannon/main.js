@@ -34,9 +34,7 @@ const getSettings = () => {
 	`,
 		confirmButtonText: "Play!",
 		didOpen: () => {
-			document.getElementById("n_threads").value =
-				navigator.hardwareConcurrency;
-			alert(String(navigator.hardwareConcurrency))
+			document.getElementById("n_threads").value = navigator.hardwareConcurrency !== undefined ? navigator.hardwareConcurrency : 4
 		},
 	}).then((result) => {
 		/* Read more about isConfirmed, isDenied below */
