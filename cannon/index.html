@@ -1,48 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta charset="utf-8" />
-  <head>
-    <title>Cannon</title>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <link href="./imgs/cannon.png" type="image/x-icon" rel="icon" />
-    <link rel="stylesheet" href="dark_mode.css" />
-    <link rel="stylesheet" href="main.css" />
-    <style>
-      body {
-    </style>
-  </head>
-  <body>
-    <div id="cannon" style="display: none">
-      <div class="center">
-        <table v-bind:class="{rotate:aiPlayerIsBlack}" id="cannon_table">
-          <tr v-for="(row, i) in grid">
-            <td
-              v-for="(col, j)  in row"
-              v-on:click="selected(aiPlayerIsBlack ? i - 1: i, !aiPlayerIsBlack ? j - 1 : j)"
-              v-bind:class="{rotate:(grid[i][j].includes('x')),selected:(grid[i][j].includes('s')),can_be_shot:(grid[i][j].includes('>')),can_be_eaten:(grid[i][j].includes('*'))}"
-            >
-              <img border="0" v-bind:src="getSrc(i, j)" />
-              <!--<div v-show='grid[i][j] === ""' style="transform: rotate(180deg)">-->
-              <div v-bind:class="{rotate: aiPlayerIsBlack}">
-                {{ !aiPlayerIsBlack ? (j === 0 && i < 10 ? 10 - i : '') : (j
-                ===10 && i> 0? i : '') }} {{ !aiPlayerIsBlack ? (i === 10 && j >
-                0 ? alphabet[j-1] : '') : (i === 0 && j < 10 ? alphabet[9 - j] :
-                '')}}
-                <div
-                  v-show="(aiPlayerIsBlack && i === 0 && j === 10)  || (!aiPlayerIsBlack && i ===10 && j === 0)"
-                >
-                  <div style="font-size: 14px">Round:</div>
-                  <div>{{round}}</div>
-                </div>
-                <!--{{alphabet[10 - j-1]}}{{i+1}}-->
-                <!--{{alphabet[j]}}{{10 - i}}-->
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-    <script type="module" src="main.js"></script>
-  </body>
+	<meta charset="utf-8" />
+	<head>
+		<title>Cannon</title>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.all.min.js"
+			integrity="sha512-IZ95TbsPTDl3eT5GwqTJH/14xZ2feLEGJRbII6bRKtE/HC6x3N4cHye7yyikadgAsuiddCY2+6gMntpVHL1gHw=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+		<link href="./imgs/cannon.png" type="image/x-icon" rel="icon" />
+		<link rel="stylesheet" href="dark_mode.css" />
+		<link rel="stylesheet" href="main.css" />
+		<style>
+			body {
+		</style>
+	</head>
+	<body>
+		<div id="cannon" style="display: none">
+			<div class="center">
+				<table
+					v-bind:class="{rotate:aiPlayerIsBlack}"
+					id="cannon_table"
+				>
+					<tr v-for="(row, i) in grid">
+						<td
+							v-for="(col, j)  in row"
+							v-on:click="selected(aiPlayerIsBlack ? i - 1: i, !aiPlayerIsBlack ? j - 1 : j)"
+							v-bind:class="{rotate:(grid[i][j].includes('x')),selected:(grid[i][j].includes('s')),can_be_shot:(grid[i][j].includes('>')),can_be_eaten:(grid[i][j].includes('*'))}"
+						>
+							<img
+								border="0"
+								v-bind:src="getSrc(i, j)"
+							/>
+							<!--<div v-show='grid[i][j] === ""' style="transform: rotate(180deg)">-->
+							<div
+								v-bind:class="{rotate: aiPlayerIsBlack}"
+							>
+								{{
+								!aiPlayerIsBlack
+								? (j === 0 && i
+								< 10 ? 10 - i :
+								'') : (j ===10
+								&& i> 0? i : '')
+								}} {{
+								!aiPlayerIsBlack
+								? (i === 10 && j
+								> 0 ?
+								alphabet[j-1] :
+								'') : (i === 0
+								&& j < 10 ?
+								alphabet[9 - j]
+								: '')}}
+								<div
+									v-show="(aiPlayerIsBlack && i === 0 && j === 10)  || (!aiPlayerIsBlack && i ===10 && j === 0)"
+								>
+									<div
+										style="
+											font-size: 14px;
+										"
+									>
+										Round:
+									</div>
+									<div>
+										{{round}}
+									</div>
+								</div>
+								<!--{{alphabet[10 - j-1]}}{{i+1}}-->
+								<!--{{alphabet[j]}}{{10 - i}}-->
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<script type="module" src="main.js"></script>
+	</body>
 </html>
