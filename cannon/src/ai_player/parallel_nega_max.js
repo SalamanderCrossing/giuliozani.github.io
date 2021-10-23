@@ -17,7 +17,7 @@ const getChunks = (a, nSplits) => {
     return result;
 };
 class ParArgNegaMax {
-    constructor(threads) {
+    constructor(threads, depth) {
         this._lowLevelArgNegaMax = (grid, isFirstRound, depth, alpha = -Infinity, beta = Infinity) => new Promise((resolve, _reject) => {
             const t0 = performance.now();
             const childNodes = orderMoves(getAllMoves(grid, 1, isFirstRound));
@@ -38,7 +38,9 @@ class ParArgNegaMax {
                     results[i] = threadResult;
                     completed += 1;
                     if (completed === chunks.length) {
+                        console.log(results);
                         const result = results.reduce((acc, r) => r[1] > acc[1] ? r : acc);
+                        console.log(result);
                         const bestAlpha = results.reduce((acc, x) => (x[2] > acc ? x[2] : acc), -Infinity);
                         const bestBeta = results.reduce((acc, x) => (x[3] < acc ? x[3] : acc), +Infinity);
                         //console.log(`Last thread finished, result:${result}`);
@@ -55,7 +57,9 @@ class ParArgNegaMax {
                 worker.postMessage([grid, chunk, alpha, beta, depth]);
             }
         });
+        this._depth = depth;
         this._workers = [];
+        this._lastTime = 0;
         for (let i = 0; i < threads; i++) {
             const worker = new Worker("./nega_max_worker.js", { type: "module" });
             this._workers.push(worker);
@@ -65,22 +69,20 @@ class ParArgNegaMax {
             worker.onmessageerror = console.log;
         }
     }
-    async argNegaMax(grid, isFirstRound, depth) {
+    async argNegaMax(grid, round) {
         const pawnCount = getPawnCount(grid);
-        if (pawnCount < 20) {
-            depth += 1;
+        if (round > 1 && this._lastTime > 15) {
+            this._depth -= 1;
         }
-        if (pawnCount < 10) {
-            depth += 1;
-        }
-        if (pawnCount < 5) {
-            depth += 1;
+        else if (round > 20 && this._lastTime < 5 && this._depth < 8) {
+            this._depth += 1;
         }
         const t1 = performance.now();
-        const protoResult = await this._lowLevelArgNegaMax(grid, isFirstRound, depth);
+        const protoResult = await this._lowLevelArgNegaMax(grid, round === 0, this._depth);
         const t2 = performance.now();
         postMessage(protoResult[0]);
-        console.log(`Took ${(t2 - t1) / 1000}`);
+        this._lastTime = (t2 - t1) / 1000;
+        console.log(`Took ${this._lastTime}`);
     }
 }
 const getPawnCount = (grid) => {
@@ -92,9 +94,9 @@ const getPawnCount = (grid) => {
     }
     return count;
 };
-const parArgNegaMax = new ParArgNegaMax(10);
+const parArgNegaMax = new ParArgNegaMax(12, 6);
 addEventListener("message", (event) => {
     const parsedEvent = event["data"];
     const [round, grid] = parsedEvent;
-    parArgNegaMax.argNegaMax(grid, round === 0, 6);
+    parArgNegaMax.argNegaMax(grid, round);
 });

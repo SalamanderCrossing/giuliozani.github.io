@@ -337,7 +337,7 @@ const getDistance = (i1, j1, i2, j2) => Math.pow(i1 - i2, 2) + Math.pow(j1 - j2,
 //town value
 //pawn value
 //cannon value
-const evalBoard = (grid, soldierValue = 10, cannonValue = 2, victoryValue = 200, leastDistanceValue = 0) => {
+const evalBoard = (grid, soldierValue = 50, cannonValue = 40, victoryValue = 10000, leastDistanceValue = 10) => {
     const townPositions = getTownPositions(grid);
     const townPosition1 = townPositions[0];
     const townPosition2 = townPositions[1];
@@ -356,7 +356,7 @@ const evalBoard = (grid, soldierValue = 10, cannonValue = 2, victoryValue = 200,
             if (Math.abs(gridVal) === 1) {
                 const cannonCount = getCannonsWithSoldier(grid, gridVal, i, j).length;
                 if (gridVal === 1) {
-                    const distance = getDistance(i, j, townPosition1[0], townPosition1[1]);
+                    const distance = getDistance(i, j, townPosition2[0], townPosition2[1]);
                     if (distance < leastDistance1) {
                         leastDistance1 = distance;
                     }
@@ -365,7 +365,7 @@ const evalBoard = (grid, soldierValue = 10, cannonValue = 2, victoryValue = 200,
                         soldierValue + cannonValue * cannonCount;
                 }
                 else {
-                    const distance = getDistance(i, j, townPosition2[0], townPosition2[1]);
+                    const distance = getDistance(i, j, townPosition1[0], townPosition1[1]);
                     if (distance < leastDistance2) {
                         leastDistance2 = distance;
                     }
@@ -376,7 +376,7 @@ const evalBoard = (grid, soldierValue = 10, cannonValue = 2, victoryValue = 200,
             }
         }
     }
-    return sum + leastDistanceValue * (-leastDistance1 + leastDistance2);
+    return sum - leastDistanceValue * (leastDistance1 - leastDistance2);
 };
 const expandStates = (grid, currentPlayer, isFirstRound) => {
     const states = [];

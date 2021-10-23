@@ -53,7 +53,7 @@ const alphaBetaWithTT = (
 	alpha: number,
 	beta: number,
 	maybeChildNodes: Move[] | null = null,
-	discount = 0.9
+	discount = 0.99
 ): NegaMaxResult => {
 	const oldAlpha = alpha;
 	const n = tTable[getHash(grid)]!;
@@ -161,7 +161,8 @@ const argNegaMax = (
 	currentPlayer: Player = 1,
 	alpha = -Infinity,
 	beta = Infinity,
-	maybeChildNodes: Move[] | null = null
+	maybeChildNodes: Move[] | null = null,
+	discount=0.99
 ): NegaMaxResult => {
 	const childNodes =
 		maybeChildNodes === null
@@ -187,7 +188,7 @@ const argNegaMax = (
 	for (let i = 0; i < orderedChildNodes.length; i++) {
 		const move = orderedChildNodes[i];
 		const child = makeMove(grid, move);
-		const protoValue = -argNegaMax(
+		const protoValue = discount*-argNegaMax(
 			child,
 			depth - 1,
 			false,

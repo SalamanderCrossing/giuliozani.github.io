@@ -9,10 +9,11 @@ const shuffleArray = (array) => {
     }
 };
 class CannonBoard {
-    constructor() {
+    constructor(initialPlayer = 1) {
         this._grid = initGrid();
-        this._currentPlayer = -1;
-        this.round = 0;
+        this._currentPlayer = -initialPlayer;
+        this._round = 0;
+        this.initialPlayer = initialPlayer;
         this.keysMap = new Map(Object.entries({
             "": 0,
             x: 1,
@@ -60,23 +61,35 @@ class CannonBoard {
         this._selectedJ = -1;
         this._selected = false;
     }
-    _switchPlayer() {
-        this.round += Number(this._currentPlayer === 1);
+    get round() {
+        return Math.floor(this._round / 2);
+    }
+    _playAI(moves = null) {
+        this._currentPlayer = 1;
+        moves =
+            moves !== null
+                ? moves
+                : getAllMoves(this._grid, this._currentPlayer, this.round === 0);
+        console.table(this._grid);
+        this._ai.postMessage([this.round, this._grid]);
+        this._isComputing = true;
+        this._ai.onmessage = (e) => {
+            const move = e.data;
+            console.assert(moves.filter((m) => m.filter((v, i) => v !== move[i]).length === 0).length === 1, "Move doesn't exist");
+            this._grid = makeMove(this._grid, move);
+            this.switchPlayer();
+            this._isComputing = false;
+            this.update();
+        };
+    }
+    switchPlayer() {
+        this._round += 1;
         this._currentPlayer *= -1;
         const moves = getAllMoves(this._grid, this._currentPlayer, this.round === 0);
         //shuffleArray(states);
         console.log(`Number of future states: ${moves.length}`);
         if (this._currentPlayer === 1) {
-            this._ai.postMessage([this.round, this._grid]);
-            this._isComputing = true;
-            this._ai.onmessage = (e) => {
-                const move = e.data;
-                console.assert(moves.filter((m) => m.filter((v, i) => v !== move[i]).length === 0).length === 1, "Move doesn't exist");
-                this._grid = makeMove(this._grid, move);
-                this._switchPlayer();
-                this._isComputing = false;
-                this.update();
-            };
+            this._playAI(moves);
         }
         return moves.length === 0;
     }
@@ -122,7 +135,7 @@ class CannonBoard {
                     this._grid = makeMove(this._grid, selectedMove);
                     this._unselect();
                     //console.table(this._grid);
-                    gameOver = this._switchPlayer();
+                    gameOver = this.switchPlayer();
                 }
                 else {
                     this._generateMoves(i, j);

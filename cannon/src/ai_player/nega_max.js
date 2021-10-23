@@ -8,7 +8,7 @@ let availableThreads = 0;
     -1,
     [-1, -1, -1, -1, -1, -1, -1],
 ]);*/
-const alphaBetaWithTT = (grid, depth, isFirstRound, currentPlayer, alpha, beta, maybeChildNodes = null, discount = 0.9) => {
+const alphaBetaWithTT = (grid, depth, isFirstRound, currentPlayer, alpha, beta, maybeChildNodes = null, discount = 0.99) => {
     const oldAlpha = alpha;
     const n = tTable[getHash(grid)];
     if (n !== undefined && n[0 /* depth */] >= depth) {
@@ -101,7 +101,7 @@ const alphaBetaWithTT = (grid, depth, isFirstRound, currentPlayer, alpha, beta, 
 
 	return bestValue ;
 `;
-const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infinity, beta = Infinity, maybeChildNodes = null) => {
+const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infinity, beta = Infinity, maybeChildNodes = null, discount = 0.99) => {
     const childNodes = maybeChildNodes === null
         ? getAllMoves(grid, currentPlayer, isFirstRound)
         : maybeChildNodes;
@@ -125,7 +125,7 @@ const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infin
     for (let i = 0; i < orderedChildNodes.length; i++) {
         const move = orderedChildNodes[i];
         const child = makeMove(grid, move);
-        const protoValue = -argNegaMax(child, depth - 1, false, -currentPlayer, -beta, -alpha)[1];
+        const protoValue = discount * -argNegaMax(child, depth - 1, false, -currentPlayer, -beta, -alpha)[1];
         if (protoValue > value) {
             value = protoValue;
             bestMove = move;

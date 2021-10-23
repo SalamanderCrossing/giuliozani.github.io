@@ -482,10 +482,10 @@ const getDistance = (i1: number, j1: number, i2: number, j2: number): number =>
 //cannon value
 const evalBoard = (
 	grid: Grid,
-	soldierValue = 10,
-	cannonValue = 2,
-	victoryValue = 200,
-	leastDistanceValue = 0
+	soldierValue = 50,
+	cannonValue = 40,
+	victoryValue = 10000,
+	leastDistanceValue = 10
 ): number => {
 	const townPositions = getTownPositions(grid);
 	const townPosition1 = townPositions[0];
@@ -513,8 +513,8 @@ const evalBoard = (
 					const distance = getDistance(
 						i,
 						j,
-						townPosition1[0],
-						townPosition1[1]
+						townPosition2[0],
+						townPosition2[1]
 					);
 					if (distance < leastDistance1) {
 						leastDistance1 = distance;
@@ -526,8 +526,8 @@ const evalBoard = (
 					const distance = getDistance(
 						i,
 						j,
-						townPosition2[0],
-						townPosition2[1]
+						townPosition1[0],
+						townPosition1[1]
 					);
 					if (distance < leastDistance2) {
 						leastDistance2 = distance;
@@ -539,7 +539,7 @@ const evalBoard = (
 			}
 		}
 	}
-	return sum + leastDistanceValue * (-leastDistance1 + leastDistance2);
+	return sum  - leastDistanceValue * (leastDistance1 - leastDistance2);
 };
 const expandStates = (
 	grid: Grid,

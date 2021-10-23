@@ -21,8 +21,12 @@ const getChunks = <T>(a: Array<T>, nSplits: number): Array<Array<T>> => {
 
 class ParArgNegaMax {
 	_workers: Worker[];
-	constructor(threads: number) {
+	_lastTime: number;
+	_depth: number;
+	constructor(threads: number, depth: number) {
+		this._depth = depth;
 		this._workers = [];
+		this._lastTime = 0;
 		for (let i = 0; i < threads; i++) {
 			const worker = new Worker("./nega_max_worker.js", { type: "module" });
 			this._workers.push(worker);
@@ -65,9 +69,11 @@ class ParArgNegaMax {
 					results[i] = threadResult;
 					completed += 1;
 					if (completed === chunks.length) {
+						console.log(results);
 						const result = results.reduce((acc, r) =>
 							r[1] > acc[1] ? r : acc
 						);
+						console.log(result);
 						const bestAlpha = results.reduce(
 							(acc, x) => (x[2] > acc ? x[2] : acc),
 							-Infinity
@@ -92,26 +98,23 @@ class ParArgNegaMax {
 			}
 		});
 
-	async argNegaMax(grid: Grid, isFirstRound: boolean, depth: number) {
-		const pawnCount = getPawnCount(grid)
-		if (pawnCount < 20){
-			depth += 1
-		}
-		if (pawnCount < 10){
-			depth += 1
-		}
-		if (pawnCount < 5){
-			depth += 1
+	async argNegaMax(grid: Grid, round: number) {
+		const pawnCount = getPawnCount(grid);
+		if (round > 1 && this._lastTime > 15) {
+			this._depth -= 1;
+		} else if (round > 20 && this._lastTime < 5 && this._depth < 8) {
+			this._depth += 1;
 		}
 		const t1 = performance.now();
 		const protoResult = await this._lowLevelArgNegaMax(
 			grid,
-			isFirstRound,
-			depth
+			round === 0,
+			this._depth
 		);
 		const t2 = performance.now();
 		postMessage(protoResult[0]);
-		console.log(`Took ${(t2 - t1) / 1000}`);
+		this._lastTime = (t2 - t1) / 1000;
+		console.log(`Took ${this._lastTime}`);
 	}
 }
 const getPawnCount = (grid: Grid) => {
@@ -123,9 +126,9 @@ const getPawnCount = (grid: Grid) => {
 	}
 	return count;
 };
-const parArgNegaMax = new ParArgNegaMax(10);
+const parArgNegaMax = new ParArgNegaMax(12, 6);
 addEventListener("message", (event) => {
 	const parsedEvent = (event as unknown as Record<string, unknown>)["data"];
 	const [round, grid] = parsedEvent as [number, Grid];
-	parArgNegaMax.argNegaMax(grid, round === 0, 6);
+	parArgNegaMax.argNegaMax(grid, round);
 });
