@@ -6,7 +6,7 @@ const getSettings = () => {
 	<div>AI player color:
 		<input
 			type="checkbox" 
-			onchange="document.getElementById('ai_color_text').innerText =this.checked ? 'black' : 'white';"
+			onchange="document.getElementById('ai_color_text').innerText = this.checked ? 'black' : 'white';"
 			id="ai_color"
 			name="ai_color"
 		checked>
@@ -36,6 +36,7 @@ const getSettings = () => {
 		didOpen: () => {
 			document.getElementById("n_threads").value =
 				navigator.hardwareConcurrency;
+			alert(String(navigator.hardwareConcurrency))
 		},
 	}).then((result) => {
 		/* Read more about isConfirmed, isDenied below */
