@@ -44,7 +44,7 @@ td {
 }
 .town{
 	background-image:url('./imgs/town.png');
-	background-size: contain;
+	background-size: cover;
 }
 .white_pawn{
 	background-image:url('./imgs/white_pawn.png');

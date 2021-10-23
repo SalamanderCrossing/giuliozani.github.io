@@ -3,8 +3,13 @@ const getSettings = () => {
 	Swal.fire({
 		title: "Welcome!",
 		html: `
+		<br>
+	<div>Check out <a target="_blank" href="https://www.iggamecenter.com/info/en/cannon.html">cannon rules</a></div>
+	<br>
+	<div>Select the <i>center</i> of a cannon in order to show its moves.</div>
+	<br>
 	<div>AI player color:
-		<input
+				<input
 			type="checkbox" 
 			onchange="document.getElementById('ai_color_text').innerText = this.checked ? 'black' : 'white';"
 			id="ai_color"
@@ -24,17 +29,17 @@ const getSettings = () => {
 			id="n_threads"
 			style='width:50px'
 		>
-		<label for="n_threads" style='font-size:20px'> Default = # native CPU threads</label>
+		<label for="n_threads" style='font-size:15px'> Default = number of native CPU threads</label>
 		
 	</div>
-	<script>
-	</script>
 	<br>
-	<div>Don't know how to play? Check out <a target="_blank" href="https://www.iggamecenter.com/info/en/cannon.html">cannon rules</a></div>
 	`,
 		confirmButtonText: "Play!",
 		didOpen: () => {
-			document.getElementById("n_threads").value = navigator.hardwareConcurrency !== undefined ? navigator.hardwareConcurrency : 2
+			document.getElementById("n_threads").value =
+				navigator.hardwareConcurrency !== undefined
+					? navigator.hardwareConcurrency
+					: 2;
 		},
 	}).then((result) => {
 		/* Read more about isConfirmed, isDenied below */
@@ -116,13 +121,17 @@ const initCannon = (aiPlayerIsBlack, nThreads) => {
 				return `./imgs/${src}`;
 			},
 			selected: function (i, j) {
-				const gameOver = cannonBoard.select(i, j);
-				if (gameOver) {
-					Swal.fire(
-						`Player ${cannonBoard.currentPlayer === "o" ? "white" : "black"} wins!!`
-					);
+				if (i >= 0 && i < 10 && j >= 0 && j < 10) {
+					const gameOver = cannonBoard.select(i, j);
+					if (gameOver) {
+						Swal.fire(
+							`Player ${
+								cannonBoard.currentPlayer === "o" ? "white" : "black"
+							} wins!!`
+						);
+					}
+					update();
 				}
-				update();
 			},
 		},
 	});
