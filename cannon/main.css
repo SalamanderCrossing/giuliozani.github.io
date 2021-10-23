@@ -32,6 +32,28 @@ td {
 	font-size: min(3vw, 3vh);
 	text-align: center;
 	border: solid 1px;
+	padding:0;
+}
+.dotted_circle{
+	background-image:url('./imgs/dotted_circle.png');
+	background-size: contain;
+}
+.multi_dotted_circle{
+	background-image:url('./imgs/dashed_circle.png');
+	background-size: contain;
+}
+.town{
+	background-image:url('./imgs/town.png');
+	background-size: contain;
+}
+.white_pawn{
+	background-image:url('./imgs/white_pawn.png');
+	background-size: contain;
+}
+.black_pawn{
+	background-image:url('./imgs/black_pawn.png');
+	background-size: contain;
+
 }
 img,
 td {

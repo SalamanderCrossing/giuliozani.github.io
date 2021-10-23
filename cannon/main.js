@@ -34,7 +34,7 @@ const getSettings = () => {
 	`,
 		confirmButtonText: "Play!",
 		didOpen: () => {
-			document.getElementById("n_threads").value = navigator.hardwareConcurrency !== undefined ? navigator.hardwareConcurrency : 4
+			document.getElementById("n_threads").value = navigator.hardwareConcurrency !== undefined ? navigator.hardwareConcurrency : 2
 		},
 	}).then((result) => {
 		/* Read more about isConfirmed, isDenied below */
@@ -102,16 +102,16 @@ const initCannon = (aiPlayerIsBlack, nThreads) => {
 				}
 				let src = "";
 				if (gridVal.includes("x")) {
-					src = !this.aiPlayerIsBlack ? "white_pawn.png" : "black_pawn.png";
+					//src = !this.aiPlayerIsBlack ? "white_pawn.png" : "black_pawn.png";
 				} else if (gridVal.includes("o")) {
-					src = !this.aiPlayerIsBlack ? "black_pawn.png" : "white_pawn.png";
+					//src = !this.aiPlayerIsBlack ? "black_pawn.png" : "white_pawn.png";
 				} else if (gridVal === "m") {
-					src = "dotted_circle.png";
+					//src = "dotted_circle.png";
 				}
 				if (gridVal.includes("t")) {
-					src = "town.png";
+					//src = "town.png";
 				} else if (gridVal === "@") {
-					src = "dashed_circle.png";
+					//src = "dashed_circle.png";
 				}
 				return `./imgs/${src}`;
 			},
