@@ -43,11 +43,11 @@
                 v-show='grid[i][j].includes("x") || grid[i][j].includes("o") || grid[i][j].includes("t")'
                 style="height: 100%; width: 100%; z-index: -1"
                 v-bind:class="{
-									black_pawn:(grid[i][j].includes('x') && !grid[i][j].includes('t')),
-								      	white_pawn:(grid[i][j].includes('o') && !grid[i][j].includes('t')),
-								        town:(grid[i][j].includes('t')),
-									}
-									"
+				black_pawn:((grid[i][j].includes('x') && !grid[i][j].includes('t') && aiPlayerIsBlack) || (grid[i][j].includes('o') && !grid[i][j].includes('t') && !aiPlayerIsBlack)),
+				white_pawn:((grid[i][j].includes('o') && !grid[i][j].includes('t') && aiPlayerIsBlack) || (grid[i][j].includes('x') && !grid[i][j].includes('t') && !aiPlayerIsBlack )),
+				town:(grid[i][j].includes('t')),
+				}
+				"
               ></div>
               <div v-bind:class="{rotate: aiPlayerIsBlack}">
                 {{ !aiPlayerIsBlack ? (j === 0 && i < 10 ? 10 - i : '') : (j
