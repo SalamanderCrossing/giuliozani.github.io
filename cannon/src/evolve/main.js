@@ -4,7 +4,7 @@ const main = async () => {
     const mutationImpact = 0.1;
     const survivalThreshold = 0.3;
     const generationCount = 30;
-    const populationSize = 50;
+    const populationSize = 100;
     const threadCount = 16;
     let population = randomGenomes(populationSize);
     let fitnesses = [];

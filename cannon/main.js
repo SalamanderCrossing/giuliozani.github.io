@@ -69,7 +69,7 @@ getSettings();
 const initCannon = (aiPlayerIsBlack, nThreads) => {
 	console.log(`AI black: ${aiPlayerIsBlack}`);
 
-	const cannonBoard = new CannonBoard();
+	const cannonBoard = new CannonBoard(nThreads);
 	const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase();
 	const rotateMatrix = (grid) => {
 		const newGrid = grid.map((_) => []);
