@@ -19,7 +19,10 @@ const getGreedyPlayer = (genome: Genome) => (grid: Grid) => {
 	return states[argMax];
 };
 const getNegaMaxPlayer = (depth: number) => (grid: Grid) =>
-	makeMove(grid, argNegaMax(grid, depth, false, 1)[0]);
+	makeMove(
+		grid,
+		argNegaMax(grid, depth, false, 1, -Infinity, Infinity, null, 0.99, true)[0]
+	);
 
 const getAGrid = (): Grid => {
 	const grid = initGrid();
@@ -32,7 +35,7 @@ const getAGrid = (): Grid => {
 	return grid;
 };
 
-const getFitness = (genome: Genome): number => {
+const playout = (genome: Genome): number => {
 	const greedyPlayer = getGreedyPlayer(genome);
 	const negaMaxPlayer = getNegaMaxPlayer(4);
 	let round = 0;
@@ -56,6 +59,15 @@ const getFitness = (genome: Genome): number => {
 	return round;
 };
 
+const getFitness = (genome: Genome): number => {
+	const playoutCount = 4;
+	let fitnessSum = 0;
+	for (let i = 0; i < playoutCount; i++) {
+		fitnessSum += playout(genome);
+	}
+	return Math.round((100 * fitnessSum) / playoutCount) / 100;
+};
+
 addEventListener("message", (event) => {
 	const parsedEvent = (event as unknown as Record<string, unknown>)["data"];
 	// if (event ===
@@ -63,3 +75,5 @@ addEventListener("message", (event) => {
 	const fitness = getFitness(genome);
 	postMessage([fitness, index]);
 });
+
+export { getFitness };

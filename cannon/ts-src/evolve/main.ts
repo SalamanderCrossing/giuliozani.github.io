@@ -6,13 +6,14 @@ import {
 	getChildren,
 } from "./evolve.js";
 
+
 const main = async () => {
 	const mutationRate = 0.01;
 	const mutationImpact = 0.05;
 	const survivalThreshold = 0.3;
 	const generationCount = 20;
 	const populationSize = 50;
-	const threadCount = 13;
+	const threadCount = 15;
 	let population = randomGenomes(populationSize);
 	let fitnesses: number[] = [];
 	const threads = new Array(threadCount).fill(0).map(
@@ -21,7 +22,7 @@ const main = async () => {
 				type: "module",
 			})
 	);
-
+	// population = threads.map(_=>population[0])
 	for (let generation = 0; generation < generationCount; generation++) {
 		fitnesses = await getFitnesses(threads, population);
 
@@ -33,7 +34,7 @@ const main = async () => {
 		const argMax = getArgMax(fitnesses);
 		console.log(fitnesses)
 		console.log(
-			`End of generation ${generation}\nFitness:${fitnesses[argMax]}\nGenome:\n${population[argMax]}`
+			`End of generation ${generation}\nBest fitness:${fitnesses[argMax]}\nBest genome:\n${population[argMax]}\n`
 		);
 		population = [...survivors, ...children, ...novelIndividuals];
 	}
