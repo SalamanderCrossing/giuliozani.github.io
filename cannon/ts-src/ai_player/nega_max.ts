@@ -154,6 +154,15 @@ const alphaBetaWithTT = (
 
 	return bestValue ;
 `;
+const simpleHeuristicFunction = (grid: Grid): number => {
+	let sum = 0;
+	for (let i = 0; i < grid.length; i++) {
+		for (let j = 0; j < grid.length; j++) {
+			sum += grid[i][j];
+		}
+	}
+	return sum;
+};
 const argNegaMax = (
 	grid: Grid,
 	depth: number,
@@ -162,7 +171,8 @@ const argNegaMax = (
 	alpha = -Infinity,
 	beta = Infinity,
 	maybeChildNodes: Move[] | null = null,
-	discount=0.99
+	discount = 0.99,
+	useSimpleHeuristiFunction = false
 ): NegaMaxResult => {
 	const childNodes =
 		maybeChildNodes === null
@@ -178,7 +188,8 @@ const argNegaMax = (
 	if (depth === 0 || childNodes.length === 0) {
 		return [
 			[-1, -1, -1, -1, -1, -1, -1],
-			currentPlayer * evalBoard(grid),
+			currentPlayer *
+				(useSimpleHeuristiFunction ? simpleHeuristicFunction(grid) : evalBoard(grid)),
 			alpha,
 			beta,
 		];
@@ -188,14 +199,16 @@ const argNegaMax = (
 	for (let i = 0; i < orderedChildNodes.length; i++) {
 		const move = orderedChildNodes[i];
 		const child = makeMove(grid, move);
-		const protoValue = discount*-argNegaMax(
-			child,
-			depth - 1,
-			false,
-			-currentPlayer as Player,
-			-beta,
-			-alpha
-		)[1];
+		const protoValue =
+			discount *
+			-argNegaMax(
+				child,
+				depth - 1,
+				false,
+				-currentPlayer as Player,
+				-beta,
+				-alpha
+			)[1];
 		if (protoValue > value) {
 			value = protoValue;
 			bestMove = move;
@@ -334,7 +347,7 @@ const negaMaxWorker = (
 		moves
 	);
 	*/
- return result
+	return result;
 };
 export type { NegaMaxResult };
 export { argNegaMax, negaMaxWorker };

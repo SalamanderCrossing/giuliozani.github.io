@@ -1,4 +1,4 @@
-import { getMoves, getAllMoves, makeMove, initGrid, } from "./cannon_engine.js";
+import { getMoves, getAllMoves, makeMove, initGrid, checkWhoLost, } from "./cannon_engine.js";
 import utils from "./utils.js";
 const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -33,7 +33,7 @@ class CannonBoard {
             m: 0.1,
             "@": 0.2,
         }).map((x) => [x[1], x[0]]));
-        this.update = () => { };
+        this.update = (_loser) => { };
         this._lastMoves = [];
         this._selected = false;
         this._selectedI = -1;
@@ -79,7 +79,7 @@ class CannonBoard {
             this._grid = makeMove(this._grid, move);
             this.switchPlayer();
             this._isComputing = false;
-            this.update();
+            this.update(this.round > 1 ? checkWhoLost(this._grid) : 0);
         };
     }
     switchPlayer() {
@@ -87,6 +87,7 @@ class CannonBoard {
         this._currentPlayer *= -1;
         const moves = getAllMoves(this._grid, this._currentPlayer, this.round === 0);
         //shuffleArray(states);
+        this.update(this.round > 1 ? checkWhoLost(this._grid) : 0);
         console.log(`Number of future states: ${moves.length}`);
         if (this._currentPlayer === 1) {
             this._playAI(moves);
@@ -122,10 +123,10 @@ class CannonBoard {
                     break;
             }
         }
+        this.update(this.round > 1 ? checkWhoLost(this._grid) : 0);
         // console.table(this._grid);
     }
     select(i, j) {
-        let gameOver = false;
         if (!this._isComputing) {
             //console.log(`Selecting ${JSON.stringify({ i, j })}`);
             if (this._selected) {
@@ -135,7 +136,7 @@ class CannonBoard {
                     this._grid = makeMove(this._grid, selectedMove);
                     this._unselect();
                     //console.table(this._grid);
-                    gameOver = this.switchPlayer();
+                    this.switchPlayer();
                 }
                 else {
                     this._generateMoves(i, j);
@@ -145,7 +146,6 @@ class CannonBoard {
                 this._generateMoves(i, j);
             }
         }
-        return gameOver;
     }
 }
 export { CannonBoard };

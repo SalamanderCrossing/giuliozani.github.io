@@ -7,6 +7,7 @@ import {
 	getAllMoves,
 	makeMove,
 	initGrid,
+	checkWhoLost,
 } from "./cannon_engine.js";
 
 import utils from "./utils.js";
@@ -28,7 +29,7 @@ class CannonBoard {
 	_selected: boolean;
 	_isComputing: boolean;
 	_ai: Worker;
-	update: () => void;
+	update: (n: number) => void;
 	_round: number;
 	keysMap: Map<number, string>;
 	initialPlayer: Player;
@@ -58,7 +59,7 @@ class CannonBoard {
 				"@": 0.2,
 			}).map((x) => [x[1], x[0]])
 		);
-		this.update = () => {};
+		this.update = (_loser: number) => {};
 		this._lastMoves = [];
 		this._selected = false;
 		this._selectedI = -1;
@@ -90,7 +91,7 @@ class CannonBoard {
 		return Math.floor(this._round / 2);
 	}
 	_playAI(moves: Move[] | null = null) {
-		this._currentPlayer = 1
+		this._currentPlayer = 1;
 		moves =
 			moves !== null
 				? moves
@@ -99,7 +100,7 @@ class CannonBoard {
 						this._currentPlayer as Player,
 						this.round === 0
 				  );
-		console.table(this._grid)
+		console.table(this._grid);
 		this._ai.postMessage([this.round, this._grid]);
 		this._isComputing = true;
 		this._ai.onmessage = (e) => {
@@ -114,7 +115,7 @@ class CannonBoard {
 			this._grid = makeMove(this._grid, move);
 			this.switchPlayer();
 			this._isComputing = false;
-			this.update();
+			this.update(this.round > 1 ? checkWhoLost(this._grid) : 0);
 		};
 	}
 	switchPlayer(): boolean {
@@ -126,6 +127,7 @@ class CannonBoard {
 			this.round === 0
 		);
 		//shuffleArray(states);
+		this.update(this.round > 1 ? checkWhoLost(this._grid) : 0);
 		console.log(`Number of future states: ${moves.length}`);
 		if (this._currentPlayer === 1) {
 			this._playAI(moves);
@@ -175,10 +177,10 @@ class CannonBoard {
 					break;
 			}
 		}
+		this.update(this.round > 1 ? checkWhoLost(this._grid) : 0);
 		// console.table(this._grid);
 	}
-	select(i: number, j: number): boolean {
-		let gameOver = false;
+	select(i: number, j: number) {
 		if (!this._isComputing) {
 			//console.log(`Selecting ${JSON.stringify({ i, j })}`);
 			if (this._selected) {
@@ -190,7 +192,7 @@ class CannonBoard {
 					this._grid = makeMove(this._grid, selectedMove);
 					this._unselect();
 					//console.table(this._grid);
-					gameOver = this.switchPlayer();
+					this.switchPlayer();
 				} else {
 					this._generateMoves(i, j);
 				}
@@ -198,7 +200,6 @@ class CannonBoard {
 				this._generateMoves(i, j);
 			}
 		}
-		return gameOver;
 	}
 }
 

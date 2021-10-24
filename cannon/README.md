@@ -4,6 +4,4 @@
 
 # todo:
 - fix gui
- - implement game shifting
- - make pop up window with instructions and settings
  - fix winning

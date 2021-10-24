@@ -4,16 +4,16 @@ import {
 	selectBest,
 	getArgMax,
 	getChildren,
+	Genome,
 } from "./evolve.js";
-
 
 const main = async () => {
 	const mutationRate = 0.01;
-	const mutationImpact = 0.05;
-	const survivalThreshold = 0.3;
-	const generationCount = 20;
-	const populationSize = 50;
-	const threadCount = 15;
+	const mutationImpact = 0.1;
+	const survivalThreshold = 0.2;
+	const generationCount = 30;
+	const populationSize = 100;
+	const threadCount = 16;
 	let population = randomGenomes(populationSize);
 	let fitnesses: number[] = [];
 	const threads = new Array(threadCount).fill(0).map(
@@ -22,7 +22,7 @@ const main = async () => {
 				type: "module",
 			})
 	);
-	// population = threads.map(_=>population[0])
+	const history: [number, Genome][] = [];
 	for (let generation = 0; generation < generationCount; generation++) {
 		fitnesses = await getFitnesses(threads, population);
 
@@ -32,10 +32,12 @@ const main = async () => {
 			populationSize - (children.length + survivors.length)
 		);
 		const argMax = getArgMax(fitnesses);
-		console.log(fitnesses)
+		console.log(fitnesses.sort());
 		console.log(
 			`End of generation ${generation}\nBest fitness:${fitnesses[argMax]}\nBest genome:\n${population[argMax]}\n`
 		);
+		history.push([fitnesses[argMax], population[argMax]]);
+		await Deno.writeTextFile("./history.json", JSON.stringify(history));
 		population = [...survivors, ...children, ...novelIndividuals];
 	}
 	Deno.exit();

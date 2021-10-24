@@ -101,7 +101,16 @@ const alphaBetaWithTT = (grid, depth, isFirstRound, currentPlayer, alpha, beta, 
 
 	return bestValue ;
 `;
-const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infinity, beta = Infinity, maybeChildNodes = null, discount = 0.99) => {
+const simpleHeuristicFunction = (grid) => {
+    let sum = 0;
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid.length; j++) {
+            sum += grid[i][j];
+        }
+    }
+    return sum;
+};
+const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infinity, beta = Infinity, maybeChildNodes = null, discount = 0.99, useSimpleHeuristiFunction = false) => {
     const childNodes = maybeChildNodes === null
         ? getAllMoves(grid, currentPlayer, isFirstRound)
         : maybeChildNodes;
@@ -115,7 +124,8 @@ const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infin
     if (depth === 0 || childNodes.length === 0) {
         return [
             [-1, -1, -1, -1, -1, -1, -1],
-            currentPlayer * evalBoard(grid),
+            currentPlayer *
+                (useSimpleHeuristiFunction ? simpleHeuristicFunction(grid) : evalBoard(grid)),
             alpha,
             beta,
         ];
@@ -125,7 +135,8 @@ const argNegaMax = (grid, depth, isFirstRound, currentPlayer = 1, alpha = -Infin
     for (let i = 0; i < orderedChildNodes.length; i++) {
         const move = orderedChildNodes[i];
         const child = makeMove(grid, move);
-        const protoValue = discount * -argNegaMax(child, depth - 1, false, -currentPlayer, -beta, -alpha)[1];
+        const protoValue = discount *
+            -argNegaMax(child, depth - 1, false, -currentPlayer, -beta, -alpha)[1];
         if (protoValue > value) {
             value = protoValue;
             bestMove = move;

@@ -124,6 +124,14 @@ const getCannonShiftsMoves = (grid: Grid, cannon: Cannon): Move[] => {
 	}
 	return moves;
 };
+const checkWhoLost = (grid: Grid): number => {
+	const townPositions = getTownPositions(grid);
+	const negaMaxPlayerLost =
+		townPositions[0][0] === -1 || getAllMoves(grid, 1, false).length === 0;
+	const greedyPlayerLost =
+		townPositions[1][0] === -1 || getAllMoves(grid, -1, false).length === 0;
+	return negaMaxPlayerLost ? 1 : greedyPlayerLost ? 1 : 0;
+};
 const getCannonShootingMoves = (
 	grid: Grid,
 	currentPlayer: Player,
@@ -135,10 +143,10 @@ const getCannonShootingMoves = (
 	const center1 = cannon[1];
 	const cannon2 = cannon[2];
 	const cannon3 = cannon[3];
-	let pH0 = center0 + 3 * cannon2;
-	let pH1 = center1 + 3 * cannon3;
-	let pL0 = center0 - 3 * cannon2;
-	let pL1 = center1 - 3 * cannon3;
+	let pH0 = center0 + 2 * cannon2;
+	let pH1 = center1 + 2 * cannon3;
+	let pL0 = center0 - 2 * cannon2;
+	let pL1 = center1 - 2 * cannon3;
 	let done = false;
 	let hCollidedBorder = false;
 	let lCollidedBorder = false;
@@ -539,7 +547,7 @@ const evalBoard = (
 			}
 		}
 	}
-	return sum  - leastDistanceValue * (leastDistance1 - leastDistance2);
+	return sum - leastDistanceValue * (leastDistance1 - leastDistance2);
 };
 const expandStates = (
 	grid: Grid,
@@ -597,4 +605,5 @@ export {
 	initGrid,
 	evalBoard,
 	getTownPositions,
+	checkWhoLost
 };

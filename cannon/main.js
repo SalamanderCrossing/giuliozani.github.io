@@ -9,7 +9,7 @@ const getSettings = () => {
 	<div>Select the <i>center</i> of a cannon in order to show its moves.</div>
 	<br>
 	<div>AI player color:
-				<input
+		<input
 			type="checkbox" 
 			onchange="document.getElementById('ai_color_text').innerText = this.checked ? 'black' : 'white';"
 			id="ai_color"
@@ -30,7 +30,13 @@ const getSettings = () => {
 			style='width:50px'
 		>
 		<label for="n_threads" style='font-size:15px'> Default = number of native CPU threads</label>
-		
+	</div>
+	<br>
+	<div>Dark mode enabled:
+		<input
+			type="checkbox" 
+			id="dark_mode"
+		checked>
 	</div>
 	<br>
 	`,
@@ -44,6 +50,10 @@ const getSettings = () => {
 	}).then((result) => {
 		/* Read more about isConfirmed, isDenied below */
 		if (result.isConfirmed) {
+			if (document.getElementById("dark_mode").checked) {
+				document.head.innerHTML +=
+					'<link rel="stylesheet" type="text/css" href="dark_mode.css">';
+			}
 			document.getElementById("cannon_table").requestFullscreen();
 			const nThreads = document.getElementById("n_threads").value;
 			const aiPlayerIsBlack = document.getElementById("ai_color").checked;
@@ -80,7 +90,21 @@ const initCannon = (aiPlayerIsBlack, nThreads) => {
 	};
 	//.concat(new Array(10).fill("").map((_, i) => alphabet[i]));
 	console.table(getGrid());
-	const update = () => {
+	const update = (loser) => {
+		if (loser !== 0) {
+			debugger;
+			Swal.fire(
+				`Player ${
+					loser === 1
+						? app.aiPlayerIsBlack
+							? "black"
+							: "white"
+						: !app.aiPlayerIsBlack
+						? "black"
+						: "white"
+				} wins!!`
+			);
+		}
 		app.grid = getGrid();
 		app.player = cannonBoard.currentPlayer;
 		app.round = cannonBoard.round;
@@ -96,10 +120,6 @@ const initCannon = (aiPlayerIsBlack, nThreads) => {
 			alphabet: "abcdefghijklmnopqrstuvwxyz".toUpperCase(),
 		},
 		methods: {
-			start: function () {
-				cannonBoard._playAI();
-				update();
-			},
 			getSrc: function (i, j) {
 				const gridVal = this.grid[i][j];
 				if (i === 6 && j === 0) {
@@ -122,21 +142,12 @@ const initCannon = (aiPlayerIsBlack, nThreads) => {
 			},
 			selected: function (i, j) {
 				if (i >= 0 && i < 10 && j >= 0 && j < 10) {
-					const gameOver = cannonBoard.select(i, j);
-					if (gameOver) {
-						Swal.fire(
-							`Player ${
-								cannonBoard.currentPlayer === "o" ? "white" : "black"
-							} wins!!`
-						);
-					}
-					update();
+					cannonBoard.select(i, j);
 				}
 			},
 		},
 	});
 	if (aiPlayerIsBlack) {
 		cannonBoard._playAI();
-		update();
 	}
 };
