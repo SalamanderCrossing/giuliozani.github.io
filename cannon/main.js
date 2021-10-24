@@ -22,6 +22,13 @@ const getSettings = () => {
 		</label>
 	</div>
 	<br>
+	<div>Dark mode enabled:
+		<input
+			type="checkbox" 
+			id="dark_mode"
+		checked>
+	</div>
+	<br>
 	<div>Number of threads:
 		<input
 			type="number" 
@@ -30,13 +37,6 @@ const getSettings = () => {
 			style='width:50px'
 		>
 		<label for="n_threads" style='font-size:15px'> Default = number of native CPU threads</label>
-	</div>
-	<br>
-	<div>Dark mode enabled:
-		<input
-			type="checkbox" 
-			id="dark_mode"
-		checked>
 	</div>
 	<br>
 	`,
