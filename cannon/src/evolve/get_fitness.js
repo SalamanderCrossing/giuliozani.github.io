@@ -3,7 +3,7 @@ import { argNegaMax } from "../ai_player/nega_max.js";
 import { getArgMax } from "./evolve.js";
 const getGreedyPlayer = (genome) => (grid) => {
     const states = expandStates(grid, -1, false);
-    const values = states.map((s) => evalBoard(s, genome[0], genome[1], genome[2], genome[3]));
+    const values = states.map((s) => evalBoard(s, genome[0], genome[1], genome[2]));
     const argMax = getArgMax(values);
     return states[argMax];
 };

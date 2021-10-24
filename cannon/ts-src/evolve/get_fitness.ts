@@ -13,7 +13,7 @@ import { Genome, getArgMax } from "./evolve.js";
 const getGreedyPlayer = (genome: Genome) => (grid: Grid) => {
 	const states = expandStates(grid, -1, false);
 	const values = states.map((s: Grid) =>
-		evalBoard(s, genome[0], genome[1], genome[2], genome[3])
+		evalBoard(s, genome[0], genome[1], genome[2])
 	);
 	const argMax = getArgMax(values);
 	return states[argMax];

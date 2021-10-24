@@ -9,8 +9,7 @@ type Genome = [
 const validGenomeRanges = [
 	[0, 100],
 	[0, 100],
-	[0, 500],
-	[-100, 100],
+	[0, 100],
 ] as [number, number][];
 
 const getArgMax = (values: number[]) => {

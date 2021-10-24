@@ -498,8 +498,8 @@ const evalBoard = (
 	grid: Grid,
 	soldierValue = 50,
 	cannonValue = 40,
+	leastDistanceValue = 10,
 	victoryValue = 10000,
-	leastDistanceValue = 10
 ): number => {
 	const townPositions = getTownPositions(grid);
 	const townPosition1 = townPositions[0];

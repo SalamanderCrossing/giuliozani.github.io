@@ -346,7 +346,7 @@ const getDistance = (i1, j1, i2, j2) => Math.pow(i1 - i2, 2) + Math.pow(j1 - j2,
 //town value
 //pawn value
 //cannon value
-const evalBoard = (grid, soldierValue = 50, cannonValue = 40, victoryValue = 10000, leastDistanceValue = 10) => {
+const evalBoard = (grid, soldierValue = 50, cannonValue = 40, leastDistanceValue = 10, victoryValue = 10000) => {
     const townPositions = getTownPositions(grid);
     const townPosition1 = townPositions[0];
     const townPosition2 = townPositions[1];

@@ -1,8 +1,7 @@
 const validGenomeRanges = [
     [0, 100],
     [0, 100],
-    [0, 500],
-    [-100, 100],
+    [0, 100],
 ];
 const getArgMax = (values) => {
     let max = values[0];

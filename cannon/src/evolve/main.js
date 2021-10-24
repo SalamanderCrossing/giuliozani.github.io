@@ -1,9 +1,9 @@
 import { randomGenomes, getFitnesses, selectBest, getArgMax, getChildren, } from "./evolve.js";
 const main = async () => {
-    const mutationRate = 0.01;
-    const mutationImpact = 0.1;
-    const survivalThreshold = 0.3;
-    const generationCount = 30;
+    const mutationRate = 0.02;
+    const mutationImpact = 0.2;
+    const survivalThreshold = 0.2;
+    const generationCount = 40;
     const populationSize = 100;
     const threadCount = 16;
     let population = randomGenomes(populationSize);
