@@ -94,9 +94,12 @@ const getPawnCount = (grid) => {
     }
     return count;
 };
-const parArgNegaMax = new ParArgNegaMax(12, 6);
+let parArgNegaMax;
 addEventListener("message", (event) => {
     const parsedEvent = event["data"];
-    const [round, grid] = parsedEvent;
+    const [round, grid, nThreads] = parsedEvent;
+    if (!parArgNegaMax) {
+        parArgNegaMax = new ParArgNegaMax(nThreads, 6);
+    }
     parArgNegaMax.argNegaMax(grid, round);
 });
