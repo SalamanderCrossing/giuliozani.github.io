@@ -170,9 +170,9 @@ const getCannonShootingMoves = (
 		done =
 			((hCollidedObject || hCollidedBorder) &&
 				(lCollidedObject || lCollidedBorder)) ||
-			i === 2;
+			i === 3;
 	}
-	if (lCollidedObject && Math.sign(grid[pL0][pL1]) === opponent) {
+	if (lCollidedObject && Math.sign(grid[pL0][pL1]) === opponent && i > 1) {
 		moves.push([
 			center0,
 			center1,
@@ -183,7 +183,7 @@ const getCannonShootingMoves = (
 			cannon3,
 		] as Move);
 	}
-	if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent) {
+	if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent && i > 1) {
 		moves.push([
 			center0,
 			center1,
