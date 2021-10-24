@@ -95,7 +95,9 @@ const getCannonShootingMoves = (grid, currentPlayer, cannon) => {
                 (lCollidedObject || lCollidedBorder)) ||
                 i === 3;
     }
-    if (lCollidedObject && Math.sign(grid[pL0][pL1]) === opponent && i > 1) {
+    if (lCollidedObject &&
+        Math.sign(grid[pL0][pL1]) === opponent &&
+        (Math.abs(pL0 - center0) > 2 || Math.abs(pL1 - center1) > 2)) {
         moves.push([
             center0,
             center1,
@@ -106,7 +108,8 @@ const getCannonShootingMoves = (grid, currentPlayer, cannon) => {
             cannon3,
         ]);
     }
-    if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent && i > 1) {
+    if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent &&
+        (Math.abs(pH0 - center0) > 2 || Math.abs(pH1 - center1) > 2)) {
         moves.push([
             center0,
             center1,
@@ -423,4 +426,4 @@ const getAllMoves = (grid, currentPlayer, isFirstRound) => {
         return moves;
     }
 };
-export { getMoves, getAllMoves, expandStates, makeMove, initGrid, evalBoard, getTownPositions, checkWhoLost };
+export { getMoves, getAllMoves, expandStates, makeMove, initGrid, evalBoard, getTownPositions, checkWhoLost, };

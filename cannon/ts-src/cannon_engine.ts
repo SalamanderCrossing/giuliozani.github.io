@@ -172,7 +172,11 @@ const getCannonShootingMoves = (
 				(lCollidedObject || lCollidedBorder)) ||
 			i === 3;
 	}
-	if (lCollidedObject && Math.sign(grid[pL0][pL1]) === opponent && i > 1) {
+	if (
+		lCollidedObject &&
+		Math.sign(grid[pL0][pL1]) === opponent &&
+		(Math.abs(pL0 - center0) > 2 || Math.abs(pL1 - center1) > 2)
+	) {
 		moves.push([
 			center0,
 			center1,
@@ -183,7 +187,9 @@ const getCannonShootingMoves = (
 			cannon3,
 		] as Move);
 	}
-	if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent && i > 1) {
+	if (hCollidedObject && Math.sign(grid[pH0][pH1]) === opponent && 
+			(Math.abs(pH0 - center0) > 2 || Math.abs(pH1 - center1) > 2)
+		 ) {
 		moves.push([
 			center0,
 			center1,
@@ -605,5 +611,5 @@ export {
 	initGrid,
 	evalBoard,
 	getTownPositions,
-	checkWhoLost
+	checkWhoLost,
 };
