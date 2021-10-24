@@ -31,9 +31,11 @@ class CannonBoard {
 	_ai: Worker;
 	update: (n: number) => void;
 	_round: number;
+  _nThreads:number;
 	keysMap: Map<number, string>;
 	initialPlayer: Player;
-	constructor(initialPlayer: Player = 1) {
+	constructor(nThreads:number, initialPlayer: Player = 1) {
+    this._nThreads = nThreads;
 		this._grid = initGrid();
 		this._currentPlayer = -initialPlayer as Player;
 		this._round = 0;
@@ -101,7 +103,7 @@ class CannonBoard {
 						this.round === 0
 				  );
 		console.table(this._grid);
-		this._ai.postMessage([this.round, this._grid]);
+		this._ai.postMessage([this.round, this._grid, this._nThreads]);
 		this._isComputing = true;
 		this._ai.onmessage = (e) => {
 			const move = e.data;
