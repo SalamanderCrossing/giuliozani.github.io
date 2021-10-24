@@ -2,9 +2,9 @@ import { randomGenomes, getFitnesses, selectBest, getArgMax, getChildren, } from
 const main = async () => {
     const mutationRate = 0.01;
     const mutationImpact = 0.1;
-    const survivalThreshold = 0.2;
+    const survivalThreshold = 0.3;
     const generationCount = 30;
-    const populationSize = 100;
+    const populationSize = 50;
     const threadCount = 16;
     let population = randomGenomes(populationSize);
     let fitnesses = [];
@@ -18,7 +18,7 @@ const main = async () => {
         const children = getChildren(survivors, mutationRate, mutationImpact);
         const novelIndividuals = randomGenomes(populationSize - (children.length + survivors.length));
         const argMax = getArgMax(fitnesses);
-        console.log(fitnesses.sort());
+        console.log(fitnesses.map(x => x).sort((x, y) => y - x));
         console.log(`End of generation ${generation}\nBest fitness:${fitnesses[argMax]}\nBest genome:\n${population[argMax]}\n`);
         history.push([fitnesses[argMax], population[argMax]]);
         await Deno.writeTextFile("./history.json", JSON.stringify(history));

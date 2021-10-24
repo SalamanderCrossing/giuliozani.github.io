@@ -9,7 +9,8 @@ const shuffleArray = (array) => {
     }
 };
 class CannonBoard {
-    constructor(initialPlayer = 1) {
+    constructor(nThreads, initialPlayer = 1) {
+        this._nThreads = nThreads;
         this._grid = initGrid();
         this._currentPlayer = -initialPlayer;
         this._round = 0;
@@ -71,7 +72,7 @@ class CannonBoard {
                 ? moves
                 : getAllMoves(this._grid, this._currentPlayer, this.round === 0);
         console.table(this._grid);
-        this._ai.postMessage([this.round, this._grid]);
+        this._ai.postMessage([this.round, this._grid, this._nThreads]);
         this._isComputing = true;
         this._ai.onmessage = (e) => {
             const move = e.data;

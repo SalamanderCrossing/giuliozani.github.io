@@ -52,9 +52,10 @@ const mutate = (genome, mutationRate, mutationImpact) => {
         : x);
 };
 const selectBest = (genomes, fitnesses, survivalThreshold = 0.3) => {
-    const sortedGenomes = argSort(genomes, fitnesses);
+    const sortedGenomes = argSort(genomes, fitnesses, true);
     const topIndex = 1 - Math.round(survivalThreshold * genomes.length);
-    return sortedGenomes.slice(topIndex);
+    const result = sortedGenomes.slice(topIndex);
+    return result;
 };
 const mate = (g1, g2, mutationRate, mutationImpact) => {
     return mutate(g1.map((_, i) => (Math.random() > 0.5 ? g1[i] : g2[i])), mutationRate, mutationImpact);
@@ -98,8 +99,12 @@ const getFitnesses = (threads, population) => new Promise((resolve, _reject) => 
     }
 });
 const test = () => {
-    const genome1 = [92.12516746620518, 90.57038431176298, 118.79403536434208, 62.5708828774591];
-    const genome2 = [9.140431535500282, 84.41403279296522, 492.7045822227587, -37.2708689358376];
+    const genome1 = [
+        92.12516746620518, 90.57038431176298, 118.79403536434208, 62.5708828774591,
+    ];
+    const genome2 = [
+        9.140431535500282, 84.41403279296522, 492.7045822227587, -37.2708689358376,
+    ];
     const offspring = mate(genome1, genome2, 0.01, 0.05);
     console.log(genome1);
     console.log(genome2);
