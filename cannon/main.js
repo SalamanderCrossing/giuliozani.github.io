@@ -49,19 +49,28 @@ const getSettings = () => {
 		},
 	}).then((result) => {
 		/* Read more about isConfirmed, isDenied below */
-		if (result.isConfirmed) {
-			if (document.getElementById("dark_mode").checked) {
-				document.head.innerHTML +=
-					'<link rel="stylesheet" type="text/css" href="dark_mode.css">';
-			}
-			document.getElementById("cannon_table").requestFullscreen();
-			const nThreads = document.getElementById("n_threads").value;
-			const aiPlayerIsBlack = document.getElementById("ai_color").checked;
-			document.getElementById("cannon").style.display = "";
-			initCannon(aiPlayerIsBlack, nThreads);
-			// Swal.fire("Ready to play!", "", "success");
+		const isChromium = !!window.chrome;
+		if (!isChromium) {
+			Swal.fire({
+				icon: "error",
+				title: "Oops...",
+				text: "This program only runs on chromium-based browsers like Chrome, Edge, Brave, Vivaldi ecc.",
+			});
 		} else {
-			getSettings();
+			if (result.isConfirmed) {
+				if (document.getElementById("dark_mode").checked) {
+					document.head.innerHTML +=
+						'<link rel="stylesheet" type="text/css" href="dark_mode.css">';
+				}
+				document.getElementById("cannon_table").requestFullscreen();
+				const nThreads = document.getElementById("n_threads").value;
+				const aiPlayerIsBlack = document.getElementById("ai_color").checked;
+				document.getElementById("cannon").style.display = "";
+				initCannon(aiPlayerIsBlack, nThreads);
+				// Swal.fire("Ready to play!", "", "success");
+			} else {
+				getSettings();
+			}
 		}
 	});
 };
