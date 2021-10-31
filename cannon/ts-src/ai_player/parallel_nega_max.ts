@@ -131,7 +131,7 @@ addEventListener("message", (event) => {
 	const parsedEvent = (event as unknown as Record<string, unknown>)["data"];
 	const [round, grid, nThreads] = parsedEvent as [number, Grid, number];
 	if (!parArgNegaMax){
-		parArgNegaMax = new ParArgNegaMax(nThreads, 8)
+		parArgNegaMax = new ParArgNegaMax(nThreads, 6)
 	}
 	parArgNegaMax.argNegaMax(grid, round);
 });
