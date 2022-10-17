@@ -16,19 +16,18 @@
     <script>
       const term = new Terminal();
       term.open(document.getElementById("terminal"));
-      let ws = null //new WebSocket();
+      let ws = null; //new WebSocket();
       const send = () => {
         const input = document.getElementById("input").value;
         document.getElementById("container").style.display = "none";
-	ws = new WebSocket("ws://" + input);
-	ws.onopen = () => {
-		console.log("connected");
-	};
-	ws.onmessage = (e) => {
-	  term.write(e.data);
-	};
+        ws = new WebSocket("ws://" + input);
+        ws.onopen = () => {
+          console.log("connected");
+        };
+        ws.onmessage = (e) => {
+          term.write(e.data);
+        };
       };
-      };
-          </script>
+    </script>
   </body>
 </html>
