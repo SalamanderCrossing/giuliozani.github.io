@@ -3,6 +3,18 @@
   padding: 0;
   text-align: center;
 }
+body,
+canvas,
+html {
+  background: #000;
+  overflow: hidden;
+  height: 100%;
+}
+.container {
+  max-width: 90%;
+  height: 100%;
+  overflow: scroll;
+}
 
 /* h1 { */
 /*   color: #ffa07a; */
@@ -26,13 +38,19 @@
 #FFFF00 (bright yellow)
 #00FF00 (bright green)
 */
-
+*::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 p {
   color: #b3e6ff;
 }
 h2 {
-  color: #FF1E56;
+  color: #ff1e56;
 }
 h1 {
-  color: #FFAC41;
+  color: #ffac41;
 }

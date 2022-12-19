@@ -37,7 +37,7 @@ const FocusGraph = (
   // css to make the display appear on top of the graph
   const cssToAddToDisplay = {
     position: "absolute",
-    top: "10%",
+    top: "5%",
     left: "50%",
     transform: "translate(-50%, 0)",
     zIndex: 1,
@@ -96,7 +96,7 @@ function App() {
   // of that view
   const displays = {
     Home: () => (
-      <div className="dark-bg">
+      <div className="container">
         <h1 className="title">GIULIO ZANI</h1>
         <img
           src="./profile.jpeg"
@@ -108,7 +108,13 @@ function App() {
             borderRadius: "50%",
           }}
         />
-        <p style={{ fontSize: "1.2em" }}>
+        <div
+          style={{
+            fontSize: "1.2em",
+            overflowY: "scroll",
+            height: "50vh",
+          }}
+        >
           As a dedicated artificial intelligence student and experienced private
           tutor and consultant, you are a highly skilled and knowledgeable
           professional in the field of computer programming, artificial
@@ -121,12 +127,16 @@ function App() {
           with students one-on-one or presenting at conferences and workshops,
           you are always eager to share your knowledge and inspire others to
           learn more about these exciting and transformative technologies.
-        </p>
+        </div>
       </div>
     ),
-    About: () => <div>About</div>,
+    About: () => (
+      <div className='container'>
+        <h1>About</h1>
+      </div>
+    ),
     "Links & Contact": () => (
-      <div>
+      <div className="container">
         <h1>CONTACT</h1>
         <h2>
           g.zani(at)uva.nl
@@ -146,7 +156,7 @@ function App() {
       </div>
     ),
     Projects: () => (
-      <div>
+      <div className="container">
         <h1>IN EVIDENCE</h1>
         <div>
           <a href="https://github.com/SalamanderXing/mate" target="_blank">
