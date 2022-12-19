@@ -3,3 +3,36 @@
   padding: 0;
   text-align: center;
 }
+
+/* h1 { */
+/*   color: #ffa07a; */
+/* } */
+/**/
+/* a, h2 { */
+/*   color: #F08080; */
+/* } */
+/**/
+/* h1 { */
+/*   color: #00ff00; */
+/* } */
+/* a, */
+/* h2 { */
+/*   color: #ff8c00; */
+/* } */
+/* p { */
+/*   color: #00ffff; */
+/* } */
+/*
+#FFFF00 (bright yellow)
+#00FF00 (bright green)
+*/
+
+p {
+  color: #b3e6ff;
+}
+h2 {
+  color: #FF1E56;
+}
+h1 {
+  color: #FFAC41;
+}
