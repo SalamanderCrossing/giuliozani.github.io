@@ -115,19 +115,7 @@ function App() {
             height: "50vh",
           }}
         >
-          As a dedicated artificial intelligence student and experienced private
-          tutor and consultant, you are a highly skilled and knowledgeable
-          professional in the field of computer programming, artificial
-          intelligence, and machine learning. With a passion for staying
-          up-to-date on the latest developments in these rapidly-evolving
-          fields, you are constantly seeking new opportunities to learn and
-          grow. Your expertise and enthusiasm for teaching make you an
-          invaluable asset to your clients and students, helping them to achieve
-          their goals and reach their full potential. Whether you are working
-          with students one-on-one or presenting at conferences and workshops,
-          you are always eager to share your knowledge and inspire others to
-          learn more about these exciting and transformative technologies.
-        </div>
+          Lorem Ipsum</div>
       </div>
     ),
     About: () => (
