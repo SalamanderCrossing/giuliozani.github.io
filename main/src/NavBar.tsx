@@ -25,15 +25,22 @@ function BasicExample() {
       <Navbar
         bg="dark"
         expand="lg"
+        style={{ color: "white" }}
         //className={`navbar-expand-${expanded ? "sm" : "lg"}`}
       >
-        <Container style={{marginLeft:"10px", maxWidth:"100vw", width:"100vw"}}>
-          <Navbar.Brand 
-          onClick={unsetExpanded} as={Link} to="/about">
+        <Container
+          style={{ marginLeft: "10px", maxWidth: "100vw", width: "100vw" }}
+        >
+          <Navbar.Brand
+            style={{ color: "white" }}
+            onClick={unsetExpanded}
+            as={Link}
+            to="/about"
+          >
             Giulio Zani
           </Navbar.Brand>
           <Navbar.Toggle
-          style={{marginRight:"0px"}}
+            style={{ marginRight: "0px", color: "white" }}
             ref={navBarToggleRef}
             aria-controls="basic-navbar-nav"
             className={`${!expanded ? "" : "collapse"}`}
@@ -42,15 +49,31 @@ function BasicExample() {
           <Navbar.Collapse
             id="basic-navbar-nav"
             className={`${!expanded ? "" : "show"}`}
+            style={{ color: "white" }}
           >
             <Nav className="me-auto">
-              <Nav.Link onClick={unsetExpanded} as={Link} to="/about">
+              <Nav.Link
+                style={{ color: "white" }}
+                onClick={unsetExpanded}
+                as={Link}
+                to="/about"
+              >
                 About
               </Nav.Link>
-              <Nav.Link onClick={unsetExpanded} as={Link} to="/contact">
+              <Nav.Link
+                style={{ color: "white" }}
+                onClick={unsetExpanded}
+                as={Link}
+                to="/contact"
+              >
                 Contact
               </Nav.Link>
-              <Nav.Link onClick={unsetExpanded} as={Link} to="/projects">
+              <Nav.Link
+                style={{ color: "white" }}
+                onClick={unsetExpanded}
+                as={Link}
+                to="/projects"
+              >
                 Projects
               </Nav.Link>
             </Nav>

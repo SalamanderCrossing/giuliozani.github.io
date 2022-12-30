@@ -36,8 +36,7 @@ function DefaultExample() {
       description: "Computes the maximum common subgraph of two graphs",
       link: "https://github.com/salamanderxing/mcs",
     },
-      
-  ]
+  ];
   return (
     <div style={{ textAlign: "center" }}>
       <ListGroup
@@ -49,28 +48,31 @@ function DefaultExample() {
           maxWidth: 500,
         }}
       >
-      {projects.map((project, index) => (
-        <ListGroup.Item
-          key={index}
-          as="li"
-          className="d-flex justify-content-between align-items-start"
-        >
-          <div className="ms-2 me-auto" style={{textAlign:'center', width:'100%'}}>
-            <div style={{marginLeft:"auto", marginRight:"auto"}}>
-            <div className="fw-bold" >{project.name}</div>
-{project.description}
-            </div>
-          </div>
-          {/* inserts the link to the project */}
-          <a
-            href={project.link}
-            target="_blank"
-            style={{ textDecoration: "none" }}
+        {projects.map((project, index) => (
+          <ListGroup.Item
+            key={index}
+            as="li"
+            className="d-flex justify-content-between align-items-start"
           >
-            <Badge bg="primary">Link</Badge>
-          </a>
-        </ListGroup.Item>
-      ))}
+            <div
+              className="ms-2 me-auto"
+              style={{ textAlign: "center", width: "100%" }}
+            >
+              <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+                <div className="fw-bold">{project.name}</div>
+                {project.description}
+              </div>
+            </div>
+            {/* inserts the link to the project */}
+            <a
+              href={project.link}
+              target="_blank"
+              style={{ textDecoration: "none" }}
+            >
+              <Badge bg="primary">Link</Badge>
+            </a>
+          </ListGroup.Item>
+        ))}
       </ListGroup>
     </div>
   );
