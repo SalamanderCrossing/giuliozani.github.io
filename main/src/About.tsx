@@ -1,5 +1,5 @@
 // imports bootstrap css
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default () => {
   const logo = "profile.jpeg";
@@ -16,11 +16,8 @@ export default () => {
         }}
       />
       <p style={{ maxWidth: "80vw", marginLeft: "auto", marginRight: "auto" }}>
-        As a AI master's student at Maastricht University, I am currently
-        completing my research internship at the University of Amsterdam. My
-        passion lies in the fields of deep learning, computer science, and
-        cryptos, and I am excited to continue exploring and advancing in these
-        areas.
+Hey there! I'm a master's student in AI at Maastricht University and I'm currently doing my research internship at the University of Amsterdam. I'm super passionate about deep learning, computer science, and cryptos. Excited to keep learning and growing in these areas!
+
       </p>
     </div>
   );

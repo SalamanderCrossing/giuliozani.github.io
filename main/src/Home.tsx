@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import NavBar from "./NavBar";
 
 function Home() {
-  return <div>Hello World</div>;
+  return <div></div>;
 }
 
 export default Home;

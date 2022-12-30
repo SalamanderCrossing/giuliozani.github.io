@@ -1,17 +1,19 @@
 {
-  "name": "main",
+  "name": "master",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "tsc && vite build && cp -r dist/* ..",
+    "dev": "vite",
+    "build": "rm -rf ../assets/* && tsc && vite build && mv dist/* ..",
     "preview": "vite preview"
   },
   "dependencies": {
+    "bootstrap": "^5.2.3",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
-    "react-force-graph": "^1.41.17"
+    "react-router-dom": "^6.6.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
