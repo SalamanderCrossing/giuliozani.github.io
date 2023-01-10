@@ -15,7 +15,8 @@ export default () => {
           objectFit: "cover",
         }}
       />
-      <p style={{ maxWidth: "80vw", marginLeft: "auto", marginRight: "auto" }}>
+      <div className="container">
+      <p>
         Hey there! I'm a master's student in AI at Maastricht University and I'm
         currently doing my research internship at the University of Amsterdam.
         I'm super passionate about deep learning, computer science, and cryptos.
@@ -23,6 +24,7 @@ export default () => {
       <p>
       I give private lessons in the field of computer programming, artificial intelligence (deep learning) and machine learning. I'm also available as a consultant for your project or thesis. Please check out the Contact section if you are interested.
       </p>
+      </div>
     </div>
   );
 };
