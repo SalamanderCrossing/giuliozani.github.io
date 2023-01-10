@@ -14,7 +14,7 @@ function DefaultExample() {
     {
       name: "Mate",
       description: "Next gen deep learning framework",
-      link: "https://github.com/salamanderxing/mate",
+      link: "https://salamanderxing.github.io/mate",
     },
     {
       name: "Stochastic Hopfield Network",
