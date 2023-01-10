@@ -22,10 +22,11 @@ function BasicExample() {
   };
   useEffect(() => {
     const canvas = document.getElementById("particle-canvas")! as HTMLCanvasElement;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.height = canvas.height + "px";
-    canvas.style.width = canvas.width + "px";
+    canvas.width = Math.round(1.5 * window.innerWidth)
+    canvas.height = Math.round(1.5 * window.innerHeight)
+    canvas.style.height = window.innerHeight + "px";
+    canvas.style.width = window.innerWidth + "px";
+
     const particlesManager = new ParticlesManager({
       canvas,
     });
@@ -47,7 +48,7 @@ function BasicExample() {
         //className={`navbar-expand-${expanded ? "sm" : "lg"}`}
       >
         <Container
-          style={{ marginLeft: "10px", maxWidth: "100vw", width: "100vw", color:'white' }}
+          style={{ maxWidth: "100vw", width: "100vw", color:'white' }}
         >
           <Navbar.Brand
             style={{ color: "white" }}
