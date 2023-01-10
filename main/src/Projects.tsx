@@ -28,7 +28,7 @@ function DefaultExample() {
     },
     {
       name: "Focus",
-      description: "Test your focus",
+      description: "Test your focus, in your browser.",
       link: "https://salamanderxing.github.io/focus/",
     },
     {

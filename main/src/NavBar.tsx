@@ -2,20 +2,28 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Home from "./Home";
 import About from "./About";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import { useState, createRef, useEffect } from "react";
 import ParticlesManager from './Intro/ParticlesManager'
 // imports Link from react-router-dom
-import { Link, BrowserRouter, Routes, Route } from "react-router-dom";
+//import { Link, BrowserRouter, Routes, Route } from "react-router-dom";
 
 function BasicExample() {
   const [expanded, setExpanded] = useState(false);
+  const routes = {
+    "Giulio Zani": <About />,
+    "Projects": <Projects />,
+    "Contact": <Contact />,
+  } as Record<string, JSX.Element>;
+  const [currentRoute, setCurrentRoute] = useState<string>("Giulio Zani")
   // defines a reference to the NavBar Toggle button
   const navBarToggleRef = createRef<HTMLButtonElement>();
-  const unsetExpanded = () => {
+  const unsetExpanded = (e:React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    const route = e.currentTarget.innerText;
+    setCurrentRoute(route);
     if (expanded) {
       navBarToggleRef.current?.click();
     }
@@ -40,7 +48,6 @@ function BasicExample() {
   <>
 
     <canvas id="particle-canvas" style={{width: '100vw', height: '100vh'}}></canvas>
-    <BrowserRouter>
       <Navbar
         bg="dark"
         expand="lg"
@@ -53,8 +60,6 @@ function BasicExample() {
           <Navbar.Brand
             style={{ color: "white" }}
             onClick={unsetExpanded}
-            as={Link}
-            to="/about"
           >
             Giulio Zani
           </Navbar.Brand>
@@ -74,24 +79,12 @@ function BasicExample() {
               <Nav.Link
                 style={{ color: "white" }}
                 onClick={unsetExpanded}
-                as={Link}
-                to="/about"
-              >
-                About
-              </Nav.Link>
-              <Nav.Link
-                style={{ color: "white" }}
-                onClick={unsetExpanded}
-                as={Link}
-                to="/contact"
               >
                 Contact
               </Nav.Link>
               <Nav.Link
                 style={{ color: "white" }}
                 onClick={unsetExpanded}
-                as={Link}
-                to="/projects"
               >
                 Projects
               </Nav.Link>
@@ -99,15 +92,7 @@ function BasicExample() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
-      <Routes>
-        <Route path="/" element={<About />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/projects" element={<Projects />} />
-      </Routes>
-
-    </BrowserRouter>
+      {routes[currentRoute]}
     </>
   );
 }
