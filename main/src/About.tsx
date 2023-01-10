@@ -8,14 +8,15 @@ export default () => {
       <img
         src={logo}
         style={{
-          marginTop: "20px",
+          marginTop: "30px",
+          marginBottom: "30px",
           width: 150,
           height: 150,
           borderRadius: "50%",
           objectFit: "cover",
         }}
       />
-      <div className="container" style={{color:'white'}}>
+      <div className="container" style={{color:'white', maxWidth:"450px"}}>
       <p>
         Hey there! I'm a master's student in AI at Maastricht University and I'm
         currently doing my research internship at the University of Amsterdam.
