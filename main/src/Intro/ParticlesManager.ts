@@ -70,7 +70,7 @@ export default class ParticlesManager {
 	particles: Particle[];
 	particleColor: string = 'rgb(173,216,230)';
 	lineColor: string = 'rgba(0,181,255)';
-	particleAmount: number = 100;
+	particleAmount: number = 150;
 	defaultRadius: number = 2;
 	variantRadius: number = 2;
 	defaultSpeed: number = 1;
