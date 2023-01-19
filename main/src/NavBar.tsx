@@ -5,10 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import About from "./About";
 import Contact from "./Contact";
 import Projects from "./Projects";
-import { useState, createRef, useEffect } from "react";
-import ParticlesManager from './Intro/ParticlesManager'
-// imports Link from react-router-dom
-//import { Link, BrowserRouter, Routes, Route } from "react-router-dom";
+import { createRef, useEffect, useState } from "react";
+import initBoids from "./flocking/main";
 
 function BasicExample() {
   const [expanded, setExpanded] = useState(false);
@@ -17,10 +15,12 @@ function BasicExample() {
     "Projects": <Projects />,
     "Contact": <Contact />,
   } as Record<string, JSX.Element>;
-  const [currentRoute, setCurrentRoute] = useState<string>("Giulio Zani")
+  const [currentRoute, setCurrentRoute] = useState<string>("Giulio Zani");
   // defines a reference to the NavBar Toggle button
   const navBarToggleRef = createRef<HTMLButtonElement>();
-  const unsetExpanded = (e:React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const unsetExpanded = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
     e.preventDefault();
     const route = e.currentTarget.innerText;
     setCurrentRoute(route);
@@ -28,26 +28,21 @@ function BasicExample() {
       navBarToggleRef.current?.click();
     }
   };
+  //let particlesManager: ParticlesManager | null = null;
+  let alreadyInitialized = false;
   useEffect(() => {
-    const canvas = document.getElementById("particle-canvas")! as HTMLCanvasElement;
-    canvas.width = Math.round(1.5 * window.innerWidth)
-    canvas.height = Math.round(1.5 * window.innerHeight)
-    canvas.style.height = window.innerHeight + "px";
-    canvas.style.width = window.innerWidth + "px";
-
-    const particlesManager = new ParticlesManager({
-      canvas,
-    });
-    const update = () => {
-      particlesManager.update();
-      requestAnimationFrame(update);
+    const div = document.getElementById(
+      "particle-canvas",
+    )! as HTMLDivElement;
+    if (!alreadyInitialized) {
+      initBoids(div);
+      alreadyInitialized = true;
     }
-    update();
-  },[])
+  }, []);
   return (
-  <>
-
-    <canvas id="particle-canvas" style={{width: '100vw', height: '100vh'}}></canvas>
+    <>
+      <div id="particle-canvas">
+      </div>
       <Navbar
         bg="dark"
         expand="lg"
@@ -55,7 +50,7 @@ function BasicExample() {
         //className={`navbar-expand-${expanded ? "sm" : "lg"}`}
       >
         <Container
-          style={{ maxWidth: "100vw", width: "100vw", color:'white' }}
+          style={{ maxWidth: "100vw", width: "100vw", color: "white" }}
         >
           <Navbar.Brand
             style={{ color: "white" }}

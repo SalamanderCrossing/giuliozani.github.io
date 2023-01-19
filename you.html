@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)https://fiddle.jshell.net/GiulioZani/cjrs0tu5/3/show/light/ -->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <title>Line Points</title>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.148.0/three.min.js"
+      integrity="sha512-TBsRPqWeusJljmmEij9waZ9K+qO2m6W1pu+5h5BjxvdizD1Izn1wwJyVYNFFFH42tIfedURxTsgtXF2Lah2PXA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style id="compiled-css" type="text/css">
+      body {
+        overflow: hidden;
+      }
+
+      /* EOS */
+    </style>
+
+    <script id="insert"></script>
+  </head>
+  <body data-new-gr-c-s-check-loaded="14.1093.0" data-gr-ext-installed="" style="margin:0; padding:0">
+    <div></div>
+
+    <script type="module">
+
+      import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/controls/OrbitControls.js";
+
+      var camera, scene, renderer, controls;
+      var sourceObj, destinationObj, line;
+
+      init();
+      animate();
+
+      function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          1,
+          10000
+        );
+        camera.position.set(5, 10, 10);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        controls = new OrbitControls(camera, renderer.domElement);
+
+        var planeGeom = new THREE.PlaneGeometry(10, 10, 10, 10);
+        planeGeom.rotateX(-Math.PI / 2);
+        planeGeom.translate(0, -5, 0);
+
+        var planeMat = new THREE.MeshBasicMaterial({
+          color: 0x777777,
+          wireframe: true,
+        });
+        var plane = new THREE.Mesh(planeGeom, planeMat);
+        scene.add(plane);
+
+        const sphereObj = function (color) {
+          var sphGeom = new THREE.SphereGeometry(0.5, 8, 4);
+          var sphMat = new THREE.MeshBasicMaterial({
+            color: color,
+            wireframe: true,
+          });
+          return new THREE.Mesh(sphGeom, sphMat);
+        };
+
+        sourceObj = new sphereObj("blue");
+        destinationObj = new sphereObj("red");
+
+        const lineGeom = new THREE.BufferGeometry([
+          sourceObj.position,
+          destinationObj.position,
+        ]);
+        var lineMat = new THREE.LineBasicMaterial({
+          color: "blue",
+        });
+        line = new THREE.Line(lineGeom, lineMat);
+
+        scene.add(sourceObj);
+        scene.add(destinationObj);
+        scene.add(line);
+      }
+
+      function animate() {
+        var timestamp = new Date() * 0.0005;
+        requestAnimationFrame(animate);
+
+        sourceObj.position.x = Math.cos(timestamp) * 7;
+        sourceObj.position.z = Math.sin(timestamp) * 7;
+
+        destinationObj.position.x = Math.cos(timestamp * 2) * 5;
+        destinationObj.position.y = Math.sin(timestamp * 2) * 5;
+
+        //line.geometry.verticesNeedUpdate = true;
+        line.geometry.attributes.position.needsUpdate = true;
+
+        render();
+      }
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+    </script>
+
+    <script>
+      // tell the embed parent frame the height of the content
+      if (window.parent && window.parent.parent) {
+        window.parent.parent.postMessage(
+          [
+            "resultsFrame",
+            {
+              height: document.body.getBoundingClientRect().height,
+              slug: "cjrs0tu5",
+            },
+          ],
+          "*"
+        );
+      }
+
+      // always overwrite window.name, in case users try to set it manually
+      window.name = "result";
+    </script>
+  </body>
+  <grammarly-desktop-integration
+    data-grammarly-shadow-root="true"
+  ></grammarly-desktop-integration>
+</html>

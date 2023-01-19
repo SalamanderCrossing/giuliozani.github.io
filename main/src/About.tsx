@@ -17,7 +17,7 @@ export default () => {
         }}
       />
       <div className="container" style={{color:'white', maxWidth:"450px"}}>
-      <p>
+      <p style={{}}>
         Hey there! I'm a master's student in AI at Maastricht University and I'm
         currently doing my research internship at the University of Amsterdam.
         I'm super passionate about deep learning, computer science, and blockchain technologies.
