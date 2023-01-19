@@ -99,7 +99,7 @@ export default function init(container: HTMLElement) {
   container.style.touchAction = "none";
   container.addEventListener("pointermove", onPointerMove);
   window.addEventListener("resize", onWindowResize);
-  const gui = new GUI();
+  //const gui = new GUI();
   const effectController = {
     separation: 20.0,
     alignment: 50.0,
@@ -114,16 +114,16 @@ export default function init(container: HTMLElement) {
     velocityUniforms["freedomFactor"].value = effectController.freedom;
   };
   valuesChanger();
-  gui
-    .add(effectController, "separation", 0.0, 100.0, 1.0)
-    .onChange(valuesChanger);
-  gui
-    .add(effectController, "alignment", 0, 200, 0.001)
-    .onChange(valuesChanger);
-  gui
-    .add(effectController, "cohesion", 0, 200, 0.001)
-    .onChange(valuesChanger);
-  gui.close();
+  // gui
+  //   .add(effectController, "separation", 0.0, 100.0, 1.0)
+  //   .onChange(valuesChanger);
+  // gui
+  //   .add(effectController, "alignment", 0, 200, 0.001)
+  //   .onChange(valuesChanger);
+  // gui
+  //   .add(effectController, "cohesion", 0, 200, 0.001)
+  //   .onChange(valuesChanger);
+  // gui.close();
   initBirds();
   animate();
 }
