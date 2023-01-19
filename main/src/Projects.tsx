@@ -23,7 +23,7 @@ function DefaultExample() {
     },
     {
       name: "Cannon",
-      description: "Play online agains an AI",
+      description: "Play online against an AI",
       link: "https://salamanderxing.github.io/cannon/",
     },
     {
