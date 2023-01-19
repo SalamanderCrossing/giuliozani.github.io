@@ -21,7 +21,7 @@ import vertexShader from "./birdVS.glsl?raw";
 import fragmentShader from "./birdFS.glsl?raw";
 /* TEXTURE WIDTH FOR SIMULATION */
 const WIDTH = 32;
-const BIRDS = 9000; //WIDTH * WIDTH;
+const BIRDS = 10000; //WIDTH * WIDTH;
 const BOUNDS = window.innerHeight / 4;
 const BOUNDS_HALF = BOUNDS / 2;
 let stats;
