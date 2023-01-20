@@ -1,10 +1,48 @@
 // imports bootstrap css
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import ListGroup from "react-bootstrap/ListGroup";
+import Badge from "react-bootstrap/Badge";
+interface Project {
+  name: string;
+  description: string;
+  link: string;
+}
 export default () => {
+  const projects: Project[] = [
+    {
+      name: "Mate",
+      description: "Next gen deep learning framework",
+      link: "https://salamanderxing.github.io/mate",
+    },
+    {
+      name: "Stochastic Hopfield Network",
+      description: "Online Stochastic Hopfield Network in JavaScript",
+      link: "https://salamanderxing.github.io/hopfield-network/",
+    },
+    {
+      name: "Cannon",
+      description: "Play online against an AI",
+      link: "https://salamanderxing.github.io/cannon/",
+    },
+    {
+      name: "Focus",
+      description: "Test your focus, in your browser.",
+      link: "https://salamanderxing.github.io/focus/",
+    },
+    {
+      name: "MCS",
+      description: "Computes the maximum common subgraph of two graphs",
+      link: "https://github.com/salamanderxing/mcs",
+    },
+  ];
   const logo = "profile.jpeg";
   return (
-    <div style={{ textAlign: "center" }}>
+    <div
+      style={{
+        textAlign: "center",
+        width: "100vw",
+      }}
+    >
       <img
         src={logo}
         style={{
@@ -16,15 +54,98 @@ export default () => {
           objectFit: "cover",
         }}
       />
-      <div className="container" style={{color:'white', maxWidth:"450px"}}>
-      <p style={{}}>
-        Hey there! I'm a master's student in AI at Maastricht University and I'm
-        currently doing my research internship at the University of Amsterdam.
-        I'm super passionate about deep learning, computer science, and blockchain technologies.
-      </p>
-      <p>
-      I give private lessons in the field of computer programming, artificial intelligence (deep learning) and machine learning. I'm also available as a consultant for your project or thesis. Please check out the Contact section if you are interested.
-      </p>
+      <div
+        style={{
+          paddingTop: "20px",
+          marginLeft: "auto",
+          marginRight: "auto",
+          maxWidth: 500,
+          borderRadius: "20px",
+          backdropFilter: "blur(10px)",
+          paddingBottom: "20px",
+        }}
+      >
+        <div
+          className="container"
+          style={{ color: "white", maxWidth: "450px" }}
+        >
+          <p
+            style={{
+              background: "rgba(0,0,0,0.0)",
+              backdropFilter: "blur(100)",
+            }}
+          >
+            Hey there! I'm a master's student in AI at Maastricht University and
+            I'm currently doing my research internship at the University of
+            Amsterdam. I'm super passionate about deep learning, computer
+            science, and blockchain technologies.
+          </p>
+          <p>
+            I give private lessons in the field of computer programming,
+            artificial intelligence (deep learning) and machine learning. I'm
+            also available as a consultant for your project or thesis. Please
+            check out the Contact section if you are interested.
+          </p>
+        </div>
+      </div>
+
+      <div style={{ textAlign: "center" }}>
+        <ListGroup
+          className="blur"
+          style={{
+            marginLeft: "auto",
+            marginRight: "auto",
+            maxWidth: "200px",
+            marginTop: "20px",
+          }}
+        >
+          <ListGroup.Item className="blur">
+            <a href="mailto:g.zani@uva.nl">email</a>
+          </ListGroup.Item>
+          <ListGroup.Item className="blur">
+            <a href="https://github.com/salamanderxing">GitHub</a>
+          </ListGroup.Item>
+          <ListGroup.Item className="blur">
+            <a href="https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html">
+              Superprof
+            </a>
+          </ListGroup.Item>
+        </ListGroup>
+        <ListGroup
+          as="ol"
+          style={{
+            marginTop: "20px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            maxWidth: 500,
+          }}
+        >
+          {projects.map((project, index) => (
+            <ListGroup.Item
+              key={index}
+              as="li"
+              className="d-flex justify-content-between align-items-start blur"
+            >
+              <div
+                className="ms-2 me-auto"
+                style={{ textAlign: "center", width: "100%", color:'white' }}
+              >
+                <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+                  <div className="fw-bold">{project.name}</div>
+                  {project.description}
+                </div>
+              </div>
+              {/* inserts the link to the project */}
+              <a
+                href={project.link}
+                target="_blank"
+                style={{ textDecoration: "none" }}
+              >
+                <Badge bg="primary">Link</Badge>
+              </a>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
       </div>
     </div>
   );

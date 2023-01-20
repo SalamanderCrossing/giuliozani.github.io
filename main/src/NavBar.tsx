@@ -10,24 +10,24 @@ import initBoids from "./flocking/main";
 
 function BasicExample() {
   const [expanded, setExpanded] = useState(false);
-  const routes = {
-    "Giulio Zani": <About />,
-    "Projects": <Projects />,
-    "Contact": <Contact />,
-  } as Record<string, JSX.Element>;
-  const [currentRoute, setCurrentRoute] = useState<string>("Giulio Zani");
-  // defines a reference to the NavBar Toggle button
-  const navBarToggleRef = createRef<HTMLButtonElement>();
-  const unsetExpanded = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-  ) => {
-    e.preventDefault();
-    const route = e.currentTarget.innerText;
-    setCurrentRoute(route);
-    if (expanded) {
-      navBarToggleRef.current?.click();
-    }
-  };
+  // const routes = {
+  //   "Giulio Zani": <About />,
+  //   "Projects": <Projects />,
+  //   "Contact": <Contact />,
+  // } as Record<string, JSX.Element>;
+  // const [currentRoute, setCurrentRoute] = useState<string>("Giulio Zani");
+  // // defines a reference to the NavBar Toggle button
+  // const navBarToggleRef = createRef<HTMLButtonElement>();
+  // const unsetExpanded = (
+  //   e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  // ) => {
+  //   e.preventDefault();
+  //   const route = e.currentTarget.innerText;
+  //   setCurrentRoute(route);
+  //   if (expanded) {
+  //     navBarToggleRef.current?.click();
+  //   }
+  // };
   //let particlesManager: ParticlesManager | null = null;
   let alreadyInitialized = false;
   useEffect(() => {
@@ -38,11 +38,23 @@ function BasicExample() {
       initBoids(div);
       alreadyInitialized = true;
     }
+    const updateParticleCanvasPositionBasedOnScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const scrollLeft = window.pageXOffset;
+      div.style.top = `${scrollTop}px`;
+      div.style.left = `${scrollLeft}px`;
+    };
+    window.addEventListener(
+      "scroll",
+      updateParticleCanvasPositionBasedOnScroll,
+    );
   }, []);
   return (
     <>
       <div id="particle-canvas">
       </div>
+      {
+        /*
       <Navbar
         bg="dark"
         expand="lg"
@@ -87,7 +99,10 @@ function BasicExample() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {routes[currentRoute]}
+      */
+      }
+      {/*{routes[currentRoute]}*/}
+      <About />
     </>
   );
 }
