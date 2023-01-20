@@ -40,12 +40,10 @@ function BasicExample() {
     }
     const updateParticleCanvasPositionBasedOnScroll = () => {
       const scrollTop = window.pageYOffset;
-      const scrollLeft = window.pageXOffset;
       div.style.top = `${scrollTop}px`;
-      div.style.left = `${scrollLeft}px`;
+      requestAnimationFrame(updateParticleCanvasPositionBasedOnScroll);
     };
-    window.addEventListener(
-      "scroll",
+    window.requestAnimationFrame(
       updateParticleCanvasPositionBasedOnScroll,
     );
   }, []);
