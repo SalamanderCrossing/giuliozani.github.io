@@ -67,7 +67,7 @@ export default () => {
       >
         <div
           className="container blur"
-          style={{ color: "white", maxWidth: "450px" }}
+          style={{ color: "white", maxWidth: "450px", borderRadius: "20px" }}
         >
           <p
             style={{
@@ -128,7 +128,7 @@ export default () => {
             >
               <div
                 className="ms-2 me-auto"
-                style={{ textAlign: "center", width: "100%", color:'white' }}
+                style={{ textAlign: "center", width: "100%", color: "white" }}
               >
                 <div style={{ marginLeft: "auto", marginRight: "auto" }}>
                   <div className="fw-bold">{project.name}</div>
