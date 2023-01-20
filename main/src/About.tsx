@@ -66,7 +66,7 @@ export default () => {
         }}
       >
         <div
-          className="container"
+          className="container blur"
           style={{ color: "white", maxWidth: "450px" }}
         >
           <p
