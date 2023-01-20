@@ -54,20 +54,10 @@ export default () => {
           objectFit: "cover",
         }}
       />
-      <div
-        style={{
-          paddingTop: "20px",
-          marginLeft: "auto",
-          marginRight: "auto",
-          maxWidth: 500,
-          borderRadius: "20px",
-          backdropFilter: "blur(10px)",
-          paddingBottom: "20px",
-        }}
-      >
+      <div>
         <div
-          className="container blur"
-          style={{ color: "white", maxWidth: "450px", borderRadius: "20px" }}
+          className="card blur"
+          style={{ color: "white", maxWidth: "450px", margin: "auto", padding: "10px" }}
         >
           <p
             style={{
