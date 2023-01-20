@@ -38,18 +38,18 @@ function BasicExample() {
       initBoids(div);
       alreadyInitialized = true;
     }
-    const updateParticleCanvasPositionBasedOnScroll = () => {
-      const scrollTop = window.pageYOffset;
-      div.style.top = `${scrollTop}px`;
-      requestAnimationFrame(updateParticleCanvasPositionBasedOnScroll);
-    };
-    window.requestAnimationFrame(
-      updateParticleCanvasPositionBasedOnScroll,
-    );
+    // const updateParticleCanvasPositionBasedOnScroll = () => {
+    //   const scrollTop = window.pageYOffset;
+    //   div.style.top = `${scrollTop}px`;
+    //   requestAnimationFrame(updateParticleCanvasPositionBasedOnScroll);
+    // };
+    // window.requestAnimationFrame(
+    //   updateParticleCanvasPositionBasedOnScroll,
+    // );
   }, []);
   return (
     <>
-      <div id="particle-canvas">
+      <div style={{ position: "fixed" }} id="particle-canvas">
       </div>
       {
         /*
