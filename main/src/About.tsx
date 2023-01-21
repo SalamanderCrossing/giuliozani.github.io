@@ -21,7 +21,7 @@ export default () => {
     },
     {
       name: "Cannon",
-      description: "Play online against an AI",
+      description: "Play online against an AI (does not work on mobile IOS)",
       link: "https://salamanderxing.github.io/cannon/",
     },
     {

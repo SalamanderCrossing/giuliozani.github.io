@@ -2,9 +2,9 @@ import * as THREE from "three";
 //@ts-ignore
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 //@ts-ignore
-import Stats from "three/addons/libs/stats.module.js";
+//import Stats from "three/addons/libs/stats.module.js";
 //@ts-ignore
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+//import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 //@ts-ignore
 import { GPUComputationRenderer } from "three/addons/misc/GPUComputationRenderer.js";
 //@ts-ignore
@@ -96,8 +96,8 @@ export default function init(container: HTMLElement) {
   material.uniforms.positionTex.value = positionVariable.texture;
   //stats = new Stats();
   //container.appendChild(stats.dom);
-  container.style.touchAction = "none";
-  container.addEventListener("pointermove", onPointerMove);
+  document.body.style.touchAction = "none";
+  document.body.addEventListener("pointermove", onPointerMove);
   window.addEventListener("resize", onWindowResize);
   //const gui = new GUI();
   const effectController = {
