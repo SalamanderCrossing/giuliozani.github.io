@@ -22,7 +22,7 @@ import fragmentShader from "./birdFS.glsl?raw";
 /* TEXTURE WIDTH FOR SIMULATION */
 const WIDTH = 32;
 const BIRDS = 10000; //WIDTH * WIDTH;
-const BOUNDS = window.innerHeight / 4;
+const BOUNDS = window.innerHeight / 12;
 const BOUNDS_HALF = BOUNDS / 2;
 //let stats;
 let camera: THREE.PerspectiveCamera;
@@ -86,8 +86,8 @@ export default function init(container: HTMLElement) {
 
   composer = new EffectComposer(renderer);
   composer.addPass(renderScene);
-  composer.addPass(bloomPass);
-  composer.addPass(afterImagePass);
+  //composer.addPass(bloomPass);
+  //composer.addPass(afterImagePass);
 
   scene.background = new THREE.Color("black");
 
@@ -171,6 +171,7 @@ function initComputeRenderer() {
   velocityVariable.wrapT = THREE.RepeatWrapping;
   positionVariable.wrapS = THREE.RepeatWrapping;
   positionVariable.wrapT = THREE.RepeatWrapping;
+  positionVariable.material.defines.BOUNDS = BOUNDS.toFixed(2);
   const error = gpuCompute.init();
 
   if (error !== null) {
@@ -182,7 +183,7 @@ function initBirds() {
   const positions = new Float32Array(
     BIRDS * 3 * mult,
   );
-  const BOUNDS = window.innerHeight;
+  const BOUNDS = window.innerHeight / 4;
   const BOUNDS_HALF = BOUNDS / 2;
   const geometry = new THREE.BufferGeometry();
   for (let i = 0; i < BIRDS; i++) {
@@ -267,7 +268,7 @@ function render() {
   velocityUniforms["predator"].value.set(
     (0.5 * mouseX) / windowHalfX,
     (-0.5 * mouseY) / windowHalfY,
-    0,
+    100,
   );
 
   mouseX = 10000;
