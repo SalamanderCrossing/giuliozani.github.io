@@ -96,7 +96,7 @@ export default function init(container: HTMLElement) {
   material.uniforms.positionTex.value = positionVariable.texture;
   //stats = new Stats();
   //container.appendChild(stats.dom);
-  document.body.style.touchAction = "none";
+  //document.body.style.touchAction = "none";
   document.body.addEventListener("pointermove", onPointerMove);
   window.addEventListener("resize", onWindowResize);
   //const gui = new GUI();

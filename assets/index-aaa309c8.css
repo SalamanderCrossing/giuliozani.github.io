@@ -1,4 +1,4 @@
-@charset "UTF-8";#particle-canvas{position:absolute;left:0;top:0;z-index:-1}.blur{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)!important;background-color:#0000!important}a{color:#fff!important}/*!
+@charset "UTF-8";#particle-canvas{position:absolute;left:0;top:0}.blur{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)!important;background-color:#0000!important}a{color:#fff!important}/*!
  * Bootstrap  v5.2.3 (https://getbootstrap.com/)
  * Copyright 2011-2022 The Bootstrap Authors
  * Copyright 2011-2022 Twitter, Inc.
