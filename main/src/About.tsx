@@ -8,6 +8,13 @@ interface Project {
   link: string;
 }
 export default () => {
+  const contacts = {
+    email: "mailto:g.zani@uva.nl",
+    GitHub: "https://github.com/salamanderxing",
+    Superprof:
+      "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
+    Twitter: "https://twitter.com/zani_giulio",
+  };
   const projects: Project[] = [
     {
       name: "Mate",
@@ -57,7 +64,12 @@ export default () => {
       <div>
         <div
           className="card blur"
-          style={{ color: "white", maxWidth: "450px", margin: "auto", padding: "10px" }}
+          style={{
+            color: "white",
+            maxWidth: "450px",
+            margin: "auto",
+            padding: "10px",
+          }}
         >
           <p
             style={{
@@ -89,17 +101,11 @@ export default () => {
             marginTop: "20px",
           }}
         >
-          <ListGroup.Item className="blur">
-            <a href="mailto:g.zani@uva.nl">email</a>
-          </ListGroup.Item>
-          <ListGroup.Item className="blur">
-            <a href="https://github.com/salamanderxing">GitHub</a>
-          </ListGroup.Item>
-          <ListGroup.Item className="blur">
-            <a href="https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html">
-              Superprof
-            </a>
-          </ListGroup.Item>
+          {Object.entries(contacts).map(([key, value], index) => (
+            <ListGroup.Item key={index} className="blur">
+              <a href={value}>{key}</a>
+            </ListGroup.Item>
+          ))}
         </ListGroup>
         <ListGroup
           as="ol"

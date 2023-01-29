@@ -2,10 +2,6 @@ import * as THREE from "three";
 //@ts-ignore
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 //@ts-ignore
-//import Stats from "three/addons/libs/stats.module.js";
-//@ts-ignore
-//import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-//@ts-ignore
 import { GPUComputationRenderer } from "three/addons/misc/GPUComputationRenderer.js";
 //@ts-ignore
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -19,6 +15,8 @@ import fragmentShaderVelocity from "./birdVelocity.glsl?raw";
 import fragmentShaderPosition from "./birdPosition.glsl?raw";
 import vertexShader from "./birdVS.glsl?raw";
 import fragmentShader from "./birdFS.glsl?raw";
+import velocityShader from "./velocity.glsl?raw";
+import positionShader from "./position.glsl?raw";
 /* TEXTURE WIDTH FOR SIMULATION */
 const WIDTH = 32;
 const BIRDS = 10000; //WIDTH * WIDTH;
