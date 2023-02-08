@@ -1,4 +1,4 @@
-uniform float time;
+uniform float uTime;
 const float separationDistance = 0.2; // 20
 const float alignmentDistance = 0.4; // 40
 const float cohesionDistance = 0.1; //

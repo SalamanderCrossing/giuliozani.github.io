@@ -59,6 +59,7 @@ export default () => {
           height: 150,
           borderRadius: "50%",
           objectFit: "cover",
+          zIndex: "-100 !important"
         }}
       />
       <div>
