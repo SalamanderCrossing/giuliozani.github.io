@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "rm -rf ../assets/* && tsc && vite build && mv dist/* ../nft",
+    "build": "rm -rf ../assets/* && tsc && vite build --base='.' && mv dist/* ../nft",
     "preview": "vite preview"
   },
   "dependencies": {
