@@ -49,7 +49,7 @@ function BasicExample() {
   }, []);
   return (
     <>
-      <div style={{ position: "fixed" }} id="particle-canvas">
+      <div style={{ position: "fixed", zIndex:'-100' }} id="particle-canvas">
       </div>
       {
         /*

@@ -11,6 +11,7 @@ export default () => {
   const contacts = {
     email: "mailto:g.zani@uva.nl",
     GitHub: "https://github.com/salamanderxing",
+    Calendly: "https://calendly.com/salamanderxing/lesson",
     Superprof:
       "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
     Twitter: "https://twitter.com/zani_giulio",
