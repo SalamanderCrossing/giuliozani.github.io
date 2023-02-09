@@ -90,4 +90,3 @@ EXTRA-CURRICULAR Activities
 I give private programming and data science lessons.
 I work out and run consistently.
 I am interested in Vipassana Buddhist meditation, and I have made two retreats.
-
