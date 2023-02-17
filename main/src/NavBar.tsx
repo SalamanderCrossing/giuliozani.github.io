@@ -1,10 +1,4 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import "bootstrap/dist/css/bootstrap.min.css";
 import About from "./About";
-import Contact from "./Contact";
-import Projects from "./Projects";
 import { createRef, useEffect, useState } from "react";
 import initBoids from "./flocking/main";
 
@@ -49,7 +43,7 @@ function BasicExample() {
   }, []);
   return (
     <>
-      <div style={{ position: "fixed", zIndex:'-100' }} id="particle-canvas">
+      <div style={{ position: "fixed", zIndex:'-100', width:'100vw', height:'100vh' }} id="particle-canvas">
       </div>
       {
         /*
