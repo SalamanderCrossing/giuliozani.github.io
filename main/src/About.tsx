@@ -138,6 +138,9 @@ export default () => {
                     <Badge variant="secondary">Curriculum Vitae</Badge>
                 </a>
             </p>
+            <p>
+                Below you can find some of my online demos. For a complete list of my projects, please check out my GitHub profile.
+            </p>
         </div>
       </div>
 
