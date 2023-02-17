@@ -2,6 +2,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
+import './About.css';
+
 interface Project {
   name: string;
   description: string;
@@ -43,6 +45,32 @@ export default () => {
       link: "https://github.com/salamanderxing/mcs",
     },
   ];
+  const links = [
+        {
+            icon_name: "fa-github",
+            url: "https://github.com/salamanderxing",
+        },
+        {
+            icon_name: "fa-globe",
+            url: "https://salamanderxing.github.io/",
+        },
+        {
+            icon_name: "fa-envelope",
+            url: "mailto:g.zani@uva.nl",
+        },
+        {
+            icon_name: "fa-chalkboard-teacher",
+            url: "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
+        },
+        {
+            icon_name: "fa-twitter",
+            url: "https://twitter.com/zani_giulio",
+        },
+        {
+            icon_name: "fa-calendar",
+            url: "https://calendly.com/salamanderxing/lesson",
+        }
+    ];
   const logo = "profile.jpeg";
   return (
     <div
@@ -64,6 +92,20 @@ export default () => {
         }}
       />
       <div>
+            <table style={{marginLeft:'auto', marginRight:'auto'}} >
+                <tbody>
+                     <tr>
+                        {
+                            links.map((link, i) => <td key={i} >
+                                    <a key={i} href={link.url} target="_blank">
+                                        <i className={`fa ${link.icon_name} fa-2x`}></i>
+                                    </a>
+                            </td>)
+                        }
+                    </tr>
+                </tbody>
+            </table>
+
         <div
           className="card blur"
           style={{
@@ -90,10 +132,18 @@ export default () => {
             also available as a consultant for your project or thesis. Please
             check out the Contact section if you are interested.
           </p>
+            <p>
+                <a href="https://salamanderxing.github.io/cv" target="_blank">
+                    {/*@ts-ignore*/}
+                    <Badge variant="secondary">Curriculum Vitae</Badge>
+                </a>
+            </p>
         </div>
       </div>
 
       <div style={{ textAlign: "center" }}>
+
+                    {/*
         <ListGroup
           className="blur"
           style={{
@@ -109,6 +159,7 @@ export default () => {
             </ListGroup.Item>
           ))}
         </ListGroup>
+        */}
         <ListGroup
           as="ol"
           style={{
