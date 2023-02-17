@@ -82,7 +82,7 @@ export default () => {
       <img
         src={logo}
         style={{
-          marginTop: "30px",
+          marginTop: "10px",
           marginBottom: "30px",
           width: 150,
           height: 150,
@@ -163,7 +163,7 @@ export default () => {
         <ListGroup
           as="ol"
           style={{
-            marginTop: "20px",
+            marginTop: "10px",
             marginLeft: "auto",
             marginRight: "auto",
             maxWidth: 500,
@@ -195,6 +195,10 @@ export default () => {
             </ListGroup.Item>
           ))}
         </ListGroup>
+        
+        <p style={{color:'white', marginTop:'10px'}}>
+            This background is a flocking algorithm implemented using Three.js & WebGL.
+        </p>
       </div>
     </div>
   );
