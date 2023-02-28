@@ -1,14 +1,16 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import getNFTs from "./find_nft";
 import { useEffect } from "react";
+// imports sweetalert2
+import Swal from "sweetalert2";
 
 function BasicExample() {
   const submit = async () => {
+    setVariant("success");
             // @ts-ignore 
     const url = document.getElementById("url").value;
             // @ts-ignore 
@@ -16,18 +18,26 @@ function BasicExample() {
             // @ts-ignore 
     const trait_type = document.getElementById("trait").value;
             // @ts-ignore 
-    const attribute = document.getElementById("attribute").value;
-    console.log(url, max_token, trait_type, attribute);
-    const nfts = getNFTs(url, max_token, trait_type, attribute).then((nfts) => {
-      console.log(nfts);
-      alert(nfts);
+    const rawAttribute = document.getElementById("attribute").value;
+    const attributes = rawAttribute.split(",");
+    console.log(url, max_token, trait_type, attributes);
+    getNFTs(url, max_token, trait_type, attributes).then((nfts) => {
+      //alert(nfts);
+      //@ts-ignore
+      Swal.fire({
+        title: "NFTs found",
+        text: nfts,
+        icon: "success",
+        confirmButtonText: "Cool",
+      });
+      setVariant("primary");
     });
   };
   useEffect(() => {
-        setTimeout(function(){
-            // @ts-ignore 
-            document.getElementById("url").value = "https://backend.yu-gi-yn.com/metadata/";
-            // @ts-ignore 
+        setTimeout(() => {
+          // @ts-ignore 
+          document.getElementById("url").value = "https://backend.yu-gi-yn.com/metadata/";
+          // @ts-ignore 
           document.getElementById("max_token").value = "100";
             // @ts-ignore 
           document.getElementById("trait").value = "type";
@@ -37,14 +47,13 @@ function BasicExample() {
         }, 1000)
 
     }, []);
+  const [variant, setVariant] = useState("primary");
   return (
     <Form>
       <Form.Group className="mb-3">
         <Form.Label>Trait</Form.Label>
         <Form.Control type="text" id="trait" placeholder="Enter trait" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
+        
       </Form.Group>
       <Form.Group className="mb-3" >
         <Form.Label>Attribute</Form.Label>
@@ -53,25 +62,18 @@ function BasicExample() {
           id="attribute"
           placeholder="Enter attribute"
         />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
+        
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>URL</Form.Label>
         <Form.Control type="text" id="url" placeholder="Enter URL" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
+        
       </Form.Group>
       <Form.Group className="mb-3" >
         <Form.Label>max token id</Form.Label>
         <Form.Control type="number" id="max_token" placeholder="Enter URL" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
       </Form.Group>
-      <Button variant="primary" onClick={submit}>
+      <Button variant={variant} onClick={submit}>
         Submit
       </Button>
     </Form>

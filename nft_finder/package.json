@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "rm -rf ../assets/* && tsc && vite build --base='.' && mv dist/* ../nft",
+    "build": "rm -rf ./dist/assets/* && rm -rf ../nft/assets/* && tsc && vite build --base='.' && mv dist/* ../nft",
     "preview": "vite preview"
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sweetalert2": "^11.7.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

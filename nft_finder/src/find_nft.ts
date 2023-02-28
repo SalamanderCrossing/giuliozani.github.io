@@ -6,18 +6,18 @@ const check = async (
   i: number,
   data: Record<string, any>,
   trait_type: string,
-  targetAttribute: string
+  targetAttributes: string[]
 ) => {
   trait_type = trait_type.toLowerCase();
-  targetAttribute = targetAttribute.toLowerCase();
+  targetAttributes = targetAttributes.map(x => x.toLowerCase());
   const attributes = data["attributes"];
   if (!attributes) {
     return;
   }
   for (const attribute of attributes) {
     if (
-      attribute["trait_type"].toLowerCase() == trait_type &&
-      attribute["value"].toLowerCase() == targetAttribute
+      attribute["trait_type"].toLowerCase() === trait_type &&
+      targetAttributes.filter(x => x === attribute["value"].toLowerCase()).length > 0
     ) {
       toPut.push(i);
     }
@@ -27,7 +27,7 @@ export default async (
   url: string,
   max_token: number,
   trait_type: string,
-  attribute: string
+  attributes: string[]
 ) => {
   url = url.endsWith("/") ? url : `${url}/`;
   const toPut = [] as Array<number>;
@@ -39,7 +39,7 @@ export default async (
   );
   const items = (await Promise.all(urls)) as Record<string, any>[];
   for (const [i, data] of items.entries()) {
-    await check(toPut, i + begin, data, trait_type, attribute);
+    await check(toPut, i + begin, data, trait_type, attributes);
   }
   return toPut;
 };
