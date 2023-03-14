@@ -1,59 +1,93 @@
 // builds an argument parser for the parameters: url, max_token, trait_type, attributes
 // and then calls the main function
 
-const check = async (
-  toPut: Array<number>,
-  i: number,
-  data: Record<string, any>,
-  trait_type: string,
-  targetAttributes: string[]
+interface NFTData {
+  name: string;
+  description: string;
+  image: string;
+  attributes: Array<{
+    trait_type: string;
+    value: string | number;
+  }>;
+}
+
+const checkAttributes = (
+  data: NFTData,
+  targetTraitType: string,
+  targetAttributes: string[],
+  verbose = false,
 ) => {
-  trait_type = trait_type.toLowerCase();
-  targetAttributes = targetAttributes.map(x => x.toLowerCase());
+  targetTraitType = targetTraitType.toLowerCase();
+  targetAttributes = targetAttributes.map((x) => x.toLowerCase());
   const attributes = data["attributes"];
   if (!attributes) {
     return;
   }
   for (const attribute of attributes) {
+    const attributeValue = (typeof attribute["value"] === "string")
+      ? attribute["value"].toLowerCase()
+      : attribute["value"].toString().toLowerCase();
+    const traitTypeValue = attribute["trait_type"].toLowerCase();
+    if (verbose) {
+      console.log([[traitTypeValue, targetTraitType], [
+        attributeValue,
+        targetAttributes,
+      ]]);
+    }
     if (
-      attribute["trait_type"].toLowerCase() === trait_type &&
-      targetAttributes.filter(x => x === attribute["value"].toLowerCase()).length > 0
+      (traitTypeValue === targetTraitType) &&
+      (targetAttributes.filter((x) => x === attributeValue).length > 0)
     ) {
-      toPut.push(i);
+      return true;
     }
   }
+  return false;
 };
+
+const searchInJson = (
+  items: NFTData[],
+  trait_type: string,
+  attributes: string[],
+) => {
+  const selectedItems = items.map((x, i) => [i, x] as [number, NFTData]).filter(
+    ([i, x]) => {
+      return x && checkAttributes(x, trait_type, attributes);
+    },
+  );
+  return selectedItems;
+};
+
+// @ts-ignore
+if (typeof Deno !== "undefined") {
+  //@ts-ignore
+  const items = Deno.readTextFileSync("./data.json");
+  const itemsJson = JSON.parse(items) as NFTData[];
+  const filter = {
+    trait_type: "torso",
+    attributes: ["ancient armor"],
+  };
+  const matches = searchInJson(itemsJson, filter.trait_type, filter.attributes);
+  console.log(matches.map((x) => x[0]));
+}
+
 export default async (
   url: string,
   max_token: number,
   trait_type: string,
-  attributes: string[]
-) => {
+  attributes: string[],
+): Promise<{ matches: number[]; allItems: NFTData[] }> => {
+  console.log("looking for", trait_type, attributes, "in", url, max_token);
   url = url.endsWith("/") ? url : `${url}/`;
-  const toPut = [] as Array<number>;
-  const begin = 1;
-  const urls = Array.from({ length: max_token }, (_, i) =>
-    fetch(`${url}${i + begin}`)
-      .then((r) => r.json())
-      .catch(() => {})
+  const urls = Array.from(
+    { length: max_token },
+    (_, i) =>
+      fetch(`${url}${i + 1}`)
+        .then((r) => r.json())
+        .catch(() => {}),
   );
-  const items = (await Promise.all(urls)) as Record<string, any>[];
-  for (const [i, data] of items.entries()) {
-    await check(toPut, i + begin, data, trait_type, attributes);
-  }
-  return toPut;
+  const items = (await Promise.all(urls)) as Array<NFTData>;
+  console.log("found", items.length, "items");
+  const matches = searchInJson(items, trait_type, attributes).map((x) => x[0]);
+  console.log("found", matches.length, "matches");
+  return { matches, allItems: items };
 };
-
-//await main("https://backend.yu-gi-yn.com/metadata/", 200, "type", "violences")
-/*
-const parser = new ArgumentParser({
-    description: "Check if a token has a specific attribute"
-})
-
-parser.add_argument("-u", "--url", {help: "The url of the metadata", required: false, default: "https://backend.yu-gi-yn.com/metadata/"})
-parser.add_argument("-m", "--max_token", {help: "The max token to check", required: false, default: 8888})
-parser.add_argument("-t", "--trait_type", {help: "The trait type to check", required: false, default: "type"})
-parser.add_argument("-a", "--attribute", {help: "The attribute to check", required: false, default: "violences"})
-const args = parser.parse_args()
-await main(args.url, args.max_token, args.trait_type, args.attribute)
-*/

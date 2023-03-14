@@ -8,6 +8,25 @@ import { useEffect } from "react";
 // imports sweetalert2
 import Swal from "sweetalert2";
 
+const downloadJson = (jsonObject: any) => {
+  // Create a Blob object with JSON data
+  let fileToSave: Blob = new Blob([JSON.stringify(jsonObject)], {
+    type: "application/json",
+  });
+
+  // Create an anchor element with download attribute
+  let downloadLink: HTMLAnchorElement = document.createElement("a");
+  downloadLink.setAttribute("href", URL.createObjectURL(fileToSave));
+  downloadLink.setAttribute("download", "data.json");
+
+  // Append the link to the document body and click it
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+
+  // Remove the link from the document body
+  document.body.removeChild(downloadLink);
+};
+
 function BasicExample() {
   const submit = async () => {
     setVariant("success");
@@ -16,19 +35,39 @@ function BasicExample() {
             // @ts-ignore 
     const max_token = Number(document.getElementById("max_token").value);
             // @ts-ignore 
-    const trait_type = document.getElementById("trait").value;
+    const trait_type = document.getElementById("trait_type").value;
             // @ts-ignore 
-    const rawAttribute = document.getElementById("attribute").value;
-    const attributes = rawAttribute.split(",");
+    const rawAttribute = document.getElementById("trait_values").value;
+    
+    const attributes = rawAttribute.split(",").map((a:string) => a.trim());
     console.log(url, max_token, trait_type, attributes);
-    getNFTs(url, max_token, trait_type, attributes).then((nfts) => {
+    getNFTs(url, max_token, trait_type, attributes).then(({matches:nfts, allItems}) => {
       //alert(nfts);
-      //@ts-ignore
+      if (nfts.length === 0) {
+        Swal.fire({
+          title: "No NFTs found",
+          text: "Try again",
+          icon: "error",
+          confirmButtonText: "Damn",
+          showCancelButton: true,
+          cancelButtonText: "Show all NFTs",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            return;
+          }
+          else if (result.isDismissed) {
+            downloadJson(allItems);
+          }
+        });
+        setVariant("primary");
+        return;
+      }
+      // @ts-ignore
       Swal.fire({
         title: "NFTs found",
         text: nfts,
         icon: "success",
-        confirmButtonText: "Cool",
+        confirmButtonText: "Awsome",
       });
       setVariant("primary");
     });
@@ -36,14 +75,13 @@ function BasicExample() {
   useEffect(() => {
         setTimeout(() => {
           // @ts-ignore 
-          document.getElementById("url").value = "https://backend.yu-gi-yn.com/metadata/";
+          document.getElementById("url").value = "https://beehive-api-q7ic5.ondigitalocean.app/v1/characters/holoselfs/metadata/"// "https://backend.yu-gi-yn.com/metadata/";
           // @ts-ignore 
-          document.getElementById("max_token").value = "100";
+          document.getElementById("max_token").value = 8888//"100";
             // @ts-ignore 
-          document.getElementById("trait").value = "type";
+          document.getElementById("trait_type").value = "torso"//"type";
             // @ts-ignore 
-          document.getElementById("attribute").value = "violences";
-
+          document.getElementById("trait_values").value = "ancient armor";
         }, 1000)
 
     }, []);
@@ -51,29 +89,29 @@ function BasicExample() {
   return (
     <Form>
       <Form.Group className="mb-3">
-        <Form.Label>Trait</Form.Label>
-        <Form.Control type="text" id="trait" placeholder="Enter trait" />
+        <Form.Label>Trait Type</Form.Label>
+        <Form.Control type="text" id="trait_type" placeholder="Enter trait" />
         
       </Form.Group>
       <Form.Group className="mb-3" >
-        <Form.Label>Attribute</Form.Label>
+        <Form.Label>Trait Value(s)</Form.Label>
         <Form.Control
           type="text"
-          id="attribute"
+          id="trait_values"
           placeholder="Enter attribute"
         />
-        
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>URL</Form.Label>
-        <Form.Control type="text" id="url" placeholder="Enter URL" />
-        
+        <Form.Control type="text" id="url" placeholder="http://" />
       </Form.Group>
       <Form.Group className="mb-3" >
-        <Form.Label>max token id</Form.Label>
+        <Form.Label>Max Token ID</Form.Label>
         <Form.Control type="number" id="max_token" placeholder="Enter URL" />
       </Form.Group>
-      <Button variant={variant} onClick={submit}>
+      {//the button should be disabled if the variant is not primary}
+      }
+      <Button variant={variant} onClick={submit} disabled={variant !== "primary"}>
         Submit
       </Button>
     </Form>
