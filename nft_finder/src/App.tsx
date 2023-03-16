@@ -50,7 +50,7 @@ function BasicExample() {
           icon: "error",
           confirmButtonText: "Damn",
           showCancelButton: true,
-          cancelButtonText: "Show all NFTs",
+          cancelButtonText: "Download all NFTs",
         }).then((result) => {
           if (result.isConfirmed) {
             return;
@@ -67,7 +67,16 @@ function BasicExample() {
         title: "NFTs found",
         text: nfts,
         icon: "success",
+        showCancelButton: true,
+        cancelButtonText: "Download all NFTs",
         confirmButtonText: "Awsome",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return;
+        }
+        else if (result.isDismissed) {
+          downloadJson(allItems);
+        }
       });
       setVariant("primary");
     });
@@ -75,13 +84,13 @@ function BasicExample() {
   useEffect(() => {
         setTimeout(() => {
           // @ts-ignore 
-          document.getElementById("url").value = "https://beehive-api-q7ic5.ondigitalocean.app/v1/characters/holoselfs/metadata/"// "https://backend.yu-gi-yn.com/metadata/";
+          document.getElementById("url").value = 'https://api.mdvmm.xyz/hvmtl/' //"https://beehive-api-q7ic5.ondigitalocean.app/v1/characters/holoselfs/metadata/"// "https://backend.yu-gi-yn.com/metadata/";
           // @ts-ignore 
-          document.getElementById("max_token").value = 8888//"100";
+          document.getElementById("max_token").value = 3000//8888//"100";
             // @ts-ignore 
-          document.getElementById("trait_type").value = "torso"//"type";
+          document.getElementById("trait_type").value = "hv type"//"type";
             // @ts-ignore 
-          document.getElementById("trait_values").value = "ancient armor";
+          document.getElementById("trait_values").value = "celestial";
         }, 1000)
 
     }, []);

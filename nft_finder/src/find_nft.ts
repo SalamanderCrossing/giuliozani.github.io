@@ -17,6 +17,9 @@ const checkAttributes = (
   targetAttributes: string[],
   verbose = false,
 ) => {
+  if (data['image'].includes('1250')){
+    debugger;
+  }
   targetTraitType = targetTraitType.toLowerCase();
   targetAttributes = targetAttributes.map((x) => x.toLowerCase());
   const attributes = data["attributes"];
@@ -28,11 +31,8 @@ const checkAttributes = (
       ? attribute["value"].toLowerCase()
       : attribute["value"].toString().toLowerCase();
     const traitTypeValue = attribute["trait_type"].toLowerCase();
-    if (verbose) {
-      console.log([[traitTypeValue, targetTraitType], [
-        attributeValue,
-        targetAttributes,
-      ]]);
+    if (verbose){
+      console.log([[traitTypeValue, targetTraitType], [attributeValue, targetAttributes]])
     }
     if (
       (traitTypeValue === targetTraitType) &&
@@ -49,11 +49,12 @@ const searchInJson = (
   trait_type: string,
   attributes: string[],
 ) => {
-  const selectedItems = items.map((x, i) => [i, x] as [number, NFTData]).filter(
-    ([i, x]) => {
-      return x && checkAttributes(x, trait_type, attributes);
-    },
-  );
+  const selectedItems = items.map((x, i) => [i+1, x] as [number, NFTData]).filter(([i, x]) =>{
+    if (i === 119){
+      console.log(x);
+    }
+    return x && checkAttributes(x, trait_type, attributes, i === 119)
+  });
   return selectedItems;
 };
 
@@ -63,11 +64,11 @@ if (typeof Deno !== "undefined") {
   const items = Deno.readTextFileSync("./data.json");
   const itemsJson = JSON.parse(items) as NFTData[];
   const filter = {
-    trait_type: "torso",
+    trait_type: "torso", 
     attributes: ["ancient armor"],
-  };
+  }
   const matches = searchInJson(itemsJson, filter.trait_type, filter.attributes);
-  console.log(matches.map((x) => x[0]));
+  console.log(matches);
 }
 
 export default async (
@@ -75,8 +76,7 @@ export default async (
   max_token: number,
   trait_type: string,
   attributes: string[],
-): Promise<{ matches: number[]; allItems: NFTData[] }> => {
-  console.log("looking for", trait_type, attributes, "in", url, max_token);
+) => {
   url = url.endsWith("/") ? url : `${url}/`;
   const urls = Array.from(
     { length: max_token },
@@ -86,8 +86,6 @@ export default async (
         .catch(() => {}),
   );
   const items = (await Promise.all(urls)) as Array<NFTData>;
-  console.log("found", items.length, "items");
-  const matches = searchInJson(items, trait_type, attributes).map((x) => x[0]);
-  console.log("found", matches.length, "matches");
+  const matches = searchInJson(items, trait_type, attributes).map
   return { matches, allItems: items };
 };
