@@ -65,7 +65,7 @@ function BasicExample() {
       // @ts-ignore
       Swal.fire({
         title: "NFTs found",
-        text: nfts,
+        html: `Found matching nfts: ${nfts.length}/${allItems.length} <br><br> ${nfts}`,
         icon: "success",
         showCancelButton: true,
         cancelButtonText: "Download all NFTs",
