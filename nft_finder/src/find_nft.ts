@@ -18,7 +18,7 @@ const checkAttributes = (
   verbose = false,
 ) => {
   if (data['image'].includes('1250')){
-    debugger;
+    // debugger;
   }
   targetTraitType = targetTraitType.toLowerCase();
   targetAttributes = targetAttributes.map((x) => x.toLowerCase());
@@ -86,6 +86,6 @@ export default async (
         .catch(() => {}),
   );
   const items = (await Promise.all(urls)) as Array<NFTData>;
-  const matches = searchInJson(items, trait_type, attributes).map
+  const matches = searchInJson(items, trait_type, attributes).map(x => x[0])
   return { matches, allItems: items };
 };
