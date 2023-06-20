@@ -2,7 +2,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
-import './About.css';
+import "./About.css";
 
 interface Project {
   name: string;
@@ -46,31 +46,32 @@ export default () => {
     },
   ];
   const links = [
-        {
-            icon_name: "fa-github",
-            url: "https://github.com/salamanderxing",
-        },
-        {
-            icon_name: "fa-globe",
-            url: "https://salamanderxing.github.io/",
-        },
-        {
-            icon_name: "fa-envelope",
-            url: "mailto:g.zani@uva.nl",
-        },
-        {
-            icon_name: "fa-chalkboard-teacher",
-            url: "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
-        },
-        {
-            icon_name: "fa-twitter",
-            url: "https://twitter.com/zani_giulio",
-        },
-        {
-            icon_name: "fa-calendar",
-            url: "https://calendly.com/salamanderxing/lesson",
-        }
-    ];
+    {
+      icon_name: "fa-github",
+      url: "https://github.com/salamanderxing",
+    },
+    {
+      icon_name: "fa-globe",
+      url: "https://salamanderxing.github.io/",
+    },
+    {
+      icon_name: "fa-envelope",
+      url: "mailto:g.zani@uva.nl",
+    },
+    {
+      icon_name: "fa-chalkboard-teacher",
+      url:
+        "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
+    },
+    {
+      icon_name: "fa-twitter",
+      url: "https://twitter.com/zani_giulio",
+    },
+    {
+      icon_name: "fa-calendar",
+      url: "https://calendly.com/salamanderxing/lesson",
+    },
+  ];
   const logo = "profile.jpeg";
   return (
     <div
@@ -88,23 +89,23 @@ export default () => {
           height: 150,
           borderRadius: "50%",
           objectFit: "cover",
-          zIndex: "-100 !important"
+          zIndex: "-100 !important",
         }}
       />
       <div>
-            <table style={{marginLeft:'auto', marginRight:'auto'}} >
-                <tbody>
-                     <tr>
-                        {
-                            links.map((link, i) => <td key={i} >
-                                    <a key={i} href={link.url} target="_blank">
-                                        <i className={`fa ${link.icon_name} fa-2x`}></i>
-                                    </a>
-                            </td>)
-                        }
-                    </tr>
-                </tbody>
-            </table>
+        <table style={{ marginLeft: "auto", marginRight: "auto" }}>
+          <tbody>
+            <tr>
+              {links.map((link, i) => (
+                <td key={i}>
+                  <a key={i} href={link.url} target="_blank">
+                    <i className={`fa ${link.icon_name} fa-2x`}></i>
+                  </a>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
 
         <div
           className="card blur"
@@ -121,32 +122,29 @@ export default () => {
               backdropFilter: "blur(100)",
             }}
           >
-            Hey there! I'm a master's student in AI at Maastricht University and
-            I'm currently doing my research internship at the University of
-            Amsterdam. I'm super passionate about deep learning, computer
-            science, and blockchain technologies.
+            I'm a master's student in AI at Maastricht University, currently
+            doing my thesis at the University of Amsterdam, with a keen interest
+            in deep learning, programming, and blockchain technologies. I offer private
+            lessons in computer programming, artificial intelligence, and
+            machine learning, and am available for consultancy on projects or
+            theses. Contact me if interested.
           </p>
           <p>
-            I give private lessons in the field of computer programming,
-            artificial intelligence (deep learning) and machine learning. I'm
-            also available as a consultant for your project or thesis. Please
-            check out the Contact section if you are interested.
+            <a href="https://salamanderxing.github.io/cv" target="_blank">
+              {/*@ts-ignore*/}
+              <Badge variant="secondary">Curriculum Vitae</Badge>
+            </a>
           </p>
-            <p>
-                <a href="https://salamanderxing.github.io/cv" target="_blank">
-                    {/*@ts-ignore*/}
-                    <Badge variant="secondary">Curriculum Vitae</Badge>
-                </a>
-            </p>
-            <p>
-                Below you can find some of my online demos. For a complete list of my projects, please check out my GitHub profile.
-            </p>
+          <p>
+            Below you can find some of my online demos. For a complete list of
+            my projects, please check out my GitHub profile.
+          </p>
         </div>
       </div>
 
       <div style={{ textAlign: "center" }}>
-
-                    {/*
+        {
+          /*
         <ListGroup
           className="blur"
           style={{
@@ -162,7 +160,8 @@ export default () => {
             </ListGroup.Item>
           ))}
         </ListGroup>
-        */}
+        */
+        }
         <ListGroup
           as="ol"
           style={{
@@ -198,9 +197,10 @@ export default () => {
             </ListGroup.Item>
           ))}
         </ListGroup>
-        
-        <p style={{color:'white', marginTop:'10px'}}>
-            This background is a flocking algorithm implemented using Three.js & WebGL.
+
+        <p style={{ color: "white", marginTop: "10px" }}>
+          This background is a flocking algorithm implemented using Three.js &
+          WebGL.
         </p>
       </div>
     </div>
