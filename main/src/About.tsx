@@ -20,58 +20,72 @@ export default () => {
   };
   const projects: Project[] = [
     {
-      name: "Mate",
-      description: "Next gen deep learning framework",
-      link: "https://salamanderxing.github.io/mate",
+      name: "GitHub",
+      description: "",
+      link: "https://github.com/salamanderxing",
     },
+    // {
+    //   name: "Stochastic Hopfield Network",
+    //   description: "Online Stochastic Hopfield Network in JavaScript",
+    //   link: "https://salamanderxing.github.io/hopfield-network/",
+    // },
     {
-      name: "Stochastic Hopfield Network",
-      description: "Online Stochastic Hopfield Network in JavaScript",
-      link: "https://salamanderxing.github.io/hopfield-network/",
-    },
-    {
-      name: "Cannon",
+      name: "UpWork",
       description: "Play online against an AI (does not work on mobile IOS)",
-      link: "https://salamanderxing.github.io/cannon/",
+      link: "https://www.upwork.com/freelancers/~01f9a244ac1e307355?viewMode=1",
+    },
+    //
+    {
+      name: "SuperProf",
+      description: "Play online against an AI (does not work on mobile IOS)",
+      link:
+        "https://www.superprof.com/researcher-python-deep-learning-prompt-engineering-gpt-personalized-lessons-project-support.html",
     },
     {
-      name: "Focus",
-      description: "Test your focus, in your browser.",
-      link: "https://salamanderxing.github.io/focus/",
+      name: "SuperProf (IT)",
+      description: "Play online against an AI (does not work on mobile IOS)",
+      link:
+        "https://www.superprof.it/ricercatore-offre-python-deep-learning-prompt-engineering-lezioni-personalizzate-supporto-progetti.html",
     },
-    {
-      name: "MCS",
-      description: "Computes the maximum common subgraph of two graphs",
-      link: "https://github.com/salamanderxing/mcs",
-    },
+    // {
+    //   name: "Focus",
+    //   description: "Test your focus, in your browser.",
+    //   link: "https://salamanderxing.github.io/focus/",
+    // },
+    // {
+    //   name: "MCS",
+    //   description: "Computes the maximum common subgraph of two graphs",
+    //   link: "https://github.com/salamanderxing/mcs",
+    // },
   ];
   const links = [
-    {
-      icon_name: "fa-github",
-      url: "https://github.com/salamanderxing",
-    },
-    {
-      icon_name: "fa-globe",
-      url: "https://salamanderxing.github.io/",
-    },
-    {
-      icon_name: "fa-envelope",
-      url: "mailto:g.zani@uva.nl",
-    },
-    {
-      icon_name: "fa-chalkboard-teacher",
-      url:
-        "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
-    },
-    {
-      icon_name: "fa-twitter",
-      url: "https://twitter.com/zani_giulio",
-    },
-    {
-      icon_name: "fa-calendar",
-      url: "https://calendly.com/salamanderxing/lesson",
-    },
-  ];
+    // {
+    //   icon_name: "fa-github",
+    //   url: "https://github.com/salamanderxing",
+    // },
+    // {
+    //   icon_name: "fa-globe",
+    //   url: "https://salamanderxing.github.io/",
+    // },
+    // {
+    //   icon_name: "fa-envelope",
+    //   url: "mailto:g.zani@uva.nl",
+    // },
+    // {
+    //   icon_name: "fa-chalkboard-teacher",
+    //   url:
+    //     "https://www.superprof.it/magistrale-intelligenza-artificiale-offre-lezioni-aiuto-progetti-python-machine-learning-deep-learning.html",
+    // },
+    // {
+    //   icon_name: "fa-twitter",
+    //   url: "https://twitter.com/zani_giulio",
+    // },
+    // {
+    //   icon_name: "fa-calendar",
+    //   url: "https://calendly.com/salamanderxing/lesson",
+    // },
+  ] as { icon_name: string; url: string }[];
+  const description = `Turtles all the way down 🐢`;
   const logo = "profile.jpeg";
   return (
     <div
@@ -83,7 +97,7 @@ export default () => {
       <img
         src={logo}
         style={{
-          marginTop: "10px",
+          marginTop: "100px",
           marginBottom: "30px",
           width: 150,
           height: 150,
@@ -113,7 +127,7 @@ export default () => {
             color: "white",
             maxWidth: "450px",
             margin: "auto",
-            padding: "10px",
+            padding: "5px",
           }}
         >
           <p
@@ -122,46 +136,18 @@ export default () => {
               backdropFilter: "blur(100)",
             }}
           >
-            I'm a master's student in AI at Maastricht University, currently
-            doing my thesis at the University of Amsterdam, with a keen interest
-            in deep learning, programming, and blockchain technologies. I offer private
-            lessons in computer programming, artificial intelligence, and
-            machine learning, and am available for consultancy on projects or
-            theses. Contact me if interested.
+            {description}
           </p>
           <p>
             <a href="https://salamanderxing.github.io/cv" target="_blank">
               {/*@ts-ignore*/}
-              <Badge variant="secondary">Curriculum Vitae</Badge>
+              <Badge variant="secondary">CV</Badge>
             </a>
-          </p>
-          <p>
-            Below you can find some of my online demos. For a complete list of
-            my projects, please check out my GitHub profile.
           </p>
         </div>
       </div>
 
       <div style={{ textAlign: "center" }}>
-        {
-          /*
-        <ListGroup
-          className="blur"
-          style={{
-            marginLeft: "auto",
-            marginRight: "auto",
-            maxWidth: "200px",
-            marginTop: "20px",
-          }}
-        >
-          {Object.entries(contacts).map(([key, value], index) => (
-            <ListGroup.Item key={index} className="blur">
-              <a href={value}>{key}</a>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-        */
-        }
         <ListGroup
           as="ol"
           style={{
@@ -172,36 +158,38 @@ export default () => {
           }}
         >
           {projects.map((project, index) => (
-            <ListGroup.Item
-              key={index}
-              as="li"
-              className="d-flex justify-content-between align-items-start blur"
+            <a
+              href={project.link}
+              target="_blank"
+              style={{ textDecoration: "none" }}
             >
-              <div
-                className="ms-2 me-auto"
-                style={{ textAlign: "center", width: "100%", color: "white" }}
-              >
-                <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                  <div className="fw-bold">{project.name}</div>
-                  {project.description}
-                </div>
-              </div>
-              {/* inserts the link to the project */}
-              <a
-                href={project.link}
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Badge bg="primary">Link</Badge>
-              </a>
-            </ListGroup.Item>
+              <Badge bg="primary">{project.name}</Badge>
+            </a>
+            // <ListGroup.Item
+            //   key={index}
+            //   as="li"
+            //   className="d-flex justify-content-between align-items-start blur"
+            // >
+            //   <div
+            //     className="ms-2 me-auto"
+            //     style={{ textAlign: "center", width: "100%", color: "white" }}
+            //   >
+            //     <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+            //       <div className="fw-bold">{project.name}</div>
+            //       {project.description}
+            //     </div>
+            //   </div>
+            //   {/* inserts the link to the project */}
+            //   <a
+            //     href={project.link}
+            //     target="_blank"
+            //     style={{ textDecoration: "none" }}
+            //   >
+            //     <Badge bg="primary">Link</Badge>
+            //   </a>
+            // </ListGroup.Item>
           ))}
         </ListGroup>
-
-        <p style={{ color: "white", marginTop: "10px" }}>
-          This background is a flocking algorithm implemented using Three.js &
-          WebGL.
-        </p>
       </div>
     </div>
   );
